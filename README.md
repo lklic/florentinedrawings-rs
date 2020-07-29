@@ -1,2 +1,3 @@
 # florentinedrawings-rs
-porting old blacklight project to researchspace
+
+porting florenting drawings blacklight front end to a full researchspace implementation
