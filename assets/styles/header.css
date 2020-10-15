@@ -1,22 +1,4 @@
 
-
-body {
-    font-size: 14px;
-    line-height: 1.2;
-    color: #000000;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-.rs-h2, h2, .h2 {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #000000;
-    font-size: 18px;
-    line-height: 1.2;
-    font-weight: 600;
-}
-.navbar {
-    height: 90px !important;
-}
-
 .rs-header {
     background-color:#e6e6e3;
     border-color: transparent;
@@ -74,49 +56,14 @@ body {
     background-color: #1C252C;
 }
 
+.rs-header .user-dropdown_item img{
+        margin-right: 0.5vw;
+        height: 1vh;
+}
+
 #main-header-dropdown:hover {
     background-color: #1C252C !important;
     color: white !important;
-}
-
-
-.footer {
-    z-index: 40;
-    width: 100%;
-    background-color: #1C252C !important;
-    color: #fff;
-}
-
-.footer__pixel-groove {
-    visibility: hidden;
-}
-
-.footer-header {
-    text-transform: uppercase;
-    font-size: 20px;
-    margin-bottom: 30px;
-}
-
-#footer-columns-container {
-    padding: 30px !important;
-    font-size: 13px;
-    line-height: normal;
-    margin-bottom: 50px;
-    height: 100%;
-    display: block;
-    overflow: auto;
-}
-
-.component-page-toolbar {
-    z-index: 99999999 !important;
-}
-
-.navbar-collapse {
-    overflow: visible !important;
-}
-
-.navbar-default .navbar-toggle.collapsed .icon-bar {
-    background-color: #1C252C;
 }
 
 #main-header-dropdown {
@@ -128,5 +75,3 @@ body {
     background-color: #3f4b54 !important;
     color: #ffffff !important;
 }
-
-

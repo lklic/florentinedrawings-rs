@@ -1,0 +1,44 @@
+@import "./footer.css";
+@import "./header.css";
+
+body {
+  font-size: 14px;
+  line-height: 1.2;
+  color: #000000;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #333 !important;
+  border-radius: 5px !important;
+}
+
+a:hover {
+  background-color: #e6e6e6 !important;
+  border-color: #adadad !important;
+}
+
+.rs-h2,
+h2,
+.h2 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #000000;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+.navbar {
+  height: 90px !important;
+}
+
+.component-page-toolbar {
+  z-index: 99999999 !important;
+}
+
+.navbar-collapse {
+  overflow: visible !important;
+}
+
+.navbar-default .navbar-toggle.collapsed .icon-bar {
+  background-color: #1c252c;
+}
