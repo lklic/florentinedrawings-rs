@@ -3,13 +3,13 @@
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
 
-      <a class="rs-header-logo" href="/"><img src="../../images/logo.png" alt="{{deploymentTitle}}"/></a>
+      <a class="rs-header-logo" href="/"><img src="../../images/logo.png" alt="{{deploymentTitle}}" /></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="rs-navbar">
 
-       <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav">
       </ul>
 
       <ul class="nav navbar-nav">
@@ -30,7 +30,9 @@
         </li>
 
         <mp-anonymous-hidden>
-          <li><mp-link url="/sparql" class="rs-body-m-M">Sparql</mp-link></li>
+          <li>
+            <mp-link url="/sparql" class="rs-body-m-M">Sparql</mp-link>
+          </li>
         </mp-anonymous-hidden>
 
 
@@ -104,56 +106,7 @@
 
   </div><!-- /.container-fluid -->
 
-  <div class="header-search">
 
-<div>
-          <bs-row>
-            <bs-col md-offset="1" md="3">
-              <div><semantic-simple-search
-  query='
-    PREFIX foaf: <http://xmlns.com/foaf/0.1/> 
-    PREFIX person: <http://example.com/person/> 
-    SELECT ?resource ?label ?typelabel WHERE {
-      FILTER REGEX(?label, ?__token__, "i")
-      VALUES(?resource ?label ?typelabel){
-        ( person:alice "Alice" "Person" )
-        ( person:carola "Carola" "Person" )      
-        ( person:bob "Bob" "Person" )
-        ( person:mike "Mike" "Person" )
-      }
-    } LIMIT 10
-  '
-  template='<span style="color: blue;" title="{{resource.value}}">{{label.value}} ({{typelabel.value}})</span>'
-  input-placeholder='Search for something e.g. "Bob"'
-></semantic-simple-search>
-</div>
-            </bs-col>
-            <bs-col md-offset="3" md="3">
-              <div>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">About</a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="/resource/credits">Credits</a>
-                        </li>
-                    </ul>
-                </li>
-              </ul>
-                </div>
-          </bs-row>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-</div><!-- /.header search -->
 
 
 
