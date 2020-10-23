@@ -1,2 +1,2 @@
 blazegraph.jnl
-!default!.ttl
+config/repositories/default.ttl

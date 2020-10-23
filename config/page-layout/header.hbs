@@ -1,8 +1,7 @@
-<nav class="navbar navbar-default" role="navigation">
+<nav id="fd-navigation" class="navbar navbar-default" role="navigation">
   <div class="rs-header">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-
       <a class="rs-header-logo" href="/"><img src="../../images/logo.png" alt="{{deploymentTitle}}" /></a>
     </div>
 
@@ -13,14 +12,22 @@
       </ul>
 
       <ul class="nav navbar-nav">
-
         <li class="rs-only-xs">
           <semantic-link iri="http://www.researchspace.org/resource/ThinkingFrames" urlqueryparam-view='simple-search'
             title="Advanced seach" style="display: inline-block;">
             Search
           </semantic-link>
         </li>
-
+        <li id="header-search">
+          <semantic-simple-search query='
+    SELECT ?resource ?label ?typelabel WHERE {
+      	?resource rdfs:label ?label;
+        a crm:E22_Man-Made_Object.
+      FILTER REGEX(?label, ?__token__, "i")
+    } LIMIT 10
+  ' template='<span style="color: blue; title="{{resource.value}}">{{label.value}} ({{typelabel.value}})</span>'
+            input-placeholder='Search for something e.g. "Michelangelo"'></semantic-simple-search>
+        </li>
         {{!-- <li class="rs-xs-none rs-navigate-input">
           <input type="text" placeholder="Navigate To .." disabled class="rs-textInput--white rs-body-m-M" style="height: 27px;">
           <semantic-link iri="http://www.researchspace.org/resource/ThinkingFrames" urlqueryparam-view='simple-search'
@@ -71,7 +78,7 @@
               </semantic-query>
             </bs-menu-item>
 
-                  {{!-- <semantic-link-container uri="http://www.researchspace.org/resource/MyImages">
+            {{!-- <semantic-link-container uri="http://www.researchspace.org/resource/MyImages">
                   <bs-menu-item title='my images'>My Images</bs-menu-item>
                 </semantic-link-container>
 

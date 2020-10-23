@@ -1,0 +1,11 @@
+
+.semantic-carousel{
+    margin-top: 3vh;
+}
+.slick-slider{
+    margin-left: 2% !important;
+    margin-right: 2% !important;
+}
+.table > tr > td{
+    border-bottom-color: black !important;
+}

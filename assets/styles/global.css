@@ -1,5 +1,8 @@
 @import "./footer.css";
 @import "./header.css";
+@import "./man_made_object.css";
+@import "./filterComponent.css";
+
 
 body {
   font-size: 14px;
@@ -41,4 +44,26 @@ h2,
 
 .navbar-default .navbar-toggle.collapsed .icon-bar {
   background-color: #1c252c;
+}
+
+.page-breadcrumb{
+  position: relative !important;
+}
+
+.rs-application .table>tbody>tr>td {
+  border-bottom-color: #000000 !important;
+  color: #000000 !important;
+}
+
+.rs-application .table>thead>tr>th {
+  border-bottom-color: #000000 !important;
+  color: #000000 !important;
+}
+
+.rs-application .Select-placeholder {
+  color: gray;
+}
+
+.rs-application .is-open .Select-arrow, .rs-application .Select-arrow, .rs-application .Select-arrow-zone:hover>.Select-arrow {
+  border-top-color: black;
 }
