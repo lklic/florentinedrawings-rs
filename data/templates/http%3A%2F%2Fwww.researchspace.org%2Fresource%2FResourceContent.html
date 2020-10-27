@@ -1,6 +1,5 @@
 [[#if (urlParam "details")]]
 <div class="detail-sidebar-content">
-
     [[#block "detailsResourceHeader"]]
     <div style="display: flex; margin-bottom: 18px;">
 
@@ -798,7 +797,7 @@
                                 <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
                                 ?id rdfs:label ?id_number
                             }                 
-                        } GROUP BY ?iri' template='{{> headerDefaultData}}'>
+                        } GROUP BY ?iri' template='{{>headerDefaultData}}'>
 
     <template id="headerDefaultData">
         <div>
@@ -830,8 +829,6 @@
                 <div class="[[#if image]]col-xs-8[[else]]col-xs-10[[/if]]" style="text-transform:capitalize;">
                     {{numberList.value}} 
                 </div>
-                {{/ifCond}}
-               
                 {{/ifCond}}
            
             </div>
