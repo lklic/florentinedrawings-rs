@@ -16,11 +16,6 @@ a {
   border-radius: 5px !important;
 }
 
-a:hover {
-  background-color: #e6e6e6 !important;
-  border-color: #adadad !important;
-}
-
 .rs-h2,
 h2,
 .h2 {
@@ -35,6 +30,7 @@ h2,
 }
 
 .component-page-toolbar {
+  position: absolute !important;
   z-index: 99999999 !important;
 }
 
@@ -66,4 +62,67 @@ h2,
 
 .rs-application .is-open .Select-arrow, .rs-application .Select-arrow, .rs-application .Select-arrow-zone:hover>.Select-arrow {
   border-top-color: black;
+}
+
+div, ul, li, table, h1, h2, h3, h4, h5, h6,  button, a, select, .btn{
+  color: black !important;
+}
+
+.panel-body{
+  background-color: white !important;
+}
+
+.rs-icon{ 
+  color: #761f0e !important;
+}
+.fa {
+  color: #761f0e !important;
+}
+.filetype-text{
+  color: #761f0e !important;
+}
+.btn:hover{
+  color: #040404 !important;
+  text-decoration: underline !important;
+}
+.yasr_btn{
+  border-color: #761f0e !important;
+  color: black !important;
+}
+
+.btn-primary, .btn-xs{
+  border-color: #761f0e !important;
+  color: white !important;
+  background-color: #761f0e !important;
+}
+
+.btn-primary,.btn-xs .fa{
+  color: white !important;
+}
+
+.yasr_btn.selected{
+  background-color: #761f0e35 !important;
+  color: white !important;
+} 
+
+.yasr_btn:focus {
+  background-color: #761f0e !important;
+  color: white !important;
+
+}
+
+a:hover{
+  color: #761f0e !important;
+}
+
+.active{
+  color: black !important;
+}
+
+.Dashboard--addItemButton {
+  background: white !important;
+}
+
+.CodeMirror {
+  color: none !important;
 }

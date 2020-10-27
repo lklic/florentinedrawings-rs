@@ -54,7 +54,7 @@
 
 .rs-header .navbar-nav > li > a:hover,
 .rs-header .navbar-nav > li > a:focus {
-  color: #fff !important;
+  color: black !important;
   background-color: #1c252c;
 }
 

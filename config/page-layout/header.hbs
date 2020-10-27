@@ -20,11 +20,23 @@
         </li>
         <li id="header-search">
           <semantic-simple-search query='
-    SELECT ?resource ?label ?typelabel WHERE {
-      	?resource rdfs:label ?label;
-        a crm:E22_Man-Made_Object.
-      FILTER REGEX(?label, ?__token__, "i")
-    } LIMIT 10
+     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                  PREFIX bds:  <http://www.bigdata.com/rdf/search#>
+
+                  SELECT distinct ?value ?label ?description ?instanceof WHERE {
+                    SERVICE <https://wikidata.metaphacts.com/sparql> {  
+                        ?value rdfs:label ?label; 
+                        <http://schema.org/description> ?description;
+                        <http://www.wikidata.org/prop/direct/P31> ?type.
+                        ?type rdfs:label ?instanceof.
+                        ?label bds:search \"?token*\" ;    
+                         bds:minRelevance \"0.5\" ;                
+                         bds:matchAllTerms \"true\"  .
+                         BIND( xsd:integer(substr(str(?value), 33)) as ?q)
+                   }  
+                 }	
+                ORDER BY ?q 
+                LIMIT 10",
   ' template='<span style="color: blue; title="{{resource.value}}">{{label.value}} ({{typelabel.value}})</span>'
             input-placeholder='Search for something e.g. "Michelangelo"'></semantic-simple-search>
         </li>

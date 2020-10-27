@@ -2,14 +2,13 @@
 <div class="detail-sidebar-content">
 
     [[#block "detailsResourceHeader"]]
-    <div style="display: flex; margin-bottom: 18px;"">
+    <div style="display: flex; margin-bottom: 18px;">
 
         <mp-resource-thumbnail iri='[[this]]' class='detail-img'>
             <mp-resource-thumbnail-fallback>
                 <with-types iri='[[this]]'
                         template='{{> noImage}}'
-                        [[> rsp:TypeMappings]]
-                    >
+                        [[> rsp:TypeMappings]]     >
                     <template id="noImage">
                         <span class="rs-icon {{getValueByKey typeToImage allTypes 'rs-icon-no-image'}} detail-icon-noimg" alt="{{directTypesLabels}}" title='{{directTypesLabels}}'></span>
                     </template>
@@ -83,7 +82,6 @@
             [[#block "resourceHeader"]]
             [[!-- Resource Header --]]
                 <div class="container-fluid rs-resource-header {{getValueByKey entityBgColor allTypes 'rs-entity-bg-thing'}}">
-
                     [[!-- Header top with draggable link --]]
                     <bs-row class="row-center">
                         <bs-col xs=1 lg=2 class="px-0">
@@ -181,52 +179,13 @@
                                         </div>
 
                                         [[#block "imageContent"]]
-                                        <rs-object-representations query='SELECT DISTINCT ?imgURL ?isMainRep
+                                        <rs-object-representations query='SELECT  
+                                                                      (GROUP_CONCAT(DISTINCT(?url)) AS ?imgURL)
                                                                         WHERE {
-                                                                        OPTIONAL {
-                                                                            {
-                                                                            <[[this]]> a ?type ;
-                                                                            FILTER(?type != rso:EX_Digital_Image) .
-                                                                            ?representationProp rdfs:subPropertyOf* crm:P138i_has_representation .
-                                                                            <[[this]]> ?representationProp ?representation .
-
-                                                                            OPTIONAL {
-                                                                                <[[this]]> ?representationProp ?representation .
-                                                                                ?representation a rso:EX_Digital_Image ;
-                                                                                                crm:P1_is_identified_by/rso:PX_has_file_name ?fileName.
-                                                                                BIND(CONCAT("/proxy/IIIF/", ?fileName, "/full/!640,480/0/default.jpg") AS ?uploadIiifUrl)
-                                                                            }
-
-                                                                            OPTIONAL {
-                                                                                <[[this]]> ?representationProp ?representation .
-                                                                                ?representation a rso:EX_Digital_Image .
-                                                                                BIND(REPLACE(STR(?representation), "^.*/(.*)$", "$1") as ?imageID) .
-                                                                                BIND(?imageID as ?imgIiifId)
-                                                                                BIND(CONCAT("/proxy/IIIF/", ?imageID, "/full/!640,480/0/default.jpg") AS ?iiifUrl)
-                                                                            }
-
-                                                                            BIND(COALESCE(?uploadIiifUrl, ?iiifUrl, ?representation) AS ?imgURLx)
-                                                                            BIND(IF(EXISTS { <[[this]]> rso:PX_has_main_representation ?representation }, true, false) AS ?isMainRepx)
-                                                                            } UNION {
-                                                                            <[[this]]> a rso:EX_Digital_Image ;
-                                                                            OPTIONAL {
-                                                                                <[[this]]> a rso:EX_Digital_Image ;
-                                                                                crm:P1_is_identified_by/rso:PX_has_file_name ?fileName. 
-                                                                                BIND(CONCAT("/proxy/IIIF/", ?fileName, "/full/!640,480/0/default.jpg") AS ?uploadIiifUrl)
-                                                                            }
-
-                                                                            OPTIONAL {
-                                                                                <[[this]]> a rso:EX_Digital_Image ;
-                                                                                BIND(REPLACE(STR(<[[this]]>), "^.*/(.*)$", "$1") as ?imageID) .
-                                                                                BIND(CONCAT("/proxy/IIIF/", ?imageID, "/full/!640,480/0/default.jpg") AS ?iiifUrl)
-                                                                            }
-                                                                            BIND(COALESCE(?uploadIiifUrl, ?iiifUrl, <[[this]]>) AS ?imgURLx)
-                                                                            BIND(true AS ?isMainRepy)
-                                                                            }  
-                                                                        }
-                                                                        BIND(?imgURLx AS ?imgURL)
-                                                                        BIND(COALESCE(?isMainRepx, ?isMainRepy) AS ?isMainRep)
-                                                                        } ORDER BY ?imgURL '
+                                                                            <[[this]]> crm:P56_bears_feature ?feat.             
+                                                                            ?feat crm:P136_has_representation ?visual.
+                                                                            ?visual crm:P129i_is_subject_of ?url
+                                                                        } '
 
                                                                         no-image-template = '{{> noImage}}'
                                                                     
@@ -236,7 +195,7 @@
                                             <div class="object-representations__image--focused">
                                                 <span class="rs-icon {{getValueByKey typeToImage allTypes 'rs-icon-entity_no-image'}} {{getValueByKey entityIconColor allTypes 'rs-icon-entity_no-image'}}"></span>
                                             </div>
-                                        </template>>
+                                        </template>
                                             
                                         </rs-object-representations>
                                         [[/block]]
@@ -261,42 +220,45 @@
                             [[#if withSummary]]
                             <bs-nav-item event-key="summary">Summary</bs-nav-item>
                             [[/if]]
-                            <bs-nav-item event-key="raw-data">Raw data</bs-nav-item>
+                            <!-- <bs-nav-item event-key="raw-data">Raw data</bs-nav-item> -->
                             [[#if withGeoData]]
                             <bs-nav-item event-key="places">Related Places</bs-nav-item>
                             [[/if]]
-                            [[#if (hasPermission "forms:ldp:*")]]
+                            
+                            <!-- Disabled Several unused tabs -->
+
+                            <!-- [[#if (hasPermission "forms:ldp:*")]]
                             <bs-nav-item event-key="media" disabled=true>Media</bs-nav-item>
-                            [[/if]]
-                            [[#if (hasPermission "forms:ldp:*")]]
+                            [[/if]] -->
+                            <!-- [[#if (hasPermission "forms:ldp:*")]]
                             <bs-nav-item event-key="annotations" disabled=true>Annotations
                                 <span class="rs-badge rs-badge--info rs-body-s-M text-white"
                                     style="margin-left:8px;">0</span>
-                                <!--      <semantic-query query="SELECT (COUNT(DISTINCT ?s) AS ?count) WHERE {
+                                     <semantic-query query="SELECT (COUNT(DISTINCT ?s) AS ?count) WHERE {
                         ?s <http://www.ics.forth.gr/isl/CRMdig/L43_annotates> <[[this]]>;}"
                         template='{{#each bindings}}
                         <span class="rs-badge rs-badge--info rs-body-s-M text-white" style="margin-left:8px;">{{count.value}}</span>
                         {{/each}}'
                         no-result-template='<span class="rs-badge rs-badge--info rs-body-s-M text-white" style="margin-left:8px;">0</span>'
-                        ></semantic-query> -->
+                        ></semantic-query>
                             </bs-nav-item>
-                            [[/if]]
-                            [[#if (hasPermission "forms:ldp:*")]]
+                            [[/if]] -->
+                            <!-- [[#if (hasPermission "forms:ldp:*")]]
                             <bs-nav-item event-key="assertions" disabled=true>Assertions
                                 <span class="rs-badge rs-badge--info rs-body-s-M text-white"
                                     style="margin-left:8px;">0</span>
-                                <!--    <semantic-query query="SELECT (COUNT(DISTINCT ?s) AS ?count) WHERE {
+                                 <semantic-query query="SELECT (COUNT(DISTINCT ?s) AS ?count) WHERE {
                                     ?s <http://www.ics.forth.gr/isl/CRMdig/L43_annotates> <[[this]]>;}"
                                     template='{{#each bindings}}
                                     <span class="rs-badge rs-badge--info rs-body-s-M text-white" style="margin-left:8px;">{{count.value}}</span>
                                     {{/each}}'
                                     no-result-template='<span class="rs-badge rs-badge--info rs-body-s-M text-white" style="margin-left:8px;">0</span>'
-                                    ></semantic-query> -->
+                                    ></semantic-query> 
                             </bs-nav-item>
-                            [[/if]]
-                            [[#if (hasPermission "forms:ldp:*")]]
+                            [[/if]] -->
+                            <!-- [[#if (hasPermission "forms:ldp:*")]]
                             <bs-nav-item event-key="related" disabled=true>Explore Related</bs-nav-item>
-                            [[/if]]
+                            [[/if]] -->
                         </bs-nav>
 
                         <bs-tab-content animation="true">
@@ -438,7 +400,7 @@
 
                             <bs-tab-pane event-key="raw-data">
                                 <div class="container-fluid rs-summary-section">
-                                    <bs-row>
+                                    <!-- <bs-row>
                                         <bs-col xs=12 style="padding: 0;">
                                             <hr class="rs-header-line">
 
@@ -449,18 +411,81 @@
                                                 [[currentDateTime
                                                 format="dd-MM-yyyy"]].</span>
                                         </bs-col>
-                                    </bs-row> <!--  close row -->
+                                    </bs-row>  -->
+                                    <!--  close row -->
 
+                                    <!-- 1961 EDITION FIELDS -->
                                     <bs-row class="row-center">
                                         <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
-                                            <mp-field-visualization subject='[[this]]'
-                                                                    fields='[[fieldDefinitionsFromQuery (setQueryBindings "SELECT DISTINCT ?field WHERE {?resource ?field ?o . ?field a <http://www.researchspace.org/resource/system/fields/Field> } ORDER BY DESC(?field)" resource=this.iri) ]]'
-                                                                    template='{{> template}}'>
-                                                <template id="template">{{> rsp:ResourceFieldBasedVisualization subject="[[this]]"}}</template>
-
+                  
+                                            <h1>1961 Edition</h1> 
+                                            <mp-field-visualization
+                                                subject="[[this]]"
+                                                fields='[[fieldDefinitions  
+                                                Recto_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Recto_Title"
+                                                Verso_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Verso_Title"  
+                                                Artist_Attrib="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Artist_Attribution"
+                                                Berenson_Cat_No="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Berenson_Cat_No"
+                                                Recto_Notes= "https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Recto_Notes"
+                                                ]]'
+                                                template='{{>sixtyone_edition_field_table}}'
+                                                >
+                                                <template id="sixtyone_edition_field_table">
+                                                    [[> rsp:ResourceFieldBasedVisualization subject=[[this]]  ]]
+                                                </template>
                                             </mp-field-visualization>
                                         </bs-col>
                                     </bs-row> <!--  close row -->
+
+                                    <!-- 1938 EDITION FIELDS -->
+                                    <bs-row class="row-center">
+                                        <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
+
+                                            <h1>1938 Edition</h1>
+                                            <mp-field-visualization
+                                                subject="[[this]]"
+                                                fields='[[fieldDefinitions  
+                                                Recto_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Recto_Title"
+                                                Verso_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Verso_Title"  
+                                                Artist_Attrib="https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Artist_Attribution"
+                                                Berenson_Cat_No="https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Berenson_Cat_No"
+                                                Recto_Notes= "https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Recto_Notes"
+                                                ]]'
+                                                template='{{>thirtyeight_edition_field_table}}'
+                                                >
+                                                <template id="thirtyeight_edition_field_table">
+                                                    [[> rsp:ResourceFieldBasedVisualization subject=[[this]]  ]]
+                                                </template>
+                                            </mp-field-visualization>
+
+                                
+                                        </bs-col>
+                                    </bs-row> <!--  close row -->
+
+                                    <!-- 1903 EDITION FIELDS -->
+                                    <bs-row class="row-center">
+                                        <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
+
+                                            <h1>1903 Edition</h1>
+                                            <mp-field-visualization
+                                                subject="[[this]]"
+                                                fields='[[fieldDefinitions  
+                                                Recto_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1903_Edition_Recto_Title"
+                                                Verso_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1903_Edition_Verso_Title"  
+                                                Artist_Attrib="https://florentinedrawings.itatti.harvard.edu/resource/field/1903_Edition_Artist_Attribution"
+                                                Berenson_Cat_No="https://florentinedrawings.itatti.harvard.edu/resource/field/1903_Edition_Berenson_Cat_No"
+                                                Recto_Notes= "https://florentinedrawings.itatti.harvard.edu/resource/field/1903_Edition_Recto_Notes"
+                                                ]]'
+                                                template='{{>othree_edition_field_table}}'
+                                                >
+                                            <template id="othree_edition_field_table">
+                                                [[> rsp:ResourceFieldBasedVisualization subject=[[this]]  ]]
+                                            </template>
+                                            </mp-field-visualization>
+                                
+                                        </bs-col>
+                                    </bs-row> <!--  close row -->
+
 
                                 </div> <!--  close container -->
 
@@ -750,10 +775,11 @@
         <mp-label iri='[[this]]'></mp-label>
     </div>
 </div>
-
+<!-- DATA ON PAGE HEADER (right by the image) -->
 <semantic-query query='SELECT (<[[this]]> as ?iri)
-                                (GROUP_CONCAT(DISTINCT(?typeLabel); SEPARATOR = " - ") AS ?typeList)
-                                (GROUP_CONCAT(DISTINCT(?instituteLabel); SEPARATOR = "; ") AS ?instituteList) 
+                        (GROUP_CONCAT(DISTINCT(?id_number)) AS ?numberList)
+                        (GROUP_CONCAT(DISTINCT(?typeLabel); SEPARATOR = " - ") AS ?typeList)
+                        (GROUP_CONCAT(DISTINCT(?instituteLabel); SEPARATOR = "; ") AS ?instituteList) 
                         WHERE {
                             OPTIONAL {
                                 <[[this]]> a ?type .
@@ -767,7 +793,11 @@
                                 <[[this]]> crm:P105_right_held_by ?institute .
                                 ?institute rdfs:label ?instituteLabel .
                             }
-                            
+
+                            OPTIONAL {
+                                <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
+                                ?id rdfs:label ?id_number
+                            }                 
                         } GROUP BY ?iri' template='{{> headerDefaultData}}'>
 
     <template id="headerDefaultData">
@@ -788,12 +818,28 @@
                 <div class="[[#if image]]col-xs-8[[else]]col-xs-10[[/if]]" style="text-transform:capitalize;">
                     {{typeList.value}}
                 </div>
+           
             </div>
             {{/ifCond}}
 
+            <!-- RESOURCE DETAILS! -->
+            <div class="row rs-body-m-M" style="margin-bottom:16px;">
+                <!-- Inventory Number -->
+                {{#ifCond numberList.value "!==" ""}}
+                <div class="[[#if image]]col-xs-4[[else]]col-xs-2[[/if]]">Inventory Number</div>
+                <div class="[[#if image]]col-xs-8[[else]]col-xs-10[[/if]]" style="text-transform:capitalize;">
+                    {{numberList.value}} 
+                </div>
+                {{/ifCond}}
+               
+                {{/ifCond}}
+           
+            </div>
             {{/each}}
         </div>
     </template>
 </semantic-query>
+  
+
 [[/block]]
 [[/inline]]
