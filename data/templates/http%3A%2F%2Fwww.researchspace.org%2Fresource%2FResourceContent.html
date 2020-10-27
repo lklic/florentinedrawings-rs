@@ -833,6 +833,24 @@
            
             </div>
             {{/each}}
+
+            <mp-field-visualization
+            subject="[[this]]"
+            fields='[[fieldDefinitions  
+            Recto_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Recto_Title"
+            Verso_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Verso_Title"  
+            Artist_Attrib="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Artist_Attribution"
+            Berenson_Cat_No="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Berenson_Cat_No"
+            Recto_Notes= "https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Recto_Notes"
+            ]]'
+            template='{{>sixtyone_edition_field_table}}'
+            >
+            <template id="sixtyone_edition_field_table">
+                [[> rsp:ResourceFieldBasedVisualization subject=[[this]]  ]]
+            </template>
+        </mp-field-visualization>
+
+
         </div>
     </template>
 </semantic-query>

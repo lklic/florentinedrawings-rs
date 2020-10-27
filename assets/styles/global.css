@@ -123,6 +123,13 @@ a:hover{
   background: white !important;
 }
 
-.CodeMirror {
-  color: none !important;
+.modal-backdrop{
+  background-color: #816e4225;
+}
+
+.pagination>li.active, .pagination>li.active>a {
+  background-color: #761f0e !important;
+  color: white !important;
+  text-decoration: none !important;
+
 }
