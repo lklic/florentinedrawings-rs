@@ -19,26 +19,47 @@
           </semantic-link>
         </li>
         <li id="header-search">
-          <semantic-simple-search query='
-     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                  PREFIX bds:  <http://www.bigdata.com/rdf/search#>
 
-                  SELECT distinct ?value ?label ?description ?instanceof WHERE {
-                    SERVICE <https://wikidata.metaphacts.com/sparql> {  
-                        ?value rdfs:label ?label; 
-                        <http://schema.org/description> ?description;
-                        <http://www.wikidata.org/prop/direct/P31> ?type.
-                        ?type rdfs:label ?instanceof.
-                        ?label bds:search \"?token*\" ;    
-                         bds:minRelevance \"0.5\" ;                
-                         bds:matchAllTerms \"true\"  .
-                         BIND( xsd:integer(substr(str(?value), 33)) as ?q)
-                   }  
-                 }	
-                ORDER BY ?q 
-                LIMIT 10",
-  ' template='<span style="color: blue; title="{{resource.value}}">{{label.value}} ({{typelabel.value}})</span>'
-            input-placeholder='Search for something e.g. "Michelangelo"'></semantic-simple-search>
+
+          <semantic-search>
+
+            <semantic-search-query-keyword domain='<http://www.w3.org/2000/01/rdf-schema#Resource>' placeholder="Search for something e.g. Michelangelo"
+              escape-lucene-syntax='false' query='
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+						PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+            SELECT ?subject WHERE {
+            ?production crm:P14_was_carried_out_by ?subject.
+            ?subject rdfs:label ?artistName. 
+            ?artistName bds:search ?__token__ .
+            ?artistName bds:minRelevance "0.5"^^xsd:double;
+            bds:matchAllTerms "true"  .
+            BIND( xsd:integer(substr(str(?value), 33)) as ?q)
+            } ORDER BY ?q
+          '></semantic-search-query-keyword>
+
+            <semantic-search-result-holder>
+
+              <semantic-search-result iri={{subject}}>
+                
+                    
+                <semantic-table id='grid-result' query='SELECT DISTINCT ?subject (SAMPLE(?rawDesc) as ?description) WHERE {
+                                  OPTIONAL { ?subject rdfs:comment ?rawDesc . }
+                            } GROUP BY ?subject LIMIT 10' number-of-displayed-rows='10'
+                  options='{"showTableHeading": false, "showFilter":false}'
+                  no-result-template='<div style="text-align: center;">No results. Please refine your keyword.</div>'>
+                  <template id="subjectCellTemplate">
+
+                    <h4>
+                      <semantic-link uri="{{subject.value}}"></semantic-link>
+                    </h4>
+
+                  </template>
+                </semantic-table>
+              </semantic-search-result>
+
+            </semantic-search-result-holder>
+
+          </semantic-search>
         </li>
         {{!-- <li class="rs-xs-none rs-navigate-input">
           <input type="text" placeholder="Navigate To .." disabled class="rs-textInput--white rs-body-m-M" style="height: 27px;">
