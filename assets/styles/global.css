@@ -2,7 +2,7 @@
 @import "./header.css";
 @import "./man_made_object.css";
 @import "./filterComponent.css";
-
+@import "./artwork_list.css";
 
 body {
   font-size: 14px;
@@ -131,5 +131,16 @@ a:hover{
   background-color: #761f0e !important;
   color: white !important;
   text-decoration: none !important;
+}
 
+.griddle .top-section input::placeholder{
+  color: #761f0e !important;
+}
+.griddle .top-section input{
+  background-blend-mode: luminosity;
+  color: black !important;
+}
+
+.rs-application .semantic-carousel>.slick-slider .slick-next:before, .rs-application .semantic-carousel>.slick-slider>.slick-prev:before{
+  color:#761f0e !important;
 }

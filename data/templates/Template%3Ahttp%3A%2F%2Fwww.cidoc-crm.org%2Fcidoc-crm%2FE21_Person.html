@@ -1,13 +1,112 @@
+
+<div class="artwork_list_head">
+  <h1>Artworks by</h1>
+    <semantic-query
+      query=" 
+      PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      
+        SELECT ?artist_name WHERE {                    
+              <[[this]]> rdfs:label ?artist_name
+        }"
+      template="{{>artistTemplate}}"
+    >
+      <template id="artistTemplate">
+        {{#each bindings}}
+        <object data="../../images/{{artist_name.value}}.png" type="image/png" class="img-circle"></object>
+        <h2>{{artist_name.value}}</h2>
+        {{/each}}
+      </template>
+    </semantic-query>
+  </h2>
+</div>
+
+<div class="artwork_list_body">
 <semantic-table
   query="
   PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-    SELECT ?man_made WHERE {                    
-        ?man_made rdf:type crm:E22_Man-Made_Object.
-        ?man_made crm:P108i_was_produced_by ?production.
-        ?production crm:P14_was_carried_out_by <[[this]]>;
-    }
-      "
-></semantic-table>
+    SELECT ?artwork ?id_number ?recto_title_1938 ?recto_title_1961 WHERE {                    
+      
+      ?production crm:P14_was_carried_out_by <[[this]]>. 
+      ?artwork crm:P108i_was_produced_by ?production.
+  
+
+      ## PREFERRED IDENTIFIER (Inventory Number) ##
+      OPTIONAL {
+          ?artwork <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
+          ?id rdfs:label ?id_number
+      }        
+
+      ## RECTO TITLE 1938 (Title) ##
+      OPTIONAL {
+        ?artwork crm:P56_bears_feature ?feature.
+        ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+        ?feature a crm:E25_Man-Made_Feature.
+        ?feature crm:P138_has_representation ?visual_item.
+        ?visual_item a crm:E36_Visual_Item.
+        ?visual_item crm:P102_has_title ?value_uri.
+        ?value_uri a crm:E35_Title.
+        ?value_uri rdfs:label ?recto_title_1938.
+        ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>
+      }
+
+      ## RECTO TITLE 1961 (English Title) ##
+      OPTIONAL {
+        ?artwork crm:P56_bears_feature ?feature_b.
+        ?feature_b crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+        ?feature_b a crm:E25_Man-Made_Feature.
+        ?feature_b crm:P138_has_representation ?visual_item_b.
+        ?visual_item_b a crm:E36_Visual_Item.
+        ?visual_item_b crm:P102_has_title ?value_uri_b.
+        ?value_uri_b a crm:E35_Title.
+        ?value_uri_b rdfs:label ?recto_title_1961.
+        ?value_uri_b crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>
+      }
+
+    
+    }"
+  column-configuration='[
+      {"variableName":"artwork","displayName": "Images","cellTemplate":"{{>imageTemplate}}"},
+      {"variableName":"recto_title_1961","displayName": "Title","cellTemplate":"{{>titleTemplate}}" },
+      {"variableName":"recto_title_1938","displayName": "English Title" },
+      {"variableName":"id_number","displayName": "Inventory Number"}
+      ]'
+>
+  <template id="titleTemplate">
+    <semantic-link iri="{{artwork.value}}"
+      >{{recto_title_1961.value}}</semantic-link
+    >
+  </template>
+
+  <template id="imageTemplate">
+    <div class="carousel">
+      <semantic-carousel
+        query="SELECT DISTINCT ?imgUrl WHERE{
+        {{artwork}} crm:P56_bears_feature ?feat.             
+        ?feat crm:P136_has_representation ?img_visual.
+        ?img_visual crm:P129i_is_subject_of ?imgUrl
+      }"
+        options='{"fade": true, "lazyLoad": true }'
+        tuple-template="{{> imageCarousel}}"
+        no-result-template="{{> noImages}}"
+      >
+        <template id="imageCarousel">
+          <img
+            style="object-fit: contain"
+            src="{{imgUrl.value}}"
+  
+          />
+        </template>
+
+        <template id="noImages">
+          <div class="no-media">No images available</div>
+        </template>
+      </semantic-carousel>
+    </div>
+  </template>
+</semantic-table>
+</div>
