@@ -4,6 +4,10 @@
   margin-bottom: 2vh;
 }
 
+object{
+  height: 12vh !important;
+}
+
 object::after {
   top: 0;
   left: 0;
@@ -34,8 +38,10 @@ object::after {
 }
 
 .carousel {
-  width: 20vw;
+  width: 16vw;
   height: 20vh;
+  margin-top: 1vh;
+  margin-left: 1vw;
 }
 
 .carousel .semantic-carousel {

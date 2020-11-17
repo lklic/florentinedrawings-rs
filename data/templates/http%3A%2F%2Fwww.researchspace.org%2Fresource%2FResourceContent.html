@@ -17,7 +17,7 @@
 
         <div style="max-width: 70%;">
             
-            <mp-draggable iri='[[this]]'>
+            <!-- <mp-draggable iri='[[this]]'> -->
                 <div class="rs-draggable-container">
                     <semantic-query query='SELECT ?type ?typeLabel WHERE {
                                             <[[this]]> a ?type .
@@ -33,7 +33,7 @@
             
                     <mp-label iri='[[this]]' class="detail-label"></mp-label>
                 </div>
-            </mp-draggable>
+            <!-- </mp-draggable> -->
 
             <mp-copy-to-clipboard text='[[this]]'>
                 <div class="rs-copy-IRI">Copy resource IRI</div>
@@ -176,27 +176,33 @@
                                             [[/if]]
 
                                         </div>
-
+                                    
                                         [[#block "imageContent"]]
-                                        <rs-object-representations query='SELECT  
-                                                                      (GROUP_CONCAT(DISTINCT(?url)) AS ?imgURL)
-                                                                        WHERE {
-                                                                            <[[this]]> crm:P56_bears_feature ?feat.             
-                                                                            ?feat crm:P136_has_representation ?visual.
-                                                                            ?visual crm:P129i_is_subject_of ?url
-                                                                        } '
-
-                                                                        no-image-template = '{{> noImage}}'
-                                                                    
-                                        >
-
-                                        <template id='noImage'>
-                                            <div class="object-representations__image--focused">
-                                                <span class="rs-icon {{getValueByKey typeToImage allTypes 'rs-icon-entity_no-image'}} {{getValueByKey entityIconColor allTypes 'rs-icon-entity_no-image'}}"></span>
-                                            </div>
-                                        </template>
-                                            
-                                        </rs-object-representations>
+                                        <div class="carousel">
+                                            <semantic-carousel
+                                              query="SELECT DISTINCT ?imgUrl WHERE{
+                                              {{subject}} crm:P56_bears_feature ?feat.             
+                                              ?feat crm:P136_has_representation ?img_visual.
+                                              ?img_visual crm:P129i_is_subject_of ?imgUrl
+                                            }"
+                                              options='{"fade": true, "lazyLoad": true }'
+                                              tuple-template="{{> imageCarousel}}"
+                                              no-result-template="{{> noImages}}"
+                                            >
+                                              <template id="imageCarousel">
+                                                <img
+                                                  style="object-fit: contain"
+                                                  src="{{imgUrl.value}}"
+                                        
+                                                />
+                                              </template>
+                                      
+                                              <template id="noImages">
+                                                <div class="no-media">No images available</div>
+                                              </template>
+                                            </semantic-carousel>
+                                          </div>
+    
                                         [[/block]]
                                     </div>
                                     <div class="col-xs-6" style="padding: 1.8% 1.5% 1.5% 5%;">
@@ -418,21 +424,7 @@
                                         <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
                   
                                             <h1>1961 Edition</h1> 
-                                            <mp-field-visualization
-                                                subject="[[this]]"
-                                                fields='[[fieldDefinitions  
-                                                Recto_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Recto_Title"
-                                                Verso_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Verso_Title"  
-                                                Artist_Attrib="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Artist_Attribution"
-                                                Berenson_Cat_No="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Berenson_Cat_No"
-                                                Recto_Notes= "https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Recto_Notes"
-                                                ]]'
-                                                template='{{>sixtyone_edition_field_table}}'
-                                                >
-                                                <template id="sixtyone_edition_field_table">
-                                                    [[> rsp:ResourceFieldBasedVisualization subject=[[this]]  ]]
-                                                </template>
-                                            </mp-field-visualization>
+                                           
                                         </bs-col>
                                     </bs-row> <!--  close row -->
 
@@ -441,21 +433,7 @@
                                         <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
 
                                             <h1>1938 Edition</h1>
-                                            <mp-field-visualization
-                                                subject="[[this]]"
-                                                fields='[[fieldDefinitions  
-                                                Recto_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Recto_Title"
-                                                Verso_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Verso_Title"  
-                                                Artist_Attrib="https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Artist_Attribution"
-                                                Berenson_Cat_No="https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Berenson_Cat_No"
-                                                Recto_Notes= "https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Recto_Notes"
-                                                ]]'
-                                                template='{{>thirtyeight_edition_field_table}}'
-                                                >
-                                                <template id="thirtyeight_edition_field_table">
-                                                    [[> rsp:ResourceFieldBasedVisualization subject=[[this]]  ]]
-                                                </template>
-                                            </mp-field-visualization>
+                    
 
                                 
                                         </bs-col>
@@ -466,25 +444,7 @@
                                         <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
 
                                             <h1>1903 Edition</h1>
-                                            <mp-field-visualization
-                                                subject="[[this]]"
-                                                fields='[[fieldDefinitions  
-                                                Recto_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1903_Edition_Recto_Title"
-                                                Verso_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1903_Edition_Verso_Title"  
-                                                Artist_Attrib="https://florentinedrawings.itatti.harvard.edu/resource/field/1903_Edition_Artist_Attribution"
-                                                Berenson_Cat_No="https://florentinedrawings.itatti.harvard.edu/resource/field/1903_Edition_Berenson_Cat_No"
-                                                Recto_Notes= "https://florentinedrawings.itatti.harvard.edu/resource/field/1903_Edition_Recto_Notes"
-                                                ]]'
-                                                column-configuration='[
-                                                {"variableName": "Recto_Title", "displayName": "Recto Title"},
-                                                {"variableName": "Verso_Title", "displayName": "Verso Title"}
-                                                ]'
-                                                template='{{>othree_edition_field_table}}'
-                                                >
-                                            <template id="othree_edition_field_table">
-                                                [[> rsp:ResourceFieldBasedVisualization subject=[[this]]  ]]
-                                            </template>
-                                            </mp-field-visualization>
+                       
                                 
                                         </bs-col>
                                     </bs-row> <!--  close row -->
@@ -779,80 +739,87 @@
     </div>
 </div>
 <!-- DATA ON PAGE HEADER (right by the image) -->
-<semantic-query query='SELECT (<[[this]]> as ?iri)
-                        (GROUP_CONCAT(DISTINCT(?id_number)) AS ?numberList)
-                        (GROUP_CONCAT(DISTINCT(?typeLabel); SEPARATOR = " - ") AS ?typeList)
-                        (GROUP_CONCAT(DISTINCT(?instituteLabel); SEPARATOR = "; ") AS ?instituteList) 
-                        WHERE {
-                            OPTIONAL {
-                                <[[this]]> a ?type .
-                                ?type rdfs:label ?typeLabel .
-                                BIND( LANG(?typeLabel) AS ?language). 
-                            }
-
-                            FILTER (?language = "en" || ?language = "")
-                              
-                            OPTIONAL {
-                                <[[this]]> crm:P105_right_held_by ?institute .
-                                ?institute rdfs:label ?instituteLabel .
-                            }
-
+<semantic-query query='SELECT  (<[[this]]> as ?iri)
+                      (GROUP_CONCAT(DISTINCT(?id_number); SEPARATOR="") AS ?inventoryNumber)
+                        (GROUP_CONCAT(DISTINCT(?id_number); SEPARATOR="") AS ?inventoryNumber)
+                        (GROUP_CONCAT(DISTINCT(?technique); SEPARATOR=", ") AS ?techniqueList)
+                           WHERE {
+                            <[[this]]> crm:P108i_was_produced_by ?production.
+                            ?production crm:P14_was_carried_out_by ?artist.
+                            ?artist rdfs:label ?artist_name
+                          
+                            ## PREFERRED IDENTIFIER (Inventory Number) ##
                             OPTIONAL {
                                 <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
                                 ?id rdfs:label ?id_number
-                            }                 
+                            }        
+
+                            ## RECTO TITLE 1938 (Title) ##
+                            OPTIONAL {
+                              <[[this]]> crm:P56_bears_feature ?feature.
+                              ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                              ?feature a crm:E25_Man-Made_Feature.
+                              ?feature crm:P138_has_representation ?visual_item.
+                              ?visual_item a crm:E36_Visual_Item.
+                              ?visual_item crm:P102_has_title ?value_uri.
+                              ?value_uri a crm:E35_Title.
+                              ?value_uri rdfs:label ?recto_title_1938.
+                              ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>
+                            }
+                      
+                            ## RECTO TITLE 1961 (English Title) ##
+                            OPTIONAL {
+                              <[[this]]> crm:P56_bears_feature ?feature_b.
+                              ?feature_b crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                              ?feature_b a crm:E25_Man-Made_Feature.
+                              ?feature_b crm:P138_has_representation ?visual_item_b.
+                              ?visual_item_b a crm:E36_Visual_Item.
+                              ?visual_item_b crm:P102_has_title ?value_uri_b.
+                              ?value_uri_b a crm:E35_Title.
+                              ?value_uri_b rdfs:label ?recto_title_1961.
+                              ?value_uri_b crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>
+                            }
+
+                            ## TECHNIQUE ##
+                            <[[this]]> crm:P56_bears_feature ?feature.
+                            ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                            ?feature a crm:E25_Man-Made_Feature.
+                            ?feature crm:P81_was_modified_by ?modification.
+                            ?modification a crm:E11_Modification.
+                            ?modification crm:P32_used_general_technique ?general_technique.
+                            ?general_technique rdfs:label ?technique
+              
                         } GROUP BY ?iri' template='{{>headerDefaultData}}'>
 
     <template id="headerDefaultData">
         <div>
+ 
+            
             {{#each bindings}}
-            <!-- RESOURCE DATA SOURCE -->
-            {{#ifCond instituteList.value "!==" ""}}
-            <div class="row rs-body-m-M pb-2-5">
-                <div class="[[#if image]]col-xs-4[[else]]col-xs-2[[/if]]">Data source</div>
-                <div class="[[#if image]]col-xs-8[[else]]col-xs-10[[/if]]">{{instituteList.value}}</div>
-            </div>
-            {{/ifCond}}
 
-            <!-- RESOURCE TYPE -->
-            {{#ifCond typeList.value "!==" ""}}
-            <div class="row rs-body-m-M" style="margin-bottom:16px;">
-                <div class="[[#if image]]col-xs-4[[else]]col-xs-2[[/if]]">Type</div>
-                <div class="[[#if image]]col-xs-8[[else]]col-xs-10[[/if]]" style="text-transform:capitalize;">
-                    {{typeList.value}}
+                <div class="row rs-body-m-M" style="margin-bottom:16px;">
+                    <!-- Inventory Number -->
+                    <div class="[[#if image]]col-xs-4[[else]]col-xs-2[[/if]]">Inventory Number</div>
+                    <div class="[[#if image]]col-xs-8[[else]]col-xs-10[[/if]]" style="text-transform:capitalize;">
+                        {{inventoryNumber.value}} 
+                    </div>
                 </div>
-           
-            </div>
-            {{/ifCond}}
 
-            <!-- RESOURCE DETAILS! -->
-            <div class="row rs-body-m-M" style="margin-bottom:16px;">
-                <!-- Inventory Number -->
-                {{#ifCond numberList.value "!==" ""}}
-                <div class="[[#if image]]col-xs-4[[else]]col-xs-2[[/if]]">Inventory Number</div>
-                <div class="[[#if image]]col-xs-8[[else]]col-xs-10[[/if]]" style="text-transform:capitalize;">
-                    {{numberList.value}} 
+                <!-- RESOURCE TYPE -->
+                {{#ifCond techniqueList.value "!==" ""}}
+                <div class="row rs-body-m-M" style="margin-bottom:16px;">
+                    <div class="[[#if image]]col-xs-4[[else]]col-xs-2[[/if]]">Technique</div>
+                    <div class="[[#if image]]col-xs-8[[else]]col-xs-10[[/if]]" style="text-transform:capitalize;">
+                        {{techniqueList.value}}
+                    </div>
+            
                 </div>
                 {{/ifCond}}
-           
-            </div>
+
+
+    
             {{/each}}
 
-            <mp-field-visualization
-            subject="[[this]]"
-            fields='[[fieldDefinitions  
-            Recto_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Recto_Title"
-            Verso_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Verso_Title"  
-            Artist_Attrib="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Artist_Attribution"
-            Berenson_Cat_No="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Berenson_Cat_No"
-            Recto_Notes= "https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Recto_Notes"
-            ]]'
-            template='{{>sixtyone_edition_field_table}}'
-            >
-            <template id="sixtyone_edition_field_table">
-                [[> rsp:ResourceFieldBasedVisualization subject=[[this]]  ]]
-            </template>
-        </mp-field-visualization>
 
 
         </div>

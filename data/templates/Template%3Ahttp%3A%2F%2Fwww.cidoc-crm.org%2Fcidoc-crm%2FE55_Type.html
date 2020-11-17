@@ -1,0 +1,286 @@
+<div class="artwork_list_head">
+    <h1>Artworks with technique</h1>
+      <semantic-query
+        query=" 
+        PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        
+          SELECT ?technique_name WHERE {                   
+                <[[this]]> rdfs:label ?technique_name
+          }"
+        template="{{>artistTemplate}}"
+      >
+        <template id="artistTemplate">
+          {{#each bindings}}
+          <object data="../../images/{{technique_name.value}}.png" type="image/png" class="img-circle"></object>
+          <h2>{{technique_name.value}}</h2>
+          {{/each}}
+        </template>
+      </semantic-query>
+    </h2>
+  </div>
+  
+  <div class="artwork_list_body">
+      <semantic-table
+      id="grid-result"
+      number-of-displayed-rows="10"
+      query="
+      SELECT DISTINCT ?subject ?artist ?artist_name ?id_number ?recto_title_1938 ?recto_title_1961  ?techniqueList
+       WHERE {
+  
+        ?subject crm:P108i_was_produced_by ?production.
+        ?production crm:P14_was_carried_out_by ?artist.
+        ?artist rdfs:label ?artist_name.
+
+        ?subject crm:P56_bears_feature ?feature_s.
+        ?feature_s crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+        ?feature_s a crm:E25_Man-Made_Feature.
+        ?feature_s crm:P81_was_modified_by ?modification.
+        ?modification a crm:E11_Modification.
+        ?modification crm:P32_used_general_technique <[[this]]>.
+      
+        ## PREFERRED IDENTIFIER (Inventory Number) ##
+        OPTIONAL {
+            ?subject <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
+            ?id rdfs:label ?id_number
+        }        
+        ## RECTO TITLE 1938 (Title) ##
+        OPTIONAL {
+          ?subject crm:P56_bears_feature ?feature.
+          ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+          ?feature a crm:E25_Man-Made_Feature.
+          ?feature crm:P138_has_representation ?visual_item.
+          ?visual_item a crm:E36_Visual_Item.
+          ?visual_item crm:P102_has_title ?value_uri.
+          ?value_uri a crm:E35_Title.
+          ?value_uri rdfs:label ?recto_title_1938.
+          ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>
+        }
+  
+        ## RECTO TITLE 1961 (English Title) ##
+        OPTIONAL {
+          ?subject crm:P56_bears_feature ?feature_b.
+          ?feature_b crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+          ?feature_b a crm:E25_Man-Made_Feature.
+          ?feature_b crm:P138_has_representation ?visual_item_b.
+          ?visual_item_b a crm:E36_Visual_Item.
+          ?visual_item_b crm:P102_has_title ?value_uri_b.
+          ?value_uri_b a crm:E35_Title.
+          ?value_uri_b rdfs:label ?recto_title_1961.
+          ?value_uri_b crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>
+        }
+        ## TECHNIQUE ##
+          BIND((?subject) as ?iri){
+            SELECT ?iri (GROUP_CONCAT(DISTINCT(?technique); SEPARATOR=', ') AS ?list)  WHERE{
+              ?iri crm:P56_bears_feature ?feature.
+              ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+              ?feature a crm:E25_Man-Made_Feature.
+              ?feature crm:P81_was_modified_by ?modification.
+              ?modification a crm:E11_Modification.
+              ?modification crm:P32_used_general_technique ?general_technique.
+              ?general_technique rdfs:label ?technique
+            }GROUP BY ?iri
+          }BIND((?list) as ?techniqueList) 
+  
+       }LIMIT 40
+    "
+      tuple-template="{{>tupleTemplate}}"
+    >
+      <template id="tupleTemplate">
+        <div
+          class="rs-grid-element panel panel-default artwork-card"
+        >
+          <div class="panel-body">
+            <!-- <bs-col md="2">
+              <div class="grid-demo">
+                <mp-resource-thumbnail
+                  iri="{{subject.value}}"
+                  class="thumbnail"
+                />
+              </div>
+            </bs-col> -->
+            <bs-col md="5">
+              <div class="carousel">
+                <semantic-carousel
+                  query="SELECT DISTINCT ?imgUrl WHERE{
+                  {{subject}} crm:P56_bears_feature ?feat.             
+                  ?feat crm:P136_has_representation ?img_visual.
+                  ?img_visual crm:P129i_is_subject_of ?imgUrl
+                }"
+                  options='{"fade": true, "lazyLoad": true }'
+                  tuple-template="{{> imageCarousel}}"
+                  no-result-template="{{> noImages}}"
+                >
+                  <template id="imageCarousel">
+                    <img
+                      style="object-fit: contain"
+                      src="{{imgUrl.value}}"
+                    />
+                  </template>
+          
+                  <template id="noImages">
+                    <div class="no-media">No images available</div>
+                  </template>
+                </semantic-carousel>
+              </div>
+            </bs-col>
+            <bs-col md="7">
+              <div data-flex-layout="row md-column center-stretch">
+                <bs-row>
+                  <bs-col md="12">
+                    <h4>
+                      <semantic-link iri="{{subject.value}}"
+                        >{{recto_title_1961.value}}</semantic-link
+                      >
+                    </h4>
+                  </bs-col>
+  
+                  <div>
+                    {{#ifCond id_number.value "!==" undefined}}
+                    <bs-col md="12">
+                      <div class="grid-demo">
+                        <b>Inventory Number: </b>{{id_number.value}}
+                      </div>
+                    </bs-col>
+                    {{/ifCond}}
+                    
+                    {{#ifCond artist_name.value "!==" undefined}}
+                    <bs-col md="12">
+                      <div class="grid-demo">
+                        <b>Artist Attribution: </b
+                        >{{artist_name.value}}
+                      </div>
+                    </bs-col>
+                    {{/ifCond}}
+  
+                    {{#ifCond techniqueList.value "!==" ""}}
+                    <bs-col md="12">
+                      <div class="grid-demo">
+                        <b>Technique: </b>
+                            {{techniqueList.value}} 
+                      </div>
+                    </bs-col>
+                    {{/ifCond}}
+                    
+  
+                    {{#ifCond recto_title_1938.value "!==" undefined}}
+                    <bs-col md="12">
+                      <div class="grid-demo">
+                        <b>English title: </b
+                        >
+                        {{recto_title_1938.value}}
+                        {{log recto_title_1938}}
+                      </div>
+                    </bs-col>
+                    {{/ifCond}}
+  
+                  </div>
+                </bs-row>
+              </div>
+            </bs-col>
+          </div>
+        </div>
+      </template>
+    </semantic-table>
+  </div>
+  
+  
+    <style>
+      .artwork-card {
+        width: 100% !important;
+        min-height: 23vh;
+        height: fit-content;
+      }
+      #search-results .rs-grid-element:hover {
+        box-shadow: 1px 2px 8px 0 #761f0e35, 1px 3px 12px 2px rgba(0,0,0,.07);
+    }
+    
+      .show-facet-button {
+        display: none;
+      }
+      .nav-tabs {
+        display: none;
+      }
+      .facet,
+      .semantic-facet-holder {
+        width: 100% !important;
+        position: relative !important;
+        border: none !important;
+        padding: 0 !important;
+      }
+    
+      .facet__category-selector-holder li {
+        border: none !important;
+        margin: 5px !important;
+      }
+    
+      .facet__relation__content__category-image {
+        width: 20px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    
+      .facet__category-selector-holder .category-selector .category-item-holder {
+        min-width: 30px;
+      }
+    
+      .FacetSlider--range input.form-control {
+        width: 60px !important;
+        min-width: 0 !important;
+        padding: 4px !important;
+      }
+      .facet__category-selector-holder {
+        display: none !important;
+      }
+    
+      .facet__relation__header {
+        border: 1px solid rgb(221, 221, 221);
+        margin-top: 5px;
+      }
+    
+      .facet__relation__header:hover,
+      .facet__relation__header:focus {
+        text-decoration: none;
+        color: #000000;
+        background-color: rgba(162, 51, 56, 0.06);
+      }
+    
+      header h1 {
+        font-family: Georgia, Serif;
+      }
+    
+      .rc-slider.FacetSlider--slider {
+        width: 80%;
+        margin-left: 10%;
+      }
+    
+      .facet__relation__values__filter {
+        margin: 0;
+      }
+    
+      .contentExcerpt {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: fade;
+        height: 65px;
+        margin-top: 10px;
+      }
+    
+      .contentExcerpt:before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: linear-gradient(transparent 50px, white);
+      }
+
+      .pagination{
+          margin-bottom: 2vh !important;
+      }
+      
+    </style>
+    
