@@ -143,71 +143,82 @@
                         <bs-row class="row-center" style="padding:32px 0px 8px 0px;">
                             <bs-col xs=11 sm=10 lg=8 style="padding: 0px;">
                                 <div class="row" style="height:100%;">
-                                    <div class="col-xs-12 col-sm-6 rs-image-container">
+                                    <semantic-query template='{{> imageViewer}}' query="
+                                    SELECT  (count(?image) as ?count) 
+                                    WHERE { 
+                                        <[[this]]> crm:P56_bears_feature ?feat.             
+                                        ?feat crm:P136_has_representation ?img_visual.
+                                        ?img_visual crm:P129i_is_subject_of ?image .                                     
+                                    }
+                                    ">
+                                    <template id='imageViewer'>
 
-                                        <div class="rs-resource-img__btngroup">
+                                        {{#ifCond bindings.0.count.value "!==" "0"}}
+     
+                                            <div class="col-xs-12 col-sm-6 rs-image-container" style="height: 45vh;">
 
-                                            <mp-overlay-dialog title="Resource Media" type="modal" class="modal-resourceMedia">
-                                                <mp-overlay-dialog-trigger>
-                                                    <button type="button" class="rs-resource-img__btn" title="Explore Media">
-                                                        <i class="rs-icon rs-icon-expand_media"></i>
-                                                    </button>
-                                                </mp-overlay-dialog-trigger>
-                                                <mp-overlay-dialog-content>
-                                                  <mp-page-loader urlqueryparam-frame=true iri='http://www.researchspace.org/resource/ItemCardMedia' context='[[this]]'>
-                                                  </mp-page-loader>
-                                                </mp-overlay-dialog-content>
-                                            </mp-overlay-dialog>
+                                                <!-- <div class="rs-resource-img__btngroup">
 
-                                            <semantic-link-container uri='[[resolvePrefix "rsp:ThinkingFrames"]]'
-                                                 urlqueryparam-view='iiif' urlqueryparam-resource='[[this]]'>
-                                                <button type="button" class="rs-resource-img__btn" title="Explore Images in high resolution Viewer">
-                                                    <i class="rs-icon rs-icon-image"></i>
-                                                </button>
-                                            </semantic-link-container>
+                                                    <mp-overlay-dialog title="Resource Media" type="modal" class="modal-resourceMedia">
+                                                        <mp-overlay-dialog-trigger>
+                                                            <button type="button" class="rs-resource-img__btn" title="Explore Media">
+                                                                <i class="rs-icon rs-icon-expand_media"></i>
+                                                            </button>
+                                                        </mp-overlay-dialog-trigger>
+                                                        <mp-overlay-dialog-content>
+                                                        <mp-page-loader urlqueryparam-frame=true iri='http://www.researchspace.org/resource/ItemCardMedia' context='[[this]]'>
+                                                        </mp-page-loader>
+                                                        </mp-overlay-dialog-content>
+                                                    </mp-overlay-dialog>
 
-                                            [[#if (hasPermission "forms:ldp:*")]]
-                                            <semantic-link-container uri='[[resolvePrefix "rsp:ThinkingFrames"]]'
-                                                 urlqueryparam-view='image-graph-authoring' urlqueryparam-resource='[[this]]'>
-                                                <button type="button" class="rs-resource-img__btn" title="Annotate Images">
-                                                    <i class="rs-icon rs-icon-area_annotation"></i>
-                                                </button>
-                                            </semantic-link-container>
-                                            [[/if]]
+                                                    <semantic-link-container uri='[[resolvePrefix "rsp:ThinkingFrames"]]'
+                                                        urlqueryparam-view='iiif' urlqueryparam-resource='[[this]]'>
+                                                        <button type="button" class="rs-resource-img__btn" title="Explore Images in high resolution Viewer">
+                                                            <i class="rs-icon rs-icon-image"></i>
+                                                        </button>
+                                                    </semantic-link-container>
 
+                                                    [[#if (hasPermission "forms:ldp:*")]]
+                                                    <semantic-link-container uri='[[resolvePrefix "rsp:ThinkingFrames"]]'
+                                                        urlqueryparam-view='image-graph-authoring' urlqueryparam-resource='[[this]]'>
+                                                        <button type="button" class="rs-resource-img__btn" title="Annotate Images">
+                                                            <i class="rs-icon rs-icon-area_annotation"></i>
+                                                        </button>
+                                                    </semantic-link-container>
+                                                    [[/if]]
+
+                                                </div>
+                                            -->
+                                                [[#block "imageContent"]]
+                                                
+                                                <rs-iiif-mirador
+                                                image-or-region="[[this]]" 
+
+                                                image-id-pattern='
+                                                BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                <[[this]]> crm:P56_bears_feature ?feat.             
+                                                ?feat crm:P136_has_representation ?img_visual.
+                                                ?img_visual crm:P129i_is_subject_of ?image . 
+                                                BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                '
+                                                iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
+                                                >
+                                                </rs-iiif-mirador>
+            
+                                                [[/block]]
+                                            </div>
+                                            <div class="col-xs-6 col-md-6" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
+                                                [[> resourceHeaderData image=true]]
+                                            </div>
+                                    {{/ifCond}}
+                                    {{#ifCond bindings.0.count.value "===" "0"}}
+                                        <div class="col-xs-12 col-md-12" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
+                                            [[> resourceHeaderData image=true]]
                                         </div>
-                                    
-                                        [[#block "imageContent"]]
-                                        <div class="carousel">
-                                            <semantic-carousel
-                                              query="SELECT DISTINCT ?imgUrl WHERE{
-                                              {{subject}} crm:P56_bears_feature ?feat.             
-                                              ?feat crm:P136_has_representation ?img_visual.
-                                              ?img_visual crm:P129i_is_subject_of ?imgUrl
-                                            }"
-                                              options='{"fade": true, "lazyLoad": true }'
-                                              tuple-template="{{> imageCarousel}}"
-                                              no-result-template="{{> noImages}}"
-                                            >
-                                              <template id="imageCarousel">
-                                                <img
-                                                  style="object-fit: contain"
-                                                  src="{{imgUrl.value}}"
-                                        
-                                                />
-                                              </template>
-                                      
-                                              <template id="noImages">
-                                                <div class="no-media">No images available</div>
-                                              </template>
-                                            </semantic-carousel>
-                                          </div>
-    
-                                        [[/block]]
-                                    </div>
-                                    <div class="col-xs-6" style="padding: 1.8% 1.5% 1.5% 5%;">
-                                        [[> resourceHeaderData image=true]]
-                                    </div>
+                                    {{/ifCond}}
+                                </template>
+                          </semantic-query>
+                                   
                                 </div> <!--  close row -->
                             </bs-col>
                         </bs-row> <!--  close row -->
@@ -405,51 +416,361 @@
 
                             <bs-tab-pane event-key="raw-data">
                                 <div class="container-fluid rs-summary-section">
-                                    <!-- <bs-row>
-                                        <bs-col xs=12 style="padding: 0;">
-                                            <hr class="rs-header-line">
-
-                                            [[#block "instituteHeader"]]
-                                            <span class="rs-h1 rs-section-header">Dataset</span>
-                                            [[/block]]
-                                            <span class="rs-body-xs-I rs-section-header">Latest confirmed data set from
-                                                [[currentDateTime
-                                                format="dd-MM-yyyy"]].</span>
-                                        </bs-col>
-                                    </bs-row>  -->
                                     <!--  close row -->
+                                    <semantic-table query=' SELECT 
+                                    ?artist ?id_number ?location  ?catalogue_number
+                                    ?recto_title_1903 ?verso_title_1903 ?recto_notes_1903 ?verso_notes_1903
+                                    ?recto_title_1938 ?verso_title_1938 ?recto_notes_1938 ?verso_notes_1938
+                                    ?recto_title_1961 ?verso_title_1961 ?recto_notes_1961 ?verso_notes_1961
+                                    WHERE {
+                                    
+                                     <[[this]]> crm:P108i_was_produced_by ?production.
+                                     ?production crm:P14_was_carried_out_by ?artist.
+                                    
+                                    ## LOCATION ##
+                                    OPTIONAL {
+                                        <[[this]]>  crm:P30_custody_transferred_through ?transfer.
+                                         ?transfer crm:P29_custody_recieved_by ?location.
+                                    }
+                                      
+                                     ## PREFERRED IDENTIFIER (Inventory Number) ##
+                                     OPTIONAL {
+                                         <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
+                                         ?id rdfs:label ?id_number
+                                     }        
+                                    
+                                     ## BERENSON CAT. NO. ##
+                                     OPTIONAL {
+                                        <[[this]]> crm:P1_is_identified_by ?cat_no.
+                                        ?cat_no a crm:E42_Identifier.
+                                        ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
+                                        ?cat_no rdfs:label ?catalogue_number.
+                                     }
 
-                                    <!-- 1961 EDITION FIELDS -->
-                                    <bs-row class="row-center">
-                                        <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
-                  
-                                            <h1>1961 Edition</h1> 
-                                           
-                                        </bs-col>
-                                    </bs-row> <!--  close row -->
+                                     ## RECTO TITLE 1903 (Title) ##
+                                     OPTIONAL {
+                                       <[[this]]> crm:P56_bears_feature ?feature_rta.
+                                       ?feature_rta crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                                       ?feature_rta a crm:E25_Man-Made_Feature.
+                                       ?feature_rta crm:P138_has_representation ?visual_item_rta.
+                                       ?visual_item_rta a crm:E36_Visual_Item.
+                                       ?visual_item_rta crm:P102_has_title ?value_uri_rta.
+                                       ?value_uri_rta a crm:E35_Title.
+                                       ?value_uri_rta rdfs:label ?recto_title_1903.
+                                       ?value_uri_rta crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1903/attribute_assignment>
+                                     }
+                                    
+                                     ## VERSO TITLE 1903 (English Title) ##
+                                     OPTIONAL {
+                                        <[[this]]> crm:P56_bears_feature ?feature_vta.
+                                        ?feature_vta crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+                                        ?feature_vta crm:P138_has_representation ?visual_item_vta.
+                                        ?visual_item_vta a crm:E36_Visual_Item.
+                                        ?visual_item_vta crm:P102_has_title ?value_uri_vta.
+                                        ?value_uri_vta a crm:E35_Title.
+                                        ?value_uri_vta rdfs:label ?verso_title_1903.
+                                        ?value_uri_vta crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1903/attribute_assignment>.
+                                      }
 
-                                    <!-- 1938 EDITION FIELDS -->
-                                    <bs-row class="row-center">
-                                        <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
+                                    ## VERSO NOTES 1903 ##
+                                    OPTIONAL{
+                                        <[[this]]> crm:P56_bears_feature ?feature_vna.
+                                        ?feature_vna crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+                                        ?feature_vna crm:P138_has_representation ?visual_item_vna.
+                                        ?visual_item_vna a crm:E36_Visual_Item.
+                                        ?visual_item_vna crm:P67i_is_referred_to_by ?object_vna.
+                                        ?object_vna a crm:E33_Linguistic_Object.
+                                        ?object_vna rdfs:label ?verso_notes_1903.
+                                        ?object_vna crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1903/attribute_assignment>.
+                                    }
 
-                                            <h1>1938 Edition</h1>
-                    
+                                    ## RECTO NOTES 1903 ##
+                                    OPTIONAL{
+                                        <[[this]]> crm:P56_bears_feature ?feature_rna.
+                                        ?feature_rna crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                                        ?feature_rna crm:P138_has_representation ?visual_item_rna.
+                                        ?visual_item_rna a crm:E36_Visual_Item.
+                                        ?visual_item_rna crm:P67i_is_referred_to_by ?object_rna.
+                                        ?object_rna a crm:E33_Linguistic_Object.
+                                        ?object_rna rdfs:label ?recto_notes_1903.
+                                        ?object_rna crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1903/attribute_assignment>.
+                                    }
 
+                                     ## RECTO TITLE 1938 (Title) ##
+                                     OPTIONAL {
+                                       <[[this]]> crm:P56_bears_feature ?feature.
+                                       ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                                       ?feature a crm:E25_Man-Made_Feature.
+                                       ?feature crm:P138_has_representation ?visual_item.
+                                       ?visual_item a crm:E36_Visual_Item.
+                                       ?visual_item crm:P102_has_title ?value_uri.
+                                       ?value_uri a crm:E35_Title.
+                                       ?value_uri rdfs:label ?recto_title_1938.
+                                       ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>
+                                     }
+                                    
+                                     ## VERSO TITLE 1938 (English Title) ##
+                                     OPTIONAL {
+                                        <[[this]]> crm:P56_bears_feature ?feature_vb.
+                                        ?feature_vb crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+                                        ?feature_vb crm:P138_has_representation ?visual_item_vb.
+                                        ?visual_item_vb a crm:E36_Visual_Item.
+                                        ?visual_item_vb crm:P102_has_title ?value_uri_vb.
+                                        ?value_uri_vb a crm:E35_Title.
+                                        ?value_uri_vb rdfs:label ?verso_title_1938.
+                                        ?value_uri_vb crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
+                                      }
+
+                                    ## VERSO NOTES 1938 ##
+                                    OPTIONAL{
+                                        <[[this]]> crm:P56_bears_feature ?feature_vnb.
+                                        ?feature_vnb crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+                                        ?feature_vnb crm:P138_has_representation ?visual_item_vnb.
+                                        ?visual_item_vnb a crm:E36_Visual_Item.
+                                        ?visual_item_vnb crm:P67i_is_referred_to_by ?object_vnb.
+                                        ?object_vnb a crm:E33_Linguistic_Object.
+                                        ?object_vnb rdfs:label ?verso_notes_1938.
+                                        ?object_vnb crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
+                                    }
+
+                                    ## RECTO NOTES 1938 ##
+                                    OPTIONAL{
+                                        <[[this]]> crm:P56_bears_feature ?feature_rnb.
+                                        ?feature_rnb crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                                        ?feature_rnb crm:P138_has_representation ?visual_item_rnb.
+                                        ?visual_item_rnb a crm:E36_Visual_Item.
+                                        ?visual_item_rnb crm:P67i_is_referred_to_by ?object_rnb.
+                                        ?object_rnb a crm:E33_Linguistic_Object.
+                                        ?object_rnb rdfs:label ?recto_notes_1938.
+                                        ?object_rnb crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
+                                    }
+
+                                     ## RECTO TITLE 1961 (English Title) ##
+                                     OPTIONAL {
+                                       <[[this]]> crm:P56_bears_feature ?feature_b.
+                                       ?feature_b crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                                       ?feature_b a crm:E25_Man-Made_Feature.
+                                       ?feature_b crm:P138_has_representation ?visual_item_b.
+                                       ?visual_item_b a crm:E36_Visual_Item.
+                                       ?visual_item_b crm:P102_has_title ?value_uri_b.
+                                       ?value_uri_b a crm:E35_Title.
+                                       ?value_uri_b rdfs:label ?recto_title_1961.
+                                       ?value_uri_b crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>
+                                     }
+                                     
+                                     ## VERSO TITLE 1961 (English Title) ##
+                                     OPTIONAL {
+                                        <[[this]]> crm:P56_bears_feature ?feature_va.
+                                        ?feature_va crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+                                        ?feature_va crm:P138_has_representation ?visual_item_va.
+                                        ?visual_item_va a crm:E36_Visual_Item.
+                                        ?visual_item_va crm:P102_has_title ?value_uri_va.
+                                        ?value_uri_va a crm:E35_Title.
+                                        ?value_uri_va rdfs:label ?verso_title_1961.
+                                        ?value_uri_va crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
+                                      }
+
+                                      ## RECTO NOTES 1961 ##
+                                      OPTIONAL{
+                                       <[[this]]> crm:P56_bears_feature ?feature_rnc.
+                                          ?feature_rnc crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                                          ?feature_rnc crm:P138_has_representation ?visual_item_rnc.
+                                          ?visual_item_rnc a crm:E36_Visual_Item.
+                                          ?visual_item_rnc crm:P67i_is_referred_to_by ?object_rnc.
+                                          ?object_rnc a crm:E33_Linguistic_Object.
+                                          ?object_rnc rdfs:label ?recto_notes_1961.
+                                          ?object_rnc crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
+                                      }
+
+                                      
+  
+                                    
+                                    }' options='{"showFilter":false}' tuple-template='{{>editionRows}}'>
+                                    
+                                        <template id="editionRows">
+                                            <bs-row class="row-center">
+                                                <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
+                                             <!-- 1961 EDITION FIELDS -->
+                                                    <h1 style=" text-align: center;">1961 Edition</h1> 
+                                                    <div  id="1961_edition_result">
+                                                        <bs-col>
+                                                            <div data-flex-layout="row md-column center-stretch">
+                                                              <bs-row>
+                                                                <div>
+                                                                    <bs-col md="12">
+                                                                      <div class="grid-demo">
+                                                                        <b>Recto Title (1961): </b>
+                                                                        {{recto_title_1961.value}}
+                                                                       </div>
+                                                                    </bs-col>
+                                                
+                                                                    <bs-col md="12">
+                                                                      <div class="grid-demo">
+                                                                        <b>Verso Title (1961): </b>
+                                                                        {{verso_title_1961.value}}
+                                                                       </div>
+                                                                    </bs-col>
+                                                                
+                                                                <bs-col md="12">
+                                                                    <div class="grid-demo">
+                                                                    <b>Berenson Cat.No.:</b>
+                                                                {{catalogue_number.value}}
+                                                                </div>
+                                                            </bs-col>
+
+                                                            <bs-col md="12">
+                                                                <div class="grid-demo">
+                                                                  <b>Artist Attribution: </b>
+                                                                  <semantic-link iri={{artist.value}}></semantic-link>
+                                                                </div>
+                                                              </bs-col>
+
+                                                                <bs-col md="12">
+                                                                    <div class="grid-demo">
+                                                                    <b>Recto Notes (1961): </b>
+                                                                {{recto_notes_1961.value}}
+                                                                </div>
+                                                            </bs-col>             
                                 
-                                        </bs-col>
-                                    </bs-row> <!--  close row -->
+                                                                </div>
+                                                              </bs-row>
+                                                            </div>
+                                                          </bs-col>
+                                            
+                                            
+                                                    </div>
+                                                </bs-col>
+                                            </bs-row> <!--  close row -->
+        
+                                            <!-- 1938 EDITION FIELDS -->
+                                            <bs-row class="row-center">
+                                                <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
+        
+                                                    <h1 style=" text-align: center;">1938 Edition</h1>
+                                                    <div id="1938_edition_result">
+                                                        <bs-col>
+                                                            <div data-flex-layout="row md-column center-stretch">
+                                                              <bs-row>
+                                                                <div>
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                          <b>Recto Title (1938): </b
+                                                                          >{{recto_title_1938.value}}
+                                                                        </div>
+                                                                      </bs-col>
+                                                    
+                                                                      <bs-col md="12">
+                                                                      <div class="grid-demo">
+                                                                        <b>Verso Title (1938): </b>
+                                                                          {{verso_title_1938.value}}
+                                                                       </div>
+                                                                        </bs-col>
 
-                                    <!-- 1903 EDITION FIELDS -->
-                                    <bs-row class="row-center">
-                                        <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
+                                                                  <bs-col md="12">
+                                                                    <div class="grid-demo">
+                                                                    <b>Berenson Cat.No.:</b>
+                                                                {{catalogue_number.value}}
+                                                                </div>
+                                                            </bs-col>
 
-                                            <h1>1903 Edition</h1>
-                       
-                                
-                                        </bs-col>
-                                    </bs-row> <!--  close row -->
+                                                            <bs-col md="12">
+                                                                <div class="grid-demo">
+                                                                  <b>Artist Attribution: </b>
+                                                                  <semantic-link iri={{artist.value}}></semantic-link>
+                                                                </div>
+                                                              </bs-col>
 
+                                                                <bs-col md="12">
+                                                                    <div class="grid-demo">
+                                                                    <b>Recto Notes (1938): </b>
+                                                                {{recto_notes_1938.value}}
+                                                                </div>
+                                                            </bs-col>
+                                                            <bs-col md="12">
+                                                             <div class="grid-demo">
+                                                                <b>Verso Notes (1938): </b>
+                                                            {{verso_notes_1938.value}}
+                                                            </div>
+                                                        </bs-col>
+                                                                                        
+                                                            
+                                                                </div>
+                                                              </bs-row>
+                                                            </div>
+                                                          </bs-col>
+                                            
+                                            
+                                                    </div>
 
+                                                </bs-col>
+                                            </bs-row> <!--  close row -->
+        
+                                            <!-- 1903 EDITION FIELDS -->
+                                            <bs-row class="row-center">
+                                                <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
+                                                    
+                                                    <h1 style=" text-align: center;">1903 Edition</h1>
+                                                        <div id="1903_edition_result">
+                                                        <bs-col>
+                                                            <div data-flex-layout="row md-column center-stretch">
+                                                              <bs-row>
+                                                                <div>
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                          <b>Recto Title (1903): </b
+                                                                          >{{recto_title_1903.value}}
+                                                                        </div>
+                                                                      </bs-col>
+                                                    
+                                                                      <bs-col md="12">
+                                                                      <div class="grid-demo">
+                                                                        <b>Verso Title (1903): </b>
+                                                                          {{verso_title_1903.value}}
+                                                                       </div>
+                                                                        </bs-col>
+
+                                                                  <bs-col md="12">
+                                                                    <div class="grid-demo">
+                                                                    <b>Berenson Cat.No.:</b>
+                                                                {{catalogue_number.value}}
+                                                                </div>
+                                                            </bs-col>
+                                                            
+                                                            <bs-col md="12">
+                                                                <div class="grid-demo">
+                                                                  <b>Artist Attribution: </b>
+                                                                  <semantic-link iri={{artist.value}}></semantic-link>
+                                                                </div>
+                                                              </bs-col>
+
+                                                                <bs-col md="12">
+                                                                    <div class="grid-demo">
+                                                                    <b>Recto Notes (1903): </b>
+                                                                {{recto_notes_1903.value}}
+                                                                </div>
+                                                            </bs-col>
+                                                            <bs-col md="12">
+                                                             <div class="grid-demo">
+                                                                <b>Verso Notes (1903): </b>
+                                                            {{verso_notes_1903.value}}
+                                                            </div>
+                                                        </bs-col>
+                                                                                        
+                                                            
+                                                                </div>
+                                                              </bs-row>
+                                                            </div>
+                                                          </bs-col>
+                                            
+                                            
+                                                    </div>
+        
+                                        
+                                                </bs-col>
+                                            </bs-row> <!--  close row -->
+
+                                        </template>
+                                    </semantic-table>
                                 </div> <!--  close container -->
 
                             </bs-tab-pane>
@@ -733,99 +1054,214 @@
 [[#*inline "resourceHeaderData"]]
 [[#block "headerData"]]
 <!-- RESOURCE LABEL-->
-<div class="rs-resource-header--singletitle">
+<!-- <div class="rs-resource-header--singletitle">
     <div class="rs-display3 rs-resource-header--title" style="text-transform: capitalize;">
         <mp-label iri='[[this]]'></mp-label>
     </div>
-</div>
+</div> -->
 <!-- DATA ON PAGE HEADER (right by the image) -->
-<semantic-query query='SELECT  (<[[this]]> as ?iri)
-                      (GROUP_CONCAT(DISTINCT(?id_number); SEPARATOR="") AS ?inventoryNumber)
-                        (GROUP_CONCAT(DISTINCT(?id_number); SEPARATOR="") AS ?inventoryNumber)
-                        (GROUP_CONCAT(DISTINCT(?technique); SEPARATOR=", ") AS ?techniqueList)
-                           WHERE {
-                            <[[this]]> crm:P108i_was_produced_by ?production.
-                            ?production crm:P14_was_carried_out_by ?artist.
-                            ?artist rdfs:label ?artist_name
-                          
-                            ## PREFERRED IDENTIFIER (Inventory Number) ##
-                            OPTIONAL {
-                                <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
-                                ?id rdfs:label ?id_number
-                            }        
+<semantic-table query=' SELECT ?artist ?id_number ?recto_title_1938 ?verso_title_1938 ?recto_title_1961 ?verso_title_1961 ?location 
+WHERE {
 
-                            ## RECTO TITLE 1938 (Title) ##
-                            OPTIONAL {
-                              <[[this]]> crm:P56_bears_feature ?feature.
-                              ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
-                              ?feature a crm:E25_Man-Made_Feature.
-                              ?feature crm:P138_has_representation ?visual_item.
-                              ?visual_item a crm:E36_Visual_Item.
-                              ?visual_item crm:P102_has_title ?value_uri.
-                              ?value_uri a crm:E35_Title.
-                              ?value_uri rdfs:label ?recto_title_1938.
-                              ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>
-                            }
-                      
-                            ## RECTO TITLE 1961 (English Title) ##
-                            OPTIONAL {
-                              <[[this]]> crm:P56_bears_feature ?feature_b.
-                              ?feature_b crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
-                              ?feature_b a crm:E25_Man-Made_Feature.
-                              ?feature_b crm:P138_has_representation ?visual_item_b.
-                              ?visual_item_b a crm:E36_Visual_Item.
-                              ?visual_item_b crm:P102_has_title ?value_uri_b.
-                              ?value_uri_b a crm:E35_Title.
-                              ?value_uri_b rdfs:label ?recto_title_1961.
-                              ?value_uri_b crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>
-                            }
+ <[[this]]> crm:P108i_was_produced_by ?production.
+ ?production crm:P14_was_carried_out_by ?artist.
 
-                            ## TECHNIQUE ##
+## LOCATION ##
+OPTIONAL {
+    <[[this]]>  crm:P30_custody_transferred_through ?transfer.
+     ?transfer crm:P29_custody_recieved_by ?location.
+}
+  
+ ## PREFERRED IDENTIFIER (Inventory Number) ##
+ OPTIONAL {
+     <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
+     ?id rdfs:label ?id_number
+ }        
+
+ ## RECTO TITLE 1938 (Title) ##
+ OPTIONAL {
+   <[[this]]> crm:P56_bears_feature ?feature.
+   ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+   ?feature a crm:E25_Man-Made_Feature.
+   ?feature crm:P138_has_representation ?visual_item.
+   ?visual_item a crm:E36_Visual_Item.
+   ?visual_item crm:P102_has_title ?value_uri.
+   ?value_uri a crm:E35_Title.
+   ?value_uri rdfs:label ?recto_title_1938.
+   ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>
+ }
+
+ ## VERSO TITLE 1938 (English Title) ##
+ OPTIONAL {
+    <[[this]]> crm:P56_bears_feature ?feature_vb.
+    ?feature_vb crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+    ?feature_vb crm:P138_has_representation ?visual_item_vb.
+    ?visual_item_vb a crm:E36_Visual_Item.
+    ?visual_item_vb crm:P102_has_title ?value_uri_vb.
+    ?value_uri_vb a crm:E35_Title.
+    ?value_uri_vb rdfs:label ?verso_title_1938.
+    ?value_uri_vb crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
+  }
+
+ ## RECTO TITLE 1961 (English Title) ##
+ OPTIONAL {
+   <[[this]]> crm:P56_bears_feature ?feature_b.
+   ?feature_b crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+   ?feature_b a crm:E25_Man-Made_Feature.
+   ?feature_b crm:P138_has_representation ?visual_item_b.
+   ?visual_item_b a crm:E36_Visual_Item.
+   ?visual_item_b crm:P102_has_title ?value_uri_b.
+   ?value_uri_b a crm:E35_Title.
+   ?value_uri_b rdfs:label ?recto_title_1961.
+   ?value_uri_b crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>
+ }
+ 
+ ## VERSO TITLE 1961 (English Title) ##
+ OPTIONAL {
+    <[[this]]> crm:P56_bears_feature ?feature_va.
+    ?feature_va crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+    ?feature_va crm:P138_has_representation ?visual_item_va.
+    ?visual_item_va a crm:E36_Visual_Item.
+    ?visual_item_va crm:P102_has_title ?value_uri_va.
+    ?value_uri_va a crm:E35_Title.
+    ?value_uri_va rdfs:label ?verso_title_1961.
+    ?value_uri_va crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
+  }
+
+}' options='{"showFilter":false}' tuple-template='{{>headerDefaultData}}'>
+
+    <template id="headerDefaultData">
+        <div>
+            <bs-col>
+                <div data-flex-layout="row md-column center-stretch">
+                  <bs-row>
+                    <div>
+                      <bs-col md="12">
+                        <div class="grid-demo">
+                          <b>Inventory Number: </b>{{id_number.value}}
+                        </div>
+                      </bs-col>
+
+                    <bs-col md="12">
+                        <div class="grid-demo">
+                        <b>Recto Title (1961): </b>
+                        {{recto_title_1961.value}}
+                        </div>
+                    </bs-col>
+
+                 <bs-col md="12">
+                    <div class="grid-demo">
+                        <b>Verso Title (1961): </b>
+                        {{verso_title_1961.value}}
+                    </div>
+                 </bs-col>
+
+                  <bs-col md="12">
+                    <div class="grid-demo">
+                      <b>Recto Title (1938): </b>
+                      {{recto_title_1938.value}}
+                    </div>
+                  </bs-col>
+
+                  <bs-col md="12">
+                    <div class="grid-demo">
+                    <b>Verso Title (1938): </b>
+                  {{verso_title_1938.value}}
+                    </div>
+              </bs-col>
+
+                      <bs-col md="12">
+                        <div class="grid-demo">
+                          <b>Artist Attribution: </b>
+                          <semantic-link iri={{artist.value}}></semantic-link>
+                        </div>
+                      </bs-col>
+
+                      <bs-col md="12">
+                        <div class="grid-demo">
+                          <b>Recto Technique: </b>
+                          <semantic-query query='  
+                          SELECT ?technique  WHERE{
                             <[[this]]> crm:P56_bears_feature ?feature.
                             ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
                             ?feature a crm:E25_Man-Made_Feature.
                             ?feature crm:P81_was_modified_by ?modification.
                             ?modification a crm:E11_Modification.
-                            ?modification crm:P32_used_general_technique ?general_technique.
-                            ?general_technique rdfs:label ?technique
-              
-                        } GROUP BY ?iri' template='{{>headerDefaultData}}'>
+                            ?modification crm:P32_used_general_technique ?technique.
+                          }'> {{technique}} </semantic-query>
+                        </div>
+                      </bs-col>
+                      <bs-col md="12">
+                        <div class="grid-demo">
+                          <b>Verso Technique: </b>
+                          <semantic-query query='  
+                          SELECT ?technique  WHERE{
+                            <[[this]]> crm:P56_bears_feature ?feature.
+                            ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+                            ?feature a crm:E25_Man-Made_Feature.
+                            ?feature crm:P81_was_modified_by ?modification.
+                            ?modification a crm:E11_Modification.
+                            ?modification crm:P32_used_general_technique ?technique.
+                          }'> {{technique}} </semantic-query>
+                        </div>
+                      </bs-col>
 
-    <template id="headerDefaultData">
-        <div>
- 
-            
-            {{#each bindings}}
-
-                <div class="row rs-body-m-M" style="margin-bottom:16px;">
-                    <!-- Inventory Number -->
-                    <div class="[[#if image]]col-xs-4[[else]]col-xs-2[[/if]]">Inventory Number</div>
-                    <div class="[[#if image]]col-xs-8[[else]]col-xs-10[[/if]]" style="text-transform:capitalize;">
-                        {{inventoryNumber.value}} 
+                      <bs-col md="12">
+                        <div class="grid-demo">
+                          <b>Location: </b>
+                          <semantic-link iri={{location.value}}></semantic-link>
+                        </div>
+                      </bs-col>
+                     
                     </div>
+                  </bs-row>
                 </div>
-
-                <!-- RESOURCE TYPE -->
-                {{#ifCond techniqueList.value "!==" ""}}
-                <div class="row rs-body-m-M" style="margin-bottom:16px;">
-                    <div class="[[#if image]]col-xs-4[[else]]col-xs-2[[/if]]">Technique</div>
-                    <div class="[[#if image]]col-xs-8[[else]]col-xs-10[[/if]]" style="text-transform:capitalize;">
-                        {{techniqueList.value}}
-                    </div>
-            
-                </div>
-                {{/ifCond}}
-
-
-    
-            {{/each}}
-
+              </bs-col>
 
 
         </div>
     </template>
-</semantic-query>
+</semantic-table>
   
 
 [[/block]]
 [[/inline]]
+
+<style>
+    .mirador-main-menu-bar{
+    display: none !important;
+    }
+
+    .mirador-viewer{
+        top: 0px !important;
+    }
+    .mirador-osd-annotation-controls{
+        display: none !important;
+    }
+    a.mirador-icon-window-menu{
+        display: none !important;
+    }
+
+    .griddle-custom-row{
+        display: unset !important;
+    }
+    
+    .grid-demo{
+        display: flex;
+        flex-direction: column;
+        padding: 8px;
+        border-radius: 3px;
+        font-size: medium;
+        margin: 0.5vh;
+    }
+    .grid-demo:hover{
+        box-shadow: 0px 2px 4px 0px #ededed;
+    }
+
+    .rs-summary-table{
+        margin: 2vh;
+        box-shadow: 0px 1px 4px 0px lightgrey;
+        padding: 1vh;
+        border-radius: 4px;
+    }
+</style>

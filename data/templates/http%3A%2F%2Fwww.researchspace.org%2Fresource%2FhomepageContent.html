@@ -1,18 +1,32 @@
 <div class="row"></div>
 
-<div class="panel panel-default">
-  <div class="description">
-    Bernard Berenson’s <i> Drawings of the Florentine Painters</i> is a digital
-    resource based on Berenson’s publication of the same name. This research
-    tool allows you to search for any of the drawings listed in the three
-    editions (1903, 1938 in English; 1961, in Italian). Filters allow you to
-    search Berenson’s information by artist, title (in English or Italian),
-    location, and technique. Each entry includes key information from all three
-    editions of Berenson’s text, as well as the current location, an image of
-    the catalog page, and plates included in 1903; most entries also have links
-    to museum webpages, including images. For information about how the data was
-    prepared, how to use the site, and for background on Berenson’s scholarship,
-    see the <a href="/pages/background">About page</a>.
+<div class="description">
+  Bernard Berenson’s <i> Drawings of the Florentine Painters</i> is a digital
+  resource based on Berenson’s publication of the same name. This research tool
+  allows you to search for any of the drawings listed in the three editions
+  (1903, 1938 in English; 1961, in Italian). Using the discover page you are
+  able search Berenson’s information by artist, title (in English or Italian),
+  location, and technique. Each entry includes key information from all three
+  editions of Berenson’s text, as well as the current location, an image of the
+  catalog page, and plates included in 1903; most entries also have links to
+  museum webpages, including images. For information about how the data was
+  prepared, how to use the site, and for background on Berenson’s scholarship,
+  see the
+  <div class="btn">
+    <semantic-link iri="rsp:background">About page</semantic-link>
+  </div>
+  .
+</div>
+
+<div class="row">
+  <div style="text-align: center; margin-top: 4vh" class="col-md-12">
+    <semantic-link class="btn btn-default" iri="rsp:search"
+      >Discover Drawings
+      <img
+        style="filter: hue-rotate(80deg); margin-left: 0.5vw"
+        src="/assets/images/icons/search.svg"
+      />
+    </semantic-link>
   </div>
 </div>
 
@@ -133,7 +147,8 @@
     </p>
   </div>
   <div class="col-md-4" style="text-align: center; margin-bottom: 35px">
-    <a href=""><img
+    <a href=""
+      ><img
         class="animate-entrance"
         src="../../images/Musée%20du%20Louvre.png"
         class="img-circle"
@@ -167,53 +182,50 @@
 <div class="row">
   <div class="col-md-4" style="text-align: center; margin-bottom: 35px">
     <!-- Image Michelangelo 0001469-Berenson -->
-    <a href=""><img
+    <a href=""
+      ><img
         class="animate-entrance"
-        src="../../images/black-chalk.png"
+        src="../../images/black chalk.png"
         class="img-circle"
     /></a>
     <h2>black chalk drawings</h2>
     <p>
-
       <semantic-link
-      class="btn btn-default"
-      iri="http://vocab.getty.edu/aat/300080058"
-      >981 records »</semantic-link
-    >
-    </p>
-  </div>
-  <div class="col-md-4" style="text-align: center; margin-bottom: 35px">
-    <!-- Image Leonardo 0001034-Berenson -->
-    <a href="?f%5Btechnique_facet%5D%5B%5D=red+chalk"
-      ><img
-        class="animate-entrance"
-        src="../../images/red-chalk2.png"
-        class="img-circle"
-    /></a>
-    <h2>red chalk drawings</h2>
-    <p>
-      <a
         class="btn btn-default"
-        href="?f%5Btechnique_facet%5D%5B%5D=red+chalk"
-        role="button"
-        >822 records »</a
+        iri="http://vocab.getty.edu/aat/300080058"
+        >981 records »</semantic-link
       >
     </p>
   </div>
   <div class="col-md-4" style="text-align: center; margin-bottom: 35px">
-    <a href="?f%5Btechnique_facet%5D%5B%5D=metalpoint+%28technique%29"
+    <a href=""
       ><img
+        class="animate-entrance"
+        src="../../images/red chalk.png"
+        class="img-circle"
+    /></a>
+    <h2>red chalk drawings</h2>
+    <p>
+      <semantic-link
+        class="btn btn-default"
+        iri="http://vocab.getty.edu/aat/300080064"
+        >822 records »</semantic-link
+      >
+    </p>
+  </div>
+  <div class="col-md-4" style="text-align: center; margin-bottom: 35px">
+    <a href="">
+      <img
         class="animate-entrance"
         src="../../images/metalpoint.png"
         class="img-circle"
     /></a>
     <h2>metalpoint drawings</h2>
     <p>
-      <a
+      <semantic-link
         class="btn btn-default"
-        href="?f%5Btechnique_facet%5D%5B%5D=metalpoint+%28technique%29"
-        role="button"
-        >608 records »</a
+        iri="http://vocab.getty.edu/aat/300404633"
+        >608 records »</semantic-link
       >
     </p>
   </div>
@@ -226,34 +238,37 @@
     box-shadow: 0px 1px 1px 1px #e3e3e3;
     padding: 2vh;
     font-size: 12pt;
-    line-height: 2vh;
+    line-height: 4vh;
   }
 
   .animate-entrance {
     border-radius: 100%;
-    -webkit-animation: scale-up-center 0.6s cubic-bezier(0.39, 0.575, 0.565, 1)
-      both;
-    animation: scale-up-center 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+    -webkit-animation: fade-in-fwd 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+    animation: fade-in-fwd 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   }
 
-  @-webkit-keyframes scale-up-center {
+  @-webkit-keyframes fade-in-fwd {
     0% {
-      -webkit-transform: scale(0.5);
-      transform: scale(0.5);
+      -webkit-transform: translateZ(-80px);
+      transform: translateZ(-80px);
+      opacity: 0;
     }
     100% {
-      -webkit-transform: scale(1);
-      transform: scale(1);
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      opacity: 1;
     }
   }
-  @keyframes scale-up-center {
+  @keyframes fade-in-fwd {
     0% {
-      -webkit-transform: scale(0.5);
-      transform: scale(0.5);
+      -webkit-transform: translateZ(-80px);
+      transform: translateZ(-80px);
+      opacity: 0;
     }
     100% {
-      -webkit-transform: scale(1);
-      transform: scale(1);
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      opacity: 1;
     }
   }
 </style>

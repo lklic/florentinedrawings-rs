@@ -6,7 +6,8 @@
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
       <header>
-        <h1>Search Artworks</h1>
+        <h1>Discover Drawings</h1>
+        <h3><i>Use filters to search and discover the dataset of more than 8000 drawings</i></h3>
         <!-- <semantic-query
         query=" 
         PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
@@ -157,16 +158,46 @@
                   id="grid-result"
                   number-of-displayed-rows="10"
                   query="
-                  SELECT DISTINCT ?subject ?artist ?artist_name ?techniqueList
+                  SELECT DISTINCT ?subject ?artist ?artist_name ?id_number ?recto_title_1938 ?recto_title_1961  ?techniqueList
                    WHERE {
 
                     ?subject crm:P108i_was_produced_by ?production.
                     ?production crm:P14_was_carried_out_by ?artist.
                     ?artist rdfs:label ?artist_name
 
+                    ## PREFERRED IDENTIFIER (Inventory Number) ##
+                    OPTIONAL {
+                        ?subject <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
+                        ?id rdfs:label ?id_number
+                    }        
+                    ## RECTO TITLE 1938 (Title) ##
+                    OPTIONAL {
+                      ?subject crm:P56_bears_feature ?feature.
+                      ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                      ?feature a crm:E25_Man-Made_Feature.
+                      ?feature crm:P138_has_representation ?visual_item.
+                      ?visual_item a crm:E36_Visual_Item.
+                      ?visual_item crm:P102_has_title ?value_uri.
+                      ?value_uri a crm:E35_Title.
+                      ?value_uri rdfs:label ?recto_title_1938.
+                      ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>
+                    }
+              
+                    ## RECTO TITLE 1961 (English Title) ##
+                    OPTIONAL {
+                      ?subject crm:P56_bears_feature ?feature_b.
+                      ?feature_b crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                      ?feature_b a crm:E25_Man-Made_Feature.
+                      ?feature_b crm:P138_has_representation ?visual_item_b.
+                      ?visual_item_b a crm:E36_Visual_Item.
+                      ?visual_item_b crm:P102_has_title ?value_uri_b.
+                      ?value_uri_b a crm:E35_Title.
+                      ?value_uri_b rdfs:label ?recto_title_1961.
+                      ?value_uri_b crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>
+                    }
                     ## TECHNIQUE ##
                       BIND((?subject) as ?iri){
-                        SELECT ?iri (GROUP_CONCAT(DISTINCT(?technique)) AS ?list)  WHERE{
+                        SELECT ?iri (GROUP_CONCAT(DISTINCT(?technique); SEPARATOR=', ') AS ?list)  WHERE{
                           ?iri crm:P56_bears_feature ?feature.
                           ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
                           ?feature a crm:E25_Man-Made_Feature.
@@ -179,7 +210,6 @@
                   
                    }LIMIT 10
                 "
-                  showFilter="false"
                   tuple-template="{{>tupleTemplate}}"
                 >
                   <template id="tupleTemplate">
@@ -249,8 +279,8 @@
                                   <div class="grid-demo">
                                     <b>Technique: </b>
                                     {{#ifCond techniqueList.value "!==" ""}}
-                                    {{techniqueList.value}} {{log
-                                    techniqueList}} {{/ifCond}}
+                                    {{techniqueList.value}}
+                                    {{/ifCond}}
                                   </div>
                                 </bs-col>
 

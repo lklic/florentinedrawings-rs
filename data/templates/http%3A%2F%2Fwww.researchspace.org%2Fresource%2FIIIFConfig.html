@@ -1,7 +1,9 @@
 image-or-region="[[#if record]][[record]][[else]]{{record}}[[/if]]" 
 
-image-id-pattern='BIND("image" AS ?type). BIND( ?? AS ?imageIRI). ?? <http://www.cidoc-crm.org/cidoc-crm/P138i_has_representation> ?image . 
+image-id-pattern='BIND("image" AS ?type). BIND( ?? AS ?imageIRI). ?? crm:P56_bears_feature ?feat.             
+  ?feat crm:P136_has_representation ?img_visual.
+  ?img_visual crm:P129i_is_subject_of ?image . 
   
-BIND(REPLACE(STR(REPLACE(STR(?image),"/full/200%2C/0/native.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)'
+BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)'
   
-iiif-server-url="https://ids.lib.harvard.edu/ids/iiif" 
+iiif-server-url=" https://iiif.itatti.harvard.edu/iiif/2"

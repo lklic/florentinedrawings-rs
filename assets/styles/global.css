@@ -96,8 +96,18 @@ select,
 .filetype-text {
   color: #761f0e !important;
 }
+
+.btn{
+  box-shadow: 0px 1px 5px 1px #dfdfdf;
+  border: none;
+}
+
+.btn:active{
+  box-shadow: 0px 1px 5px 1px #dfdfdf !important;
+  border: none;
+}
+
 .btn:hover {
-  color: #040404 !important;
   text-decoration: underline !important;
 }
 .yasr_btn {
@@ -128,7 +138,13 @@ select,
 }
 
 a:hover {
-  color: #761f0e !important;
+  text-decoration: underline !important;
+  background: none !important;
+}
+
+a:focus {
+  text-decoration: underline !important;
+  background: none !important;
 }
 
 .active {
@@ -141,6 +157,10 @@ a:hover {
 
 .modal-backdrop {
   background-color: #816e4225;
+}
+
+.pagination{
+  margin-bottom: 2vh !important ;
 }
 
 .pagination > li.active,
