@@ -8,7 +8,8 @@ body {
   font-size: 14px;
   line-height: 1.2;
   color: #000000;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing:0.3px;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
 }
 
 a {
@@ -19,7 +20,7 @@ a {
 .rs-h2,
 h2,
 .h2 {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
   color: #000000;
   font-size: 18px;
   line-height: 1.2;
