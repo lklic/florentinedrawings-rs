@@ -85,8 +85,7 @@
                     <bs-row class="row-center">
                         <bs-col xs=1 lg=2 class="px-0">
                         </bs-col>
-
-                        <bs-col xs=10 lg=8 class="rs-resource-header-content">
+                        <!-- <bs-col xs=10 lg=8 class="rs-resource-header-content">
 
                             <div class="rs-resource-header-content-underline">
                                 [[!-- defaul Header top customisable inline --]]
@@ -117,6 +116,7 @@
                             </div>
 
                         </bs-col>
+                     -->
 
                         <bs-col xs=1 lg=2 class="px-0" style="position: relative;">
                             <!-- <div class="rs-authoring-btnGroup">
@@ -135,7 +135,6 @@
                                 </semantic-link-container>
                             </div> -->
                         </bs-col>
-
                     </bs-row> <!--  close row -->
 
                     [[!-- Header content with image (if available) and resource primary informations --]]
@@ -154,69 +153,70 @@
                                     <template id='imageViewer'>
 
                                         {{#ifCond bindings.0.count.value "!==" "0"}}
-     
                                             <div class="col-xs-12 col-sm-6 rs-image-container" style="height: 45vh;">
 
-                                                <!-- <div class="rs-resource-img__btngroup">
+                                            <!-- <div class="rs-resource-img__btngroup">
 
-                                                    <mp-overlay-dialog title="Resource Media" type="modal" class="modal-resourceMedia">
-                                                        <mp-overlay-dialog-trigger>
-                                                            <button type="button" class="rs-resource-img__btn" title="Explore Media">
-                                                                <i class="rs-icon rs-icon-expand_media"></i>
-                                                            </button>
-                                                        </mp-overlay-dialog-trigger>
-                                                        <mp-overlay-dialog-content>
-                                                        <mp-page-loader urlqueryparam-frame=true iri='http://www.researchspace.org/resource/ItemCardMedia' context='[[this]]'>
-                                                        </mp-page-loader>
-                                                        </mp-overlay-dialog-content>
-                                                    </mp-overlay-dialog>
+                                            <mp-overlay-dialog title="Resource Media" type="modal" class="modal-resourceMedia">
+                                            <mp-overlay-dialog-trigger>
+                                            <button type="button" class="rs-resource-img__btn" title="Explore Media">
+                                            <i class="rs-icon rs-icon-expand_media"></i>
+                                            </button>
+                                            </mp-overlay-dialog-trigger>
+                                            <mp-overlay-dialog-content>
+                                            <mp-page-loader urlqueryparam-frame=true iri='http://www.researchspace.org/resource/ItemCardMedia' context='[[this]]'>
+                                            </mp-page-loader>
+                                            </mp-overlay-dialog-content>
+                                            </mp-overlay-dialog>
 
-                                                    <semantic-link-container uri='[[resolvePrefix "rsp:ThinkingFrames"]]'
-                                                        urlqueryparam-view='iiif' urlqueryparam-resource='[[this]]'>
-                                                        <button type="button" class="rs-resource-img__btn" title="Explore Images in high resolution Viewer">
-                                                            <i class="rs-icon rs-icon-image"></i>
-                                                        </button>
-                                                    </semantic-link-container>
+                                            <semantic-link-container uri='[[resolvePrefix "rsp:ThinkingFrames"]]'
+                                            urlqueryparam-view='iiif' urlqueryparam-resource='[[this]]'>
+                                            <button type="button" class="rs-resource-img__btn" title="Explore Images in high resolution Viewer">
+                                            <i class="rs-icon rs-icon-image"></i>
+                                            </button>
+                                            </semantic-link-container>
 
-                                                    [[#if (hasPermission "forms:ldp:*")]]
-                                                    <semantic-link-container uri='[[resolvePrefix "rsp:ThinkingFrames"]]'
-                                                        urlqueryparam-view='image-graph-authoring' urlqueryparam-resource='[[this]]'>
-                                                        <button type="button" class="rs-resource-img__btn" title="Annotate Images">
-                                                            <i class="rs-icon rs-icon-area_annotation"></i>
-                                                        </button>
-                                                    </semantic-link-container>
-                                                    [[/if]]
+                                            [[#if (hasPermission "forms:ldp:*")]]
+                                            <semantic-link-container uri='[[resolvePrefix "rsp:ThinkingFrames"]]'
+                                            urlqueryparam-view='image-graph-authoring' urlqueryparam-resource='[[this]]'>
+                                            <button type="button" class="rs-resource-img__btn" title="Annotate Images">
+                                            <i class="rs-icon rs-icon-area_annotation"></i>
+                                            </button>
+                                            </semantic-link-container>
+                                            [[/if]]
 
-                                                </div>
+                                            </div>
                                             -->
-                                                [[#block "imageContent"]]
-                                                
-                                                <rs-iiif-mirador
-                                                image-or-region="[[this]]" 
+                                            [[#block "imageContent"]]
 
-                                                image-id-pattern='
-                                                BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                <[[this]]> crm:P56_bears_feature ?feat.             
-                                                ?feat crm:P136_has_representation ?img_visual.
-                                                ?img_visual crm:P129i_is_subject_of ?image . 
-                                                BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                '
-                                                iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
-                                                >
-                                                </rs-iiif-mirador>
-            
-                                                [[/block]]
+                                            <rs-iiif-mirador
+                                            image-or-region="[[this]]" 
+
+                                            image-id-pattern='
+                                            BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                            <[[this]]> crm:P56_bears_feature ?feat.             
+                                            ?feat crm:P136_has_representation ?img_visual.
+                                            ?img_visual crm:P129i_is_subject_of ?image . 
+                                            BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                            '
+                                            iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
+                                            >
+                                            </rs-iiif-mirador>
+
+                                            [[/block]]
                                             </div>
                                             <div class="col-xs-6 col-md-6" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
                                                 [[> resourceHeaderData image=true]]
                                             </div>
-                                    {{/ifCond}}
-                                    {{#ifCond bindings.0.count.value "===" "0"}}
-                                        <div class="col-xs-12 col-md-12" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
-                                            [[> resourceHeaderData image=true]]
-                                        </div>
-                                    {{/ifCond}}
-                                </template>
+                                            {{/ifCond}}
+
+                                            {{#ifCond bindings.0.count.value "===" "0"}}
+                                                <div class="col-xs-12 col-md-12" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
+                                                [[> resourceHeaderData image=true]]
+                                            </div>
+                                            {{/ifCond}}
+
+                                    </template>
                           </semantic-query>
                                    
                                 </div> <!--  close row -->
@@ -581,10 +581,6 @@
                                           ?object_rnc rdfs:label ?recto_notes_1961.
                                           ?object_rnc crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
                                       }
-
-                                      
-  
-                                    
                                     }' options='{"showFilter":false}' tuple-template='{{>editionRows}}'>
                                     
                                         <template id="editionRows">
@@ -597,47 +593,55 @@
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
+                                                                    {{#ifCond recto_title_1961.value "!==" undefined}}
                                                                     <bs-col md="12">
-                                                                      <div class="grid-demo">
-                                                                        <b>Recto Title (1961): </b>
-                                                                        {{recto_title_1961.value}}
-                                                                       </div>
+                                                                        <div class="grid-demo">
+                                                                            <b>Recto Title (1961): </b>
+                                                                            {{recto_title_1961.value}}
+                                                                        </div>
                                                                     </bs-col>
-                                                
+                                                                    {{/ifCond}}
+
+                                                                    {{#ifCond verso_title_1961.value "!==" undefined}}
                                                                     <bs-col md="12">
-                                                                      <div class="grid-demo">
-                                                                        <b>Verso Title (1961): </b>
-                                                                        {{verso_title_1961.value}}
-                                                                       </div>
+                                                                        <div class="grid-demo">
+                                                                            <b>Verso Title (1961): </b>
+                                                                            {{verso_title_1961.value}}
+                                                                        </div>
                                                                     </bs-col>
-                                                                
-                                                                <bs-col md="12">
-                                                                    <div class="grid-demo">
-                                                                    <b>Berenson Cat.No.:</b>
-                                                                {{catalogue_number.value}}
-                                                                </div>
-                                                            </bs-col>
+                                                                    {{/ifCond}}
 
-                                                            <bs-col md="12">
-                                                                <div class="grid-demo">
-                                                                  <b>Artist Attribution: </b>
-                                                                  <semantic-link iri={{artist.value}}></semantic-link>
-                                                                </div>
-                                                              </bs-col>
+                                                                    {{#ifCond catalogue_number.value "!==" undefined}}
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Berenson Cat.No.:</b>
+                                                                            {{catalogue_number.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
 
-                                                                <bs-col md="12">
-                                                                    <div class="grid-demo">
-                                                                    <b>Recto Notes (1961): </b>
-                                                                {{recto_notes_1961.value}}
-                                                                </div>
-                                                            </bs-col>             
+                                                                    {{#ifCond artist.value "!==" undefined}}
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Artist Attribution: </b>
+                                                                            <semantic-link iri={{artist.value}}></semantic-link>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+
+                                                                    {{#ifCond recto_notes_1961.value "!==" undefined}}
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Recto Notes (1961): </b>
+                                                                            {{recto_notes_1961.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}             
                                 
                                                                 </div>
                                                               </bs-row>
                                                             </div>
                                                           </bs-col>
-                                            
-                                            
                                                     </div>
                                                 </bs-col>
                                             </bs-row> <!--  close row -->
@@ -652,56 +656,66 @@
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
+                                                                                    
+                                                                    {{#ifCond recto_title_1938.value "!==" undefined}}
                                                                     <bs-col md="12">
                                                                         <div class="grid-demo">
-                                                                          <b>Recto Title (1938): </b
-                                                                          >{{recto_title_1938.value}}
+                                                                            <b>Recto Title (1938): </b
+                                                                            >{{recto_title_1938.value}}
                                                                         </div>
-                                                                      </bs-col>
-                                                    
-                                                                      <bs-col md="12">
-                                                                      <div class="grid-demo">
-                                                                        <b>Verso Title (1938): </b>
-                                                                          {{verso_title_1938.value}}
-                                                                       </div>
-                                                                        </bs-col>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
 
-                                                                  <bs-col md="12">
-                                                                    <div class="grid-demo">
-                                                                    <b>Berenson Cat.No.:</b>
-                                                                {{catalogue_number.value}}
-                                                                </div>
-                                                            </bs-col>
+                                                                    {{#ifCond verso_title_1938.value "!==" undefined}}
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Verso Title (1938): </b>
+                                                                            {{verso_title_1938.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
 
-                                                            <bs-col md="12">
-                                                                <div class="grid-demo">
-                                                                  <b>Artist Attribution: </b>
-                                                                  <semantic-link iri={{artist.value}}></semantic-link>
-                                                                </div>
-                                                              </bs-col>
+                                                                    {{#ifCond catalogue_number.value "!==" undefined}}
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Berenson Cat.No.:</b>
+                                                                            {{catalogue_number.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
 
-                                                                <bs-col md="12">
-                                                                    <div class="grid-demo">
-                                                                    <b>Recto Notes (1938): </b>
-                                                                {{recto_notes_1938.value}}
-                                                                </div>
-                                                            </bs-col>
-                                                            <bs-col md="12">
-                                                             <div class="grid-demo">
-                                                                <b>Verso Notes (1938): </b>
-                                                            {{verso_notes_1938.value}}
-                                                            </div>
-                                                        </bs-col>
-                                                                                        
+                                                                    {{#ifCond artist.value "!==" undefined}}
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Artist Attribution: </b>
+                                                                            <semantic-link iri={{artist.value}}></semantic-link>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+
+                                                                    {{#ifCond recto_notes_1938.value "!==" undefined}}
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Recto Notes (1938): </b>
+                                                                            {{recto_notes_1938.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+
+                                                                    {{#ifCond verso_notes_1938.value "!==" undefined}}
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Verso Notes (1938): </b>
+                                                                            {{verso_notes_1938.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
                                                             
                                                                 </div>
                                                               </bs-row>
                                                             </div>
                                                           </bs-col>
-                                            
-                                            
                                                     </div>
-
                                                 </bs-col>
                                             </bs-row> <!--  close row -->
         
@@ -715,46 +729,60 @@
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
+                                                                                    
+                                                                    {{#ifCond recto_title_1903.value "!==" undefined}}
                                                                     <bs-col md="12">
                                                                         <div class="grid-demo">
-                                                                          <b>Recto Title (1903): </b
-                                                                          >{{recto_title_1903.value}}
+                                                                            <b>Recto Title (1903): </b
+                                                                            >{{recto_title_1903.value}}
                                                                         </div>
-                                                                      </bs-col>
-                                                    
-                                                                      <bs-col md="12">
-                                                                      <div class="grid-demo">
-                                                                        <b>Verso Title (1903): </b>
-                                                                          {{verso_title_1903.value}}
-                                                                       </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+
+                                                                    {{#ifCond verso_title_1903.value "!==" undefined}}
+                                                                        <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Verso Title (1903): </b>
+                                                                            {{verso_title_1903.value}}
+                                                                        </div>
                                                                         </bs-col>
+                                                                    {{/ifCond}}
 
-                                                                  <bs-col md="12">
-                                                                    <div class="grid-demo">
-                                                                    <b>Berenson Cat.No.:</b>
-                                                                {{catalogue_number.value}}
-                                                                </div>
-                                                            </bs-col>
-                                                            
-                                                            <bs-col md="12">
-                                                                <div class="grid-demo">
-                                                                  <b>Artist Attribution: </b>
-                                                                  <semantic-link iri={{artist.value}}></semantic-link>
-                                                                </div>
-                                                              </bs-col>
+                                                                    {{#ifCond catalogue_number.value "!==" undefined}}
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Berenson Cat.No.:</b>
+                                                                            {{catalogue_number.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
 
-                                                                <bs-col md="12">
-                                                                    <div class="grid-demo">
-                                                                    <b>Recto Notes (1903): </b>
-                                                                {{recto_notes_1903.value}}
-                                                                </div>
-                                                            </bs-col>
-                                                            <bs-col md="12">
-                                                             <div class="grid-demo">
-                                                                <b>Verso Notes (1903): </b>
-                                                            {{verso_notes_1903.value}}
-                                                            </div>
-                                                        </bs-col>
+                                                                    {{#ifCond artist.value "!==" undefined}}
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Artist Attribution: </b>
+                                                                            <semantic-link iri={{artist.value}}></semantic-link>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+
+                                                                    {{#ifCond recto_notes_1903.value "!==" undefined}}
+                                                                        <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                        <b>Recto Notes (1903): </b>
+                                                                        {{recto_notes_1903.value}}
+                                                                    </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+                                                                    
+                                                                    {{#ifCond verso_notes_1903.value "!==" undefined}}
+                                                                    <bs-col md="12">
+                                                                        <div class="grid-demo">
+                                                                            <b>Verso Notes (1903): </b>
+                                                                            {{verso_notes_1903.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
                                                                                         
                                                             
                                                                 </div>
@@ -1136,89 +1164,106 @@ OPTIONAL {
                 <div data-flex-layout="row md-column center-stretch">
                   <bs-row>
                     <div>
-                      <bs-col md="12">
-                        <div class="grid-demo">
-                          <b>Inventory Number: </b>{{id_number.value}}
-                        </div>
-                      </bs-col>
+                                    
+                        {{#ifCond id_number.value "!==" undefined}}
+                        <bs-col md="12">
+                            <div class="grid-demo">
+                                <b>Inventory Number: </b>{{id_number.value}}
+                            </div>
+                        </bs-col>
+                        {{/ifCond}}
 
-                    <bs-col md="12">
-                        <div class="grid-demo">
-                        <b>Recto Title (1961): </b>
-                        {{recto_title_1961.value}}
-                        </div>
-                    </bs-col>
+                        {{#ifCond recto_title_1961.value "!==" undefined}}
+                        <bs-col md="12">
+                            <div class="grid-demo">
+                                <b>Recto Title (1961): </b>
+                                {{recto_title_1961.value}}
+                            </div>
+                        </bs-col>
+                        {{/ifCond}}
 
-                 <bs-col md="12">
-                    <div class="grid-demo">
-                        <b>Verso Title (1961): </b>
-                        {{verso_title_1961.value}}
-                    </div>
-                 </bs-col>
+                        {{#ifCond verso_title_1961.value "!==" undefined}}
+                        <bs-col md="12">
+                            <div class="grid-demo">
+                                <b>Verso Title (1961): </b>
+                                {{verso_title_1961.value}}
+                            </div>
+                        </bs-col>
+                        {{/ifCond}}
 
-                  <bs-col md="12">
-                    <div class="grid-demo">
-                      <b>Recto Title (1938): </b>
-                      {{recto_title_1938.value}}
-                    </div>
-                  </bs-col>
+                        {{#ifCond recto_title_1938.value "!==" undefined}}
+                        <bs-col md="12">
+                            <div class="grid-demo">
+                                <b>Recto Title (1938): </b>
+                                {{recto_title_1938.value}}
+                            </div>
+                        </bs-col>
+                        {{/ifCond}}
 
-                  <bs-col md="12">
-                    <div class="grid-demo">
-                    <b>Verso Title (1938): </b>
-                  {{verso_title_1938.value}}
-                    </div>
-              </bs-col>
+                        {{#ifCond verso_title_1938.value "!==" undefined}}
+                        <bs-col md="12">
+                            <div class="grid-demo">
+                                <b>Verso Title (1938): </b>
+                                {{verso_title_1938.value}}
+                            </div>
+                        </bs-col>
+                        {{/ifCond}}
 
-                      <bs-col md="12">
-                        <div class="grid-demo">
-                          <b>Artist Attribution: </b>
-                          <semantic-link iri={{artist.value}}></semantic-link>
-                        </div>
-                      </bs-col>
+                        {{#ifCond artist.value "!==" undefined}}
+                        <bs-col md="12">
+                            <div class="grid-demo">
+                                <b>Artist Attribution: </b>
+                                <semantic-link iri={{artist.value}}></semantic-link>
+                            </div>
+                        </bs-col>
+                        {{/ifCond}}
 
-                      <bs-col md="12">
-                        <div class="grid-demo">
-                          <b>Recto Technique: </b>
-                          <semantic-query query='  
-                          SELECT ?technique  WHERE{
-                            <[[this]]> crm:P56_bears_feature ?feature.
-                            ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
-                            ?feature a crm:E25_Man-Made_Feature.
-                            ?feature crm:P81_was_modified_by ?modification.
-                            ?modification a crm:E11_Modification.
-                            ?modification crm:P32_used_general_technique ?technique.
-                          }'> {{technique}} </semantic-query>
-                        </div>
-                      </bs-col>
-                      <bs-col md="12">
-                        <div class="grid-demo">
-                          <b>Verso Technique: </b>
-                          <semantic-query query='  
-                          SELECT ?technique  WHERE{
-                            <[[this]]> crm:P56_bears_feature ?feature.
-                            ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
-                            ?feature a crm:E25_Man-Made_Feature.
-                            ?feature crm:P81_was_modified_by ?modification.
-                            ?modification a crm:E11_Modification.
-                            ?modification crm:P32_used_general_technique ?technique.
-                          }'> {{technique}} </semantic-query>
-                        </div>
-                      </bs-col>
+                        {{#ifCond recto_title_1961.value "!==" undefined}}
+                        <bs-col md="12">
+                            <div class="grid-demo">
+                                <b>Recto Technique: </b>
+                                <semantic-query query='  
+                                SELECT ?technique  WHERE{
+                                <[[this]]> crm:P56_bears_feature ?feature.
+                                ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                                ?feature a crm:E25_Man-Made_Feature.
+                                ?feature crm:P81_was_modified_by ?modification.
+                                ?modification a crm:E11_Modification.
+                                ?modification crm:P32_used_general_technique ?technique.
+                                }'> {{technique}} </semantic-query>
+                            </div>
+                        </bs-col>
+                        {{/ifCond}}
 
-                      <bs-col md="12">
-                        <div class="grid-demo">
-                          <b>Location: </b>
-                          <semantic-link iri={{location.value}}></semantic-link>
-                        </div>
-                      </bs-col>
-                     
+                        {{#ifCond verso_title_1961.value "!==" undefined}}
+                        <bs-col md="12">
+                            <div class="grid-demo">
+                                <b>Verso Technique: </b>
+                                <semantic-query query='  
+                                SELECT ?technique  WHERE{
+                                <[[this]]> crm:P56_bears_feature ?feature.
+                                ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+                                ?feature a crm:E25_Man-Made_Feature.
+                                ?feature crm:P81_was_modified_by ?modification.
+                                ?modification a crm:E11_Modification.
+                                ?modification crm:P32_used_general_technique ?technique.
+                                }'> {{technique}} </semantic-query>
+                            </div>
+                        </bs-col>
+                        {{/ifCond}}
+
+                        {{#ifCond location.value "!==" undefined}}
+                        <bs-col md="12">
+                            <div class="grid-demo">
+                                <b>Location: </b>
+                                <semantic-link iri={{location.value}}></semantic-link>
+                            </div>
+                        </bs-col>
+                        {{/ifCond}}
                     </div>
                   </bs-row>
                 </div>
-              </bs-col>
-
-
+            </bs-col>
         </div>
     </template>
 </semantic-table>
