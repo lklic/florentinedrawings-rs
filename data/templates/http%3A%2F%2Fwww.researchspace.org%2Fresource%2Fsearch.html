@@ -226,31 +226,20 @@
                           </div>
                         </bs-col> -->
                         <bs-col md="3">
-                          <div class="carousel">
-                            <semantic-carousel
-                              query="SELECT DISTINCT ?imgUrl WHERE{
-                              {{subject}} crm:P56_bears_feature ?feat.             
-                              ?feat crm:P136_has_representation ?img_visual.
-                              ?img_visual crm:P129i_is_subject_of ?imgUrl
-                            }"
-                              options='{"fade": true, "lazyLoad": true }'
-                              tuple-template="{{> imageCarousel}}"
-                              no-result-template="{{> noImages}}"
-                            >
-                              <template id="imageCarousel">
-                                <img
-                                  style="object-fit: contain"
-                                  src="{{imgUrl.value}}"
-                                />
-                              </template>
-
-                              <template id="noImages">
-                                <div class="no-media">No images available</div>
-                              </template>
-                            </semantic-carousel>
+                          <div class="row-center">
+                            <semantic-query
+                            query='SELECT DISTINCT ?imgUrl WHERE{
+                            BIND(CONCAT("https://s3-eu-west-1.amazonaws.com/florentinedrawings/thumbs/",REPLACE(STR(REPLACE(STR({{subject}}),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2"),".jpg") AS ?imgUrl)
+                          }'
+                            template="{{> imageThumbnail}}"
+                          >
+                            <template id="imageThumbnail">
+                              <object data="{{bindings.0.imgUrl.value}}" type="image/jpeg"class="thumbnailImage"></object>
+                            </template>
+                          </semantic-query>
                           </div>
                         </bs-col>
-                        <bs-col md="9">
+                        <bs-col class="drawingInfo" md="9">
                           <div data-flex-layout="row md-column center-stretch">
                             <bs-row>
                               <bs-col md="12">
@@ -442,4 +431,14 @@
     font-size: medium;
     text-transform: uppercase;
   }
+
+  .thumbnailImage{
+    margin-top: 1vh;
+    margin-left: 1vw;
+  }
+
+  .drawingInfo{
+    margin-bottom: 2vh;
+  }
+
 </style>

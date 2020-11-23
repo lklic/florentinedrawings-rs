@@ -192,3 +192,22 @@ a:focus {
   color: #761f0e !important;
   text-decoration: underline;
 }
+
+.thumbnailImage{
+  height: 20vh;
+  background: url("/assets/images/image_placeholder.png");
+}
+.thumbnailImage{
+  height: 20vh;
+}
+.thumbnailImage::after{
+  background: url("/assets/images/image_placeholder.png");
+  top: 0;
+  left: 0;
+  display: block;
+  width: 12.5vw;
+  min-width: 253px;
+  height: 100%;
+  content: "";
+  border: none;
+}

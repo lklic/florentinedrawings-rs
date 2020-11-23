@@ -13,7 +13,7 @@
     >
       <template id="artistTemplate">
         {{#each bindings}}
-        <object data="../../images/{{artist_name.value}}.png" type="image/png" class="img-circle"></object>
+        <object data="../../images/{{artist_name.value}}.png" type="image/png" class="img-circle headImageObject"></object>
         <h2>{{artist_name.value}}</h2>
         {{/each}}
       </template>
@@ -94,28 +94,17 @@
             </div>
           </bs-col> -->
           <bs-col md="5">
-            <div class="carousel">
-              <semantic-carousel
-                query="SELECT DISTINCT ?imgUrl WHERE{
-                {{subject}} crm:P56_bears_feature ?feat.             
-                ?feat crm:P136_has_representation ?img_visual.
-                ?img_visual crm:P129i_is_subject_of ?imgUrl
-              }"
-                options='{"fade": true, "lazyLoad": true }'
-                tuple-template="{{> imageCarousel}}"
-                no-result-template="{{> noImages}}"
+            <div class="row-center">
+              <semantic-query
+                query='SELECT DISTINCT ?imgUrl WHERE{
+                BIND(CONCAT("https://s3-eu-west-1.amazonaws.com/florentinedrawings/thumbs/",REPLACE(STR(REPLACE(STR({{subject}}),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2"),".jpg") AS ?imgUrl)
+              }'
+                template="{{> imageThumbnail}}"
               >
-                <template id="imageCarousel">
-                  <img
-                    style="object-fit: contain"
-                    src="{{imgUrl.value}}"
-                  />
+                <template id="imageThumbnail">
+                  <object data="{{bindings.0.imgUrl.value}}" type="image/jpeg"class="thumbnailImage"></object>
                 </template>
-        
-                <template id="noImages">
-                  <div class="no-media">No images available</div>
-                </template>
-              </semantic-carousel>
+              </semantic-query>
             </div>
           </bs-col>
           <bs-col md="7">
@@ -270,5 +259,6 @@
       top: 0;
       background: linear-gradient(transparent 50px, white);
     }
+ 
   </style>
   
