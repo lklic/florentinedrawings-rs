@@ -223,7 +223,7 @@
                     >
                       <div class="panel-body">
                         <!-- <bs-col md="2">
-                          <div class="grid-demo">
+                          <div class="grid-info">
                             <mp-resource-thumbnail
                               iri="{{subject.value}}"
                               class="thumbnail"
@@ -256,34 +256,43 @@
                               </bs-col>
 
                               <div>
+                                {{log recto_title_1938}}
+
+                                {{#ifCond id_number.value "!==" undefined}}
                                 <bs-col md="12">
-                                  <div class="grid-demo">
+                                  <div class="grid-info">
                                     <b>Inventory Number: </b>{{id_number.value}}
                                   </div>
                                 </bs-col>
+                                {{/ifCond}}
 
+                                {{#ifCond artist_name.value "!==" undefined}}
                                 <bs-col md="12">
-                                  <div class="grid-demo">
+                                  <div class="grid-info">
                                     <b>Artist Attribution: </b
                                     >{{artist_name.value}}
                                   </div>
                                 </bs-col>
+                                {{/ifCond}}
 
+                                {{#ifCond techniqueList.value "!==" undefined}}
                                 <bs-col md="12">
-                                  <div class="grid-demo">
+                                  <div class="grid-info">
                                     <b>Technique: </b>
-                                    {{#ifCond techniqueList.value "!==" ""}}
                                     {{techniqueList.value}}
-                                    {{/ifCond}}
                                   </div>
                                 </bs-col>
+                                {{/ifCond}}
 
+                                {{#ifCond recto_title_1938.value "!==" undefined}}
                                 <bs-col md="12">
-                                  <div class="grid-demo">
+                                  <div class="grid-info">
                                     <b>English title: </b
                                     >{{recto_title_1938.value}}
                                   </div>
                                 </bs-col>
+                                {{/ifCond}}
+
                               </div>
                             </bs-row>
                           </div>
@@ -444,6 +453,10 @@
 
   .drawingInfo{
     margin-bottom: 2vh;
+  }
+
+  .grid-info{
+    font-size: 16px !important;
   }
 
 </style>
