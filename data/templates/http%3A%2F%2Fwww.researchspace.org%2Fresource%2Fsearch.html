@@ -158,13 +158,19 @@
                   id="grid-result"
                   number-of-displayed-rows="10"
                   query="
-                  SELECT DISTINCT ?subject ?artist ?artist_name ?id_number ?recto_title_1938 ?recto_title_1961  ?techniqueList
+                  SELECT DISTINCT ?subject ?artist ?artist_name ?id_number ?recto_title_1938 ?recto_title_1961 ?techniqueList ?imgUrl
                    WHERE {
 
                     ?subject crm:P108i_was_produced_by ?production.
                     ?production crm:P14_was_carried_out_by ?artist.
-                    ?artist rdfs:label ?artist_name
+                    ?artist rdfs:label ?artist_name.
 
+                    ## Images ##
+                    OPTIONAL {
+                      ?subject crm:P56_bears_feature ?feat.             
+                      ?feat crm:P136_has_representation ?img_visual.
+                      ?img_visual crm:P129i_is_subject_of ?imgUrl
+                    }
                     ## PREFERRED IDENTIFIER (Inventory Number) ##
                     OPTIONAL {
                         ?subject <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
@@ -182,7 +188,6 @@
                       ?value_uri rdfs:label ?recto_title_1938.
                       ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>
                     }
-              
                     ## RECTO TITLE 1961 (English Title) ##
                     OPTIONAL {
                       ?subject crm:P56_bears_feature ?feature_b.
@@ -207,8 +212,8 @@
                           ?general_technique rdfs:label ?technique
                         }GROUP BY ?iri
                       }BIND((?list) as ?techniqueList) 
-                  
-                   }LIMIT 10
+                
+                   }LIMIT 10 
                 "
                   tuple-template="{{>tupleTemplate}}"
                 >

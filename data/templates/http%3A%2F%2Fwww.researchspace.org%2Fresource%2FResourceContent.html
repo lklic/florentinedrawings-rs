@@ -189,6 +189,7 @@
                                             -->
                                             [[#block "imageContent"]]
 
+
                                             <rs-iiif-mirador
                                             image-or-region="[[this]]" 
 
@@ -211,7 +212,10 @@
                                             {{/ifCond}}
 
                                             {{#ifCond bindings.0.count.value "===" "0"}}
-                                                <div class="col-xs-12 col-md-12" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
+                                            <div class="col-xs-12 col-sm-6 rs-image-container" style="width:30vw; height: 45vh;">
+                                                <img src='/assets/images/image_placeholder_large.png' style="width:100%"/>
+                                            </div>
+                                                <div class="col-xs-6 col-md-6" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
                                                 [[> resourceHeaderData image=true]]
                                             </div>
                                             {{/ifCond}}

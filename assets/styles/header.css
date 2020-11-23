@@ -75,8 +75,8 @@
 }
 
 .rs-header .navbar-nav > li > a[title^="login"] {
-  background-color: #3f4b54 !important;
-  color: #ffffff !important;
+  background-color: none !important;
+  color: black !important;
 }
 
 .navbar-default {
