@@ -18,21 +18,13 @@
             Search
           </semantic-link>
         </li>
-        <li id="header-search-select">
-          <select id="searchFilter" name="searchFilter"  onchange="sayHi()">
-            <option value="all">All Fields</option>
-            <option value="title">Artist</option>
-            <option value="artist">Artist</option>
-            <option value="location">Location</option>
-            <option value="invNumber">Inventory Number</option>
-          </select>
-        </li>
+
         <li id="header-search">
 
           <semantic-search>
 
             <semantic-search-query-keyword domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
-              placeholder="Search for something e.g. Michelangelo" escape-lucene-syntax='false' query='
+              placeholder="Search for an artist e.g. Michelangelo" escape-lucene-syntax='false' query='
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 						PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
             SELECT ?subject WHERE {
@@ -133,20 +125,8 @@
           </bs-nav-dropdown>
         </mp-anonymous-hidden>
 
-
       </ul>
 
-
-
-
-
     </div><!-- /.navbar-collapse -->
-
-
   </div><!-- /.container-fluid -->
-
-
-
-
-
 </nav>
