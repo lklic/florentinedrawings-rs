@@ -1,4 +1,4 @@
-<div id="main-container" class="container-fluid" style="height: 500px">
+<div id="main-container" class="container-fluid">
   <!-- /main container open -->
 
   <link href="/assets/styles/annotation.css" rel="stylesheet" />
@@ -144,12 +144,12 @@
     >
     </semantic-search-query-constant>
 
-    <div style="height: 500px" class="row">
-      <div class="col-sm-2" style="margin-top: 8px">
+    <div class="row">
+      <bs-col lg="2" md="4" sm="5" class="fade-in" style="margin-top: 8px">
         <div class="filter-title">Filters</div>
-        <semantic-search-facet open-by-default="true"></semantic-search-facet>
-      </div>
-      <div class="col-sm-10">
+        <semantic-search-facet  open-by-default="true"></semantic-search-facet>
+      </bs-col>
+      <bs-col lg="10" md="8" sm="7">
         <semantic-search-result-holder>
           <bs-tabs unmount-on-exit="true" id="search-results" animation="false">
             <bs-tab event-key="2" title="Grid">
@@ -219,7 +219,7 @@
                 >
                   <template id="tupleTemplate">
                     <div
-                      class="rs-grid-element panel panel-default artwork-card"
+                      class="rs-grid-element panel panel-default artwork-card fade-in"
                     >
                       <div class="panel-body">
                         <!-- <bs-col md="2">
@@ -230,7 +230,7 @@
                             />
                           </div>
                         </bs-col> -->
-                        <bs-col md="3">
+                        <bs-col lg="3" md="12">
                           <div class="row-center">
                             <semantic-query
                             query='SELECT DISTINCT ?imgUrl WHERE{
@@ -244,7 +244,7 @@
                           </semantic-query>
                           </div>
                         </bs-col>
-                        <bs-col class="drawingInfo" md="9">
+                        <bs-col class="drawingInfo" lg="9" md="12">
                           <div data-flex-layout="row md-column center-stretch">
                             <bs-row>
                               <bs-col md="12">
@@ -304,7 +304,7 @@
             </bs-tab>
           </bs-tabs>
         </semantic-search-result-holder>
-      </div>
+      </bs-col>
     </div>
   </semantic-search>
 
@@ -456,6 +456,11 @@
 
   .grid-info{
     font-size: 16px !important;
+  }
+
+  .fade-in {
+    -webkit-animation: fade-in-fwd 0.8s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+    animation: fade-in-fwd 0.8s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   }
 
 </style>
