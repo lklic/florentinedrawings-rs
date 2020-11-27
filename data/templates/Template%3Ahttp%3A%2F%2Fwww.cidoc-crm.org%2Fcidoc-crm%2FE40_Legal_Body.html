@@ -78,7 +78,7 @@
             }GROUP BY ?iri
           }BIND((?list) as ?techniqueList) 
   
-       }LIMIT 40
+       }
     "
       tuple-template="{{>tupleTemplate}}"
     >
@@ -86,75 +86,81 @@
         <div
           class="rs-grid-element panel panel-default artwork-card fade-in"
         >
+        <semantic-link-container uri="{{subject.value}}">
           <div class="panel-body">
-            <!-- <bs-col md="2">
-              <div class="grid-demo">
-                <mp-resource-thumbnail
-                  iri="{{subject.value}}"
-                  class="thumbnail"
-                />
-              </div>
-            </bs-col> -->
             <bs-col md="5">
               <div class="row-center">
                 <semantic-query
-                query='SELECT DISTINCT ?imgUrl WHERE{
-                BIND(CONCAT("https://s3-eu-west-1.amazonaws.com/florentinedrawings/thumbs/",REPLACE(STR(REPLACE(STR({{subject}}),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2"),".jpg") AS ?imgUrl)
-              }'
-                template="{{> imageThumbnail}}"
-              >
-              <template id="imageThumbnail">
-                <object data="{{bindings.0.imgUrl.value}}" type="image/jpeg"class="thumbnailImage"></object>
-              </template>
-              </semantic-query>
+                  query='SELECT DISTINCT ?imgUrl WHERE{
+                  BIND(CONCAT("https://s3-eu-west-1.amazonaws.com/florentinedrawings/thumbs/",REPLACE(STR(REPLACE(STR({{subject}}),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2"),".jpg") AS ?imgUrl)
+                }'
+                  template="{{> imageThumbnail}}"
+                >
+                  <template id="imageThumbnail">
+                    <object data="{{bindings.0.imgUrl.value}}" type="image/jpeg"class="thumbnailImage"></object>
+                  </template>
+                </semantic-query>
               </div>
             </bs-col>
             <bs-col md="7">
               <div data-flex-layout="row md-column center-stretch">
                 <bs-row>
+                 
+                  {{#ifCond recto_title_1961.value "!==" undefined}}
                   <bs-col md="12">
-                    <h4>
-                      <semantic-link iri="{{subject.value}}"
-                        >{{recto_title_1961.value}}</semantic-link
-                      >
-                    </h4>
+                    <h4>{{recto_title_1961.value}}</h4>
                   </bs-col>
+                  {{/ifCond}}
+  
+                    {{#ifCond recto_title_1938.value "!==" undefined}}
+                    <bs-col md="3">
+                      <div class="grid-demo">
+                        <b>English title: </b>
+                      </div>
+                    </bs-col>
+                    <bs-col md="9">
+                      <div class="grid-demo">
+                        {{recto_title_1938.value}}
+                      </div>
+                    </bs-col>
+                    {{/ifCond}}
   
                   <div>
                     {{#ifCond id_number.value "!==" undefined}}
-                    <bs-col md="12">
+                    <bs-col md="3">
                       <div class="grid-demo">
-                        <b>Inventory Number: </b>{{id_number.value}}
+                        <b>Inventory Number: </b>
+                      </div>
+                    </bs-col>
+                    <bs-col md="9">
+                      <div class="grid-demo">
+                        {{id_number.value}}
                       </div>
                     </bs-col>
                     {{/ifCond}}
                     
                     {{#ifCond artist_name.value "!==" undefined}}
-                    <bs-col md="12">
+                    <bs-col md="3">
                       <div class="grid-demo">
-                        <b>Artist Attribution: </b
-                        >{{artist_name.value}}
+                        <b>Artist Attribution: </b>
+                      </div>
+                    </bs-col>
+                    <bs-col md="9">
+                      <div class="grid-demo">
+                        {{artist_name.value}}
                       </div>
                     </bs-col>
                     {{/ifCond}}
   
                     {{#ifCond techniqueList.value "!==" ""}}
-                    <bs-col md="12">
+                    <bs-col md="3">
                       <div class="grid-demo">
                         <b>Technique: </b>
-                            {{techniqueList.value}} 
                       </div>
                     </bs-col>
-                    {{/ifCond}}
-                    
-  
-                    {{#ifCond recto_title_1938.value "!==" undefined}}
-                    <bs-col md="12">
+                    <bs-col md="9">
                       <div class="grid-demo">
-                        <b>English title: </b
-                        >
-                        {{recto_title_1938.value}}
-                        {{log recto_title_1938}}
+                        {{techniqueList.value}} 
                       </div>
                     </bs-col>
                     {{/ifCond}}
@@ -164,6 +170,7 @@
               </div>
             </bs-col>
           </div>
+        </semantic-link-container>
         </div>
       </template>
     </semantic-table>
@@ -179,6 +186,18 @@
   .fade-in {
     -webkit-animation: fade-in-fwd 0.7s cubic-bezier(0.39, 0.575, 0.565, 1) both;
     animation: fade-in-fwd 0.7s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  }
+
+  .grid-demo b{
+      font-weight: normal;
+    color: #777777;
+    }
+
+  .panel-body{
+    cursor: pointer;
+  }
+  .panel-body:hover{
+    box-shadow: 1px 2px 8px 0 #761f0e35, 1px 3px 12px 2px rgba(0, 0, 0, 0.07);
   }
 </style>
   
