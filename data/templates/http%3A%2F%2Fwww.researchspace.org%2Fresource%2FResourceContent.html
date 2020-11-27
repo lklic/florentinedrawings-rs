@@ -188,22 +188,47 @@
                                             </div>
                                             -->
                                             [[#block "imageContent"]]
-                                            <div class="rs-page__summary-image">
-                                            <rs-object-representations query='SELECT distinct ?label (bound(?mainRepresentationImage) AS ?isMainRep) (STR(COALESCE(?mainRepresentationImage,?representationImage)) AS ?imgURL)
-                                            WHERE {
-                                                {
-                                                    <[[this]]> rso:displayLabel ?label .
-                                                }
-                                                UNION{
-                                                    <[[this]]> crm:P56_bears_feature ?feat.             
-                                                    ?feat crm:P136_has_representation ?img_visual.
-                                                    ?img_visual crm:P129i_is_subject_of ?mainRepresentationImage.        
-                                                }
-                                            }'
-                                            
-                                           >
-                           </rs-object-representations>
-                        </div>
+                                            <mp-overlay-dialog title="Inspect image in detail" class="miradorViewerPopup">
+                                                <mp-overlay-dialog-trigger>
+                                                  <a>
+                                                    <div class="rs-page__summary-image">
+                                                        <semantic-query query='SELECT distinct ?label (bound(?mainRepresentationImage) AS ?isMainRep) (STR(COALESCE(?mainRepresentationImage,?representationImage)) AS ?imgURL)
+                                                        WHERE {
+                                                            {
+                                                                <[[this]]> rso:displayLabel ?label .
+                                                            }
+                                                            UNION{
+                                                                <[[this]]> crm:P56_bears_feature ?feat.             
+                                                                ?feat crm:P136_has_representation ?img_visual.
+                                                                ?img_visual crm:P129i_is_subject_of ?mainRepresentationImage.        
+                                                            }
+                                                        }' template='{{> imageThumbnail}}'>
+                                                       <template id="imageThumbnail">
+                                                        <img style="height:20vh" src="{{bindings.0.imgURL.value}}"/>
+                                                       </template>
+                                                     </semantic-query>
+                                                    </div>
+                                                  </a>
+                                                </mp-overlay-dialog-trigger>
+                                                <mp-overlay-dialog-content>
+                                                   <div style='height: 80vh; width: 100%;'>
+                                                        <rs-iiif-mirador
+                                                        image-or-region="[[this]]" 
+            
+                                                        image-id-pattern='
+                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                        <[[this]]> crm:P56_bears_feature ?feat.             
+                                                        ?feat crm:P136_has_representation ?img_visual.
+                                                        ?img_visual crm:P129i_is_subject_of ?image . 
+                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                        '
+                                                        iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
+                                                        >
+                                                        </rs-iiif-mirador>
+                                                    </div>
+                                                </mp-overlay-dialog-content>
+                                              </mp-overlay-dialog>
+
                                             <!-- <rs-iiif-mirador
                                             image-or-region="[[this]]" 
 
@@ -1397,4 +1422,23 @@ OPTIONAL {
         padding: 1vh;
         border-radius: 4px;
     }
+
+    .rs-page__summary-image{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .rs-page__summary-image img{
+        height: 45vh;
+    }
+    .miradorViewerPopup .grid-demo{
+        height: 92vh;
+    }
+    .miradorViewerPopup .modal-dialog{
+        width: 85%;
+    }
+    .miradorViewerPopup .modal-title{
+        text-align: center;
+    }
+
 </style>
