@@ -188,9 +188,23 @@
                                             </div>
                                             -->
                                             [[#block "imageContent"]]
-
-
-                                            <rs-iiif-mirador
+                                            <div class="rs-page__summary-image">
+                                            <rs-object-representations query='SELECT distinct ?label (bound(?mainRepresentationImage) AS ?isMainRep) (STR(COALESCE(?mainRepresentationImage,?representationImage)) AS ?imgURL)
+                                            WHERE {
+                                                {
+                                                    <[[this]]> rso:displayLabel ?label .
+                                                }
+                                                UNION{
+                                                    <[[this]]> crm:P56_bears_feature ?feat.             
+                                                    ?feat crm:P136_has_representation ?img_visual.
+                                                    ?img_visual crm:P129i_is_subject_of ?mainRepresentationImage.        
+                                                }
+                                            }'
+                                            
+                                           >
+                           </rs-object-representations>
+                        </div>
+                                            <!-- <rs-iiif-mirador
                                             image-or-region="[[this]]" 
 
                                             image-id-pattern='
@@ -202,7 +216,7 @@
                                             '
                                             iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
                                             >
-                                            </rs-iiif-mirador>
+                                            </rs-iiif-mirador> -->
 
                                             [[/block]]
                                             </div>
