@@ -226,7 +226,7 @@
                     >
                     <semantic-link-container uri="{{subject.value}}">
                       <div class="panel-body">
-                        <bs-col md="5">
+                        <bs-col md="4">
                           <div class="row-center">
                             <semantic-query
                               query='SELECT DISTINCT ?imgUrl WHERE{
@@ -246,31 +246,30 @@
                              
                               {{#ifCond recto_title_1961.value "!==" undefined}}
                               <bs-col md="12">
-                                <h4>{{recto_title_1961.value}}</h4>
+                                <h3>{{recto_title_1961.value}}</h3>
                               </bs-col>
                               {{/ifCond}}
               
                                 {{#ifCond recto_title_1938.value "!==" undefined}}
-                                <bs-col md="3">
+                                <bs-col md="4">
                                   <div class="grid-demo">
                                     <b>English title: </b>
                                   </div>
                                 </bs-col>
-                                <bs-col md="9">
+                                <bs-col md="8">
                                   <div class="grid-demo">
                                     {{recto_title_1938.value}}
                                   </div>
                                 </bs-col>
                                 {{/ifCond}}
-              
-                              <div>
+
                                 {{#ifCond id_number.value "!==" undefined}}
-                                <bs-col md="3">
+                                <bs-col md="4">
                                   <div class="grid-demo">
                                     <b>Inventory Number: </b>
                                   </div>
                                 </bs-col>
-                                <bs-col md="9">
+                                <bs-col md="8">
                                   <div class="grid-demo">
                                     {{id_number.value}}
                                   </div>
@@ -278,12 +277,12 @@
                                 {{/ifCond}}
                                 
                                 {{#ifCond artist_name.value "!==" undefined}}
-                                <bs-col md="3">
+                                <bs-col md="4">
                                   <div class="grid-demo">
                                     <b>Artist Attribution: </b>
                                   </div>
                                 </bs-col>
-                                <bs-col md="9">
+                                <bs-col md="8">
                                   <div class="grid-demo">
                                     {{artist_name.value}}
                                   </div>
@@ -291,19 +290,17 @@
                                 {{/ifCond}}
               
                                 {{#ifCond techniqueList.value "!==" ""}}
-                                <bs-col md="3">
+                                <bs-col md="4">
                                   <div class="grid-demo">
                                     <b>Technique: </b>
                                   </div>
                                 </bs-col>
-                                <bs-col md="9">
+                                <bs-col md="8">
                                   <div class="grid-demo">
                                     {{techniqueList.value}} 
                                   </div>
                                 </bs-col>
-                                {{/ifCond}}
-              
-                              </div>
+                                {{/ifCond}}      
                             </bs-row>
                           </div>
                         </bs-col>
@@ -328,6 +325,7 @@
     width: 100% !important;
     min-height: 23vh;
     height: fit-content;
+    padding: 2vh 0 2vh 0;
   }
   #search-results .rs-grid-element:hover {
     box-shadow: 1px 2px 8px 0 #761f0e35, 1px 3px 12px 2px rgba(0, 0, 0, 0.07);
@@ -480,8 +478,11 @@
     color: #777777;
    }
 
-  .panel-body{
+   #search-results .rs-grid-element .panel-body{
     cursor: pointer;
+    font-size: large;
+    align-items: center;
+    display: flex !important;
   }
 
 </style>

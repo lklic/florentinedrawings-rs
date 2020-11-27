@@ -78,7 +78,7 @@
             }GROUP BY ?iri
           }BIND((?list) as ?techniqueList) 
   
-       }
+       }LIMIT 10
     "
       tuple-template="{{>tupleTemplate}}"
     >
@@ -113,26 +113,25 @@
                   {{/ifCond}}
   
                     {{#ifCond recto_title_1938.value "!==" undefined}}
-                    <bs-col md="3">
+                    <bs-col md="4">
                       <div class="grid-demo">
                         <b>English title: </b>
                       </div>
                     </bs-col>
-                    <bs-col md="9">
+                    <bs-col md="8">
                       <div class="grid-demo">
                         {{recto_title_1938.value}}
                       </div>
                     </bs-col>
                     {{/ifCond}}
-  
-                  <div>
+
                     {{#ifCond id_number.value "!==" undefined}}
-                    <bs-col md="3">
+                    <bs-col md="4">
                       <div class="grid-demo">
                         <b>Inventory Number: </b>
                       </div>
                     </bs-col>
-                    <bs-col md="9">
+                    <bs-col md="8">
                       <div class="grid-demo">
                         {{id_number.value}}
                       </div>
@@ -140,12 +139,12 @@
                     {{/ifCond}}
                     
                     {{#ifCond artist_name.value "!==" undefined}}
-                    <bs-col md="3">
+                    <bs-col md="4">
                       <div class="grid-demo">
                         <b>Artist Attribution: </b>
                       </div>
                     </bs-col>
-                    <bs-col md="9">
+                    <bs-col md="8">
                       <div class="grid-demo">
                         {{artist_name.value}}
                       </div>
@@ -153,19 +152,18 @@
                     {{/ifCond}}
   
                     {{#ifCond techniqueList.value "!==" ""}}
-                    <bs-col md="3">
+                    <bs-col md="4">
                       <div class="grid-demo">
                         <b>Technique: </b>
                       </div>
                     </bs-col>
-                    <bs-col md="9">
+                    <bs-col md="8">
                       <div class="grid-demo">
                         {{techniqueList.value}} 
                       </div>
                     </bs-col>
                     {{/ifCond}}
-  
-                  </div>
+
                 </bs-row>
               </div>
             </bs-col>
