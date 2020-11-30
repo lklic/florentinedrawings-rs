@@ -1200,16 +1200,18 @@
     </div>
 </div> -->
 <!-- DATA ON PAGE HEADER (right by the image) -->
-<semantic-table query=' SELECT ?artist ?id_number ?recto_title_1938 ?verso_title_1938 ?recto_title_1961 ?verso_title_1961 ?location 
+<semantic-table query=' SELECT ?artist ?artistLabel ?id_number ?recto_title_1938 ?verso_title_1938 ?recto_title_1961 ?verso_title_1961 ?location ?locationLabel
 WHERE {
 
  <[[this]]> crm:P108i_was_produced_by ?production.
  ?production crm:P14_was_carried_out_by ?artist.
+ ?artist rdfs:label ?artistLabel.
 
 ## LOCATION ##
 OPTIONAL {
     <[[this]]>  crm:P30_custody_transferred_through ?transfer.
      ?transfer crm:P29_custody_recieved_by ?location.
+     ?location rdfs:label ?locationLabel
 }
   
  ## PREFERRED IDENTIFIER (Inventory Number) ##
@@ -1372,6 +1374,82 @@ OPTIONAL {
                             </div>
                         </bs-col>
                         {{/ifCond}}
+                        <bs-col md="12">
+                            
+                            <div class="grid-demo">
+                                <b>Data sources: </b>
+                                <div class="row">
+                                <bs-col md='3'>
+                                <semantic-query
+                                query='SELECT DISTINCT ?dataSourceUrl ?dataSourceLabel WHERE{
+                                BIND(REPLACE(STR(REPLACE(STR("[[this]]"),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?dataSourceLabel).
+                                BIND(CONCAT("http://data.itatti.harvard.edu/resource/florentinedrawings/",?dataSourceLabel) AS ?dataSourceUrl)
+                              }'
+                                template="{{> itattiDataSource}}"
+                              >
+                              <template id="itattiDataSource">
+                                <b><i>Villa I Tatti</i></b><br>
+                                <a href="{{bindings.0.dataSourceUrl.value}}">
+                                  {{bindings.0.dataSourceLabel.value}}
+                                </a>
+                              </template>
+                              </semantic-query>
+                            </bs-col>
+                            <bs-col md='3'>
+                                {{#ifCond artist.value "!==" undefined}}
+                                <b><i>ULAN</i></b><br>
+                                <a href={{artist.value}}>
+                                    {{artistLabel.value}}
+                                </a>
+                                {{/ifCond}}
+                            </bs-col>
+                            <bs-col md='3'>
+                              {{#ifCond location.value "!==" undefined}}
+                              <b><i>VIAF</i></b><br>
+                              <a href={{location.value}}>
+                                  {{locationLabel.value}}
+                              </a>
+                              {{/ifCond}}
+                            </bs-col>
+                            <bs-col md='3'>
+                                {{#ifCond recto_title_1961.value "!==" undefined}}
+                                <b><i>AAT</i></b> <br>
+                                  <semantic-query query='  
+                                        SELECT ?technique ?techniqueLabel  WHERE{
+                                        <[[this]]> crm:P56_bears_feature ?feature.
+                                        ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                                        ?feature a crm:E25_Man-Made_Feature.
+                                        ?feature crm:P81_was_modified_by ?modification.
+                                        ?modification a crm:E11_Modification.
+                                        ?modification crm:P32_used_general_technique ?technique.
+                                        ?technique rdfs:label ?techniqueLabel
+                                        }'
+                                        template="{{> aatDataSource}}"
+                                        ><template id="aatDataSource">
+                                          <div><a href="{{bindings.0.technique.value}}">{{bindings.0.techniqueLabel.value}}</a></div>
+                                        </template>    
+                                    </semantic-query>
+                                <semantic-query query='  
+                                        SELECT ?technique ?techniqueLabel  WHERE{
+                                        <[[this]]> crm:P56_bears_feature ?feature.
+                                        ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+                                        ?feature a crm:E25_Man-Made_Feature.
+                                        ?feature crm:P81_was_modified_by ?modification.
+                                        ?modification a crm:E11_Modification.
+                                        ?modification crm:P32_used_general_technique ?technique.
+                                        ?technique rdfs:label ?techniqueLabel
+                                        }'
+                                        template="{{> aatDataSource}}"
+                                        ><template id="aatDataSource">
+                                          <div><a href="{{bindings.0.technique.value}}">{{bindings.0.techniqueLabel.value}}</a></div>
+                                        </template>  
+                                 </semantic-query>
+                                {{/ifCond}}
+                              </bs-col>  
+                        </div>
+                          
+                            </div>
+                        </bs-col>
                     </div>
                   </bs-row>
                 </div>
