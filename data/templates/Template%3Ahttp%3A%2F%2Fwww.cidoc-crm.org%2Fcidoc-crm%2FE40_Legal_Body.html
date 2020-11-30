@@ -40,7 +40,7 @@
         >
         <semantic-link-container uri="{{subject.value}}">
           <div class="panel-body">
-            <bs-col md="5">
+            <bs-col md="5" xs="12">
               <div class="row-center">
                 <semantic-query
                   query='SELECT DISTINCT ?imgUrl WHERE{
@@ -54,7 +54,7 @@
                 </semantic-query>
               </div>
             </bs-col>
-            <bs-col md="7">
+            <bs-col md="7" xs="12">
               <div data-flex-layout="row md-column center-stretch">
                 <bs-row>
                   <mp-field-visualization
@@ -104,6 +104,7 @@
     cursor: pointer;
     display:flex;
     align-items:center;
+    flex-wrap: wrap;
   }
   .panel-body:hover{
     box-shadow: 1px 2px 8px 0 #761f0e35, 1px 3px 12px 2px rgba(0, 0, 0, 0.07);
