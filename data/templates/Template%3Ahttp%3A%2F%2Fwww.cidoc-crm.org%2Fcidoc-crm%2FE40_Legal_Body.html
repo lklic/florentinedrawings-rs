@@ -26,10 +26,29 @@
       id="grid-result"
       number-of-displayed-rows="10"
       query="
-      SELECT DISTINCT ?subject
+      SELECT DISTINCT ?subject ?recto_title_1961 ?recto_title_1938
        WHERE {
         ?subject <http://www.cidoc-crm.org/cidoc-crm/P30_custody_transferred_through> ?transfer.
         ?transfer <http://www.cidoc-crm.org/cidoc-crm/P29_custody_recieved_by> <[[this]]>.
+        OPTIONAL{
+          ?subject crm:P56_bears_feature ?feature_a.
+          ?feature_a crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+          ?feature_a a crm:E25_Man-Made_Feature.
+          ?feature_a crm:P138_has_representation ?visual_item_a.
+          ?visual_item_a a crm:E36_Visual_Item.
+          OPTIONAL{
+            ?visual_item_a crm:P102_has_title ?value_uri_a.
+            ?value_uri_a a crm:E35_Title.
+            ?value_uri_a rdfs:label ?recto_title_1961.
+            ?value_uri_a crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
+           }
+          OPTIONAL{
+            ?visual_item_a crm:P102_has_title ?value_uri.
+            ?value_uri a crm:E35_Title.
+            ?value_uri rdfs:label ?recto_title_1938.
+            ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
+          }
+        }
        }
     "
       tuple-template="{{>tupleTemplate}}"
