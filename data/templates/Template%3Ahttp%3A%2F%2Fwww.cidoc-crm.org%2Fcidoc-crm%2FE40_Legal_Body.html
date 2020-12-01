@@ -26,10 +26,12 @@
       id="grid-result"
       number-of-displayed-rows="10"
       query="
-      SELECT DISTINCT ?subject ?recto_title_1961 ?recto_title_1938
+      SELECT DISTINCT ?subject ?artist ?recto_title_1961 ?recto_title_1938
        WHERE {
         ?subject <http://www.cidoc-crm.org/cidoc-crm/P30_custody_transferred_through> ?transfer.
         ?transfer <http://www.cidoc-crm.org/cidoc-crm/P29_custody_recieved_by> <[[this]]>.
+        ?subject crm:P108i_was_produced_by ?production.
+        ?production crm:P14_was_carried_out_by ?artist.
         OPTIONAL{
           ?subject crm:P56_bears_feature ?feature_a.
           ?feature_a crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
@@ -79,11 +81,11 @@
                   <mp-field-visualization
                   subject="{{subject.value}}"
                   fields='[[fieldDefinitions  
-                  Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Recto_Title"
-                  English_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Recto_Title"  
-                  Inv.Number="https://florentinedrawings.itatti.harvard.edu/resource/field/Inventory_Number"
-                  Artist ="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Artist_Attribution"
-                  Technique="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Technique"
+                Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1961"
+                English_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1938"  
+                Inv.Number="https://florentinedrawings.itatti.harvard.edu/resource/field/Inventory_Number"
+                Artist ="https://florentinedrawings.itatti.harvard.edu/resource/field/Artist_Attribution"
+                Technique="https://florentinedrawings.itatti.harvard.edu/resource/field/Technique"
                   ]]'
                 
                   template='{{>generalInfo}}'

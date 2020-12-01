@@ -25,9 +25,10 @@
       id="grid-result"
       number-of-displayed-rows="10"
       query="
-      SELECT DISTINCT ?subject ?recto_title_1938 ?recto_title_1961
+      SELECT DISTINCT ?subject ?recto_title_1938 ?recto_title_1961 ?artist
        WHERE {
         ?subject crm:P108i_was_produced_by ?production.
+        ?production crm:P14_was_carried_out_by ?artist.
         ?subject crm:P56_bears_feature ?feature_s.
         ?feature_s crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
         ?feature_s a crm:E25_Man-Made_Feature.
@@ -83,11 +84,11 @@
                   <mp-field-visualization
                   subject="{{subject.value}}"
                   fields='[[fieldDefinitions  
-                  Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Recto_Title"
-                  English_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Recto_Title"  
-                  Inv.Number="https://florentinedrawings.itatti.harvard.edu/resource/field/Inventory_Number"
-                  Artist ="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Artist_Attribution"
-                  Technique="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Technique"
+                Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1961"
+                English_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1938"  
+                Inv.Number="https://florentinedrawings.itatti.harvard.edu/resource/field/Inventory_Number"
+                Artist ="https://florentinedrawings.itatti.harvard.edu/resource/field/Artist_Attribution"
+                Technique="https://florentinedrawings.itatti.harvard.edu/resource/field/Technique"
                   ]]'
                   template='{{>generalInfo}}'
                   >

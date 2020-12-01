@@ -141,11 +141,30 @@
   >
     <semantic-search-query-constant
       domain="<http://www.cidoc-crm.org/cidoc-crm/E22_Man-Made_Object>"
-      query="SELECT ?subject
+      query=" SELECT DISTINCT ?subject ?artist ?recto_title_1938 ?recto_title_1961
       WHERE {
-        ?subject crm:P108i_was_produced_by ?production.
-        ?production crm:P14_was_carried_out_by ?artist.
-       }"
+       ?subject crm:P108i_was_produced_by ?production.
+       ?production crm:P14_was_carried_out_by ?artist.
+       OPTIONAL{
+         ?subject crm:P56_bears_feature ?feature_a.
+         ?feature_a crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+         ?feature_a a crm:E25_Man-Made_Feature.
+         ?feature_a crm:P138_has_representation ?visual_item_a.
+         ?visual_item_a a crm:E36_Visual_Item.
+         OPTIONAL{
+           ?visual_item_a crm:P102_has_title ?value_uri_a.
+           ?value_uri_a a crm:E35_Title.
+           ?value_uri_a rdfs:label ?recto_title_1961.
+           ?value_uri_a crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
+          }
+         OPTIONAL{
+           ?visual_item_a crm:P102_has_title ?value_uri.
+           ?value_uri a crm:E35_Title.
+           ?value_uri rdfs:label ?recto_title_1938.
+           ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
+         }
+       }
+      }"
     >
     </semantic-search-query-constant>
 
@@ -163,9 +182,30 @@
                   id="grid-result"
                   number-of-displayed-rows="10"
                   query="
-                  SELECT DISTINCT ?subject ?artist ?artist_name ?id_number ?recto_title_1938 ?recto_title_1961 ?techniqueList ?imgUrl
+                  SELECT DISTINCT ?subject ?artist ?artist_name ?recto_title_1938 ?recto_title_1961
                    WHERE {
                     ?subject crm:P108i_was_produced_by ?production.
+                    ?production crm:P14_was_carried_out_by ?artist.
+                    ?artist rdfs:label ?artist_name.
+                    OPTIONAL{
+                      ?subject crm:P56_bears_feature ?feature_a.
+                      ?feature_a crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                      ?feature_a a crm:E25_Man-Made_Feature.
+                      ?feature_a crm:P138_has_representation ?visual_item_a.
+                      ?visual_item_a a crm:E36_Visual_Item.
+                      OPTIONAL{
+                        ?visual_item_a crm:P102_has_title ?value_uri_a.
+                        ?value_uri_a a crm:E35_Title.
+                        ?value_uri_a rdfs:label ?recto_title_1961.
+                        ?value_uri_a crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
+                       }
+                      OPTIONAL{
+                        ?visual_item_a crm:P102_has_title ?value_uri.
+                        ?value_uri a crm:E35_Title.
+                        ?value_uri rdfs:label ?recto_title_1938.
+                        ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
+                      }
+                    }
                    }
                 "
                   tuple-template="{{>tupleTemplate}}"
@@ -196,11 +236,11 @@
                               <mp-field-visualization
                               subject="{{subject.value}}"
                               fields='[[fieldDefinitions  
-                              Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Recto_Title"
-                              English_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/1938_Edition_Recto_Title"  
+                              Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1961"
+                              English_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1938"  
                               Inv.Number="https://florentinedrawings.itatti.harvard.edu/resource/field/Inventory_Number"
-                              Artist ="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Artist_Attribution"
-                              Technique="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Technique"
+                              Artist ="https://florentinedrawings.itatti.harvard.edu/resource/field/Artist_Attribution"
+                              Technique="https://florentinedrawings.itatti.harvard.edu/resource/field/Technique"
                               ]]'
                             
                               template='{{>generalInfo}}'
