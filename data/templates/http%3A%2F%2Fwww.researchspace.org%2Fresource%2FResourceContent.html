@@ -1280,62 +1280,91 @@ OPTIONAL {
                     <div>
                                     
                         {{#ifCond id_number.value "!==" undefined}}
-                        <bs-col md="12">
+                        <bs-col lg="5" md="12"> 
+                            <div class="grid-demo"> 
+                                <b>Inventory Number: </b>
+                            </div> 
+                        </bs-col>
+                        <bs-col md="7">
                             <div class="grid-demo">
-                                <b>Inventory Number: </b>{{id_number.value}}
+                                {{id_number.value}}
                             </div>
                         </bs-col>
                         {{/ifCond}}
 
                         {{#ifCond recto_title_1961.value "!==" undefined}}
-                        <bs-col md="12">
-                            <div class="grid-demo">
+                        <bs-col lg="5" md="12"> 
+                            <div class="grid-demo"> 
                                 <b>Recto Title (1961): </b>
+                            </div> 
+                        </bs-col>
+                        <bs-col md="7">
+                            <div class="grid-demo">
                                 {{recto_title_1961.value}}
                             </div>
                         </bs-col>
                         {{/ifCond}}
 
                         {{#ifCond verso_title_1961.value "!==" undefined}}
-                        <bs-col md="12">
-                            <div class="grid-demo">
+                        <bs-col lg="5" md="12"> 
+                            <div class="grid-demo"> 
                                 <b>Verso Title (1961): </b>
+                            </div> 
+                        </bs-col>
+                        <bs-col md="7">
+                            <div class="grid-demo">
                                 {{verso_title_1961.value}}
                             </div>
                         </bs-col>
                         {{/ifCond}}
 
                         {{#ifCond recto_title_1938.value "!==" undefined}}
-                        <bs-col md="12">
-                            <div class="grid-demo">
+                        <bs-col lg="5" md="12"> 
+                            <div class="grid-demo"> 
                                 <b>Recto Title (1938): </b>
+                            </div> 
+                        </bs-col>
+                        <bs-col md="7">
+                            <div class="grid-demo">
                                 {{recto_title_1938.value}}
                             </div>
                         </bs-col>
                         {{/ifCond}}
 
                         {{#ifCond verso_title_1938.value "!==" undefined}}
-                        <bs-col md="12">
-                            <div class="grid-demo">
+                        <bs-col lg="5" md="12"> 
+                            <div class="grid-demo"> 
                                 <b>Verso Title (1938): </b>
+                            </div> 
+                        </bs-col>
+                        <bs-col md="7">
+                            <div class="grid-demo">
                                 {{verso_title_1938.value}}
                             </div>
                         </bs-col>
                         {{/ifCond}}
 
                         {{#ifCond artist.value "!==" undefined}}
-                        <bs-col md="12">
-                            <div class="grid-demo">
+                        <bs-col lg="5" md="12"> 
+                            <div class="grid-demo"> 
                                 <b>Artist Attribution: </b>
+                            </div> 
+                        </bs-col>
+                        <bs-col md="7">
+                            <div class="grid-demo">
                                 <semantic-link iri={{artist.value}}></semantic-link>
                             </div>
                         </bs-col>
                         {{/ifCond}}
 
                         {{#ifCond recto_title_1961.value "!==" undefined}}
-                        <bs-col md="12">
-                            <div class="grid-demo">
+                        <bs-col lg="5" md="12"> 
+                            <div class="grid-demo"> 
                                 <b>Recto Technique: </b>
+                            </div> 
+                        </bs-col>
+                        <bs-col md="7">
+                            <div class="grid-demo">
                                 <semantic-query query='  
                                 SELECT ?technique  WHERE{
                                 <[[this]]> crm:P56_bears_feature ?feature.
@@ -1350,9 +1379,13 @@ OPTIONAL {
                         {{/ifCond}}
 
                         {{#ifCond verso_title_1961.value "!==" undefined}}
-                        <bs-col md="12">
-                            <div class="grid-demo">
+                        <bs-col lg="5" md="12"> 
+                            <div class="grid-demo"> 
                                 <b>Verso Technique: </b>
+                            </div> 
+                        </bs-col>
+                        <bs-col md="7">
+                            <div class="grid-demo">
                                 <semantic-query query='  
                                 SELECT ?technique  WHERE{
                                 <[[this]]> crm:P56_bears_feature ?feature.
@@ -1367,9 +1400,13 @@ OPTIONAL {
                         {{/ifCond}}
 
                         {{#ifCond location.value "!==" undefined}}
-                        <bs-col md="12">
-                            <div class="grid-demo">
+                        <bs-col lg="5" md="12"> 
+                            <div class="grid-demo"> 
                                 <b>Location: </b>
+                            </div> 
+                        </bs-col>
+                        <bs-col md="7">
+                            <div class="grid-demo">
                                 <semantic-link iri={{location.value}}></semantic-link>
                             </div>
                         </bs-col>
@@ -1378,8 +1415,8 @@ OPTIONAL {
                             
                             <div class="grid-demo">
                                 <b>Data sources: </b>
-                                <div class="row">
-                                <bs-col md='3'>
+                                <div style="display:flex; flex-wrap: nowrap; margin-top: 8px;" class="row">
+                                <div style="margin-right:1vw">
                                 <semantic-query
                                 query='SELECT DISTINCT ?dataSourceUrl ?dataSourceLabel WHERE{
                                 BIND(REPLACE(STR(REPLACE(STR("[[this]]"),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?dataSourceLabel).
@@ -1388,34 +1425,31 @@ OPTIONAL {
                                 template="{{> itattiDataSource}}"
                               >
                               <template id="itattiDataSource">
-                                <b><i>Villa I Tatti</i></b><br>
-                                <a href="{{bindings.0.dataSourceUrl.value}}">
-                                  {{bindings.0.dataSourceLabel.value}}
+                                <a title={{bindings.0.dataSourceLabel.value}} href="{{bindings.0.dataSourceUrl.value}}">
+                                    <img class="dataSourceIcon" alt="ITATTI" src="../../assets/images/itatti_source.png">
                                 </a>
                               </template>
                               </semantic-query>
-                            </bs-col>
-                            <bs-col md='3'>
+                            </div>
+                            <div style="margin-right:1vw">
                                 {{#ifCond artist.value "!==" undefined}}
-                                <b><i>ULAN</i></b><br>
-                                <a href={{artist.value}}>
-                                    {{artistLabel.value}}
+                                <a title={{artistLabel.value}} href={{artist.value}}>
+                                    <img class="dataSourceIcon" alt="ULAN" src="../../assets/images/ulan_source.png">
                                 </a>
                                 {{/ifCond}}
-                            </bs-col>
-                            <bs-col md='3'>
+                            </div>
+                            <div style="margin-right:1vw">
                               {{#ifCond location.value "!==" undefined}}
-                              <b><i>VIAF</i></b><br>
-                              <a href={{location.value}}>
-                                  {{locationLabel.value}}
+                              <a title={{locationLabel.value}} href={{location.value}}>
+                                  <img class="dataSourceIcon" alt="VIAF" src="../../assets/images/viaf_source.png">
                               </a>
                               {{/ifCond}}
-                            </bs-col>
-                            <bs-col md='3'>
+                            </div>
+                            <div style="margin-right:1vw">
                                 {{#ifCond recto_title_1961.value "!==" undefined}}
-                                <b><i>AAT</i></b> <br>
+                                <div style="display: flex;">
                                   <semantic-query query='  
-                                        SELECT ?technique ?techniqueLabel  WHERE{
+                                        SELECT DISTINCT ?technique ?techniqueLabel  WHERE{
                                         <[[this]]> crm:P56_bears_feature ?feature.
                                         ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
                                         ?feature a crm:E25_Man-Made_Feature.
@@ -1426,26 +1460,16 @@ OPTIONAL {
                                         }'
                                         template="{{> aatDataSource}}"
                                         ><template id="aatDataSource">
-                                          <div><a href="{{bindings.0.technique.value}}">{{bindings.0.techniqueLabel.value}}</a></div>
+                                            {{#each bindings}}
+                                            <div style="margin-right:1vw"><a title={{techniqueLabel.value}} href="{{technique.value}}">  
+                                                <img class="dataSourceIcon" alt="AAT" src="../../assets/images/aat_source.png">
+                                              </a></div>
+                                            {{/each}}
                                         </template>    
                                     </semantic-query>
-                                <semantic-query query='  
-                                        SELECT ?technique ?techniqueLabel  WHERE{
-                                        <[[this]]> crm:P56_bears_feature ?feature.
-                                        ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
-                                        ?feature a crm:E25_Man-Made_Feature.
-                                        ?feature crm:P81_was_modified_by ?modification.
-                                        ?modification a crm:E11_Modification.
-                                        ?modification crm:P32_used_general_technique ?technique.
-                                        ?technique rdfs:label ?techniqueLabel
-                                        }'
-                                        template="{{> aatDataSource}}"
-                                        ><template id="aatDataSource">
-                                          <div><a href="{{bindings.0.technique.value}}">{{bindings.0.techniqueLabel.value}}</a></div>
-                                        </template>  
-                                 </semantic-query>
+                                </div>
                                 {{/ifCond}}
-                              </bs-col>  
+                              </div>  
                         </div>
                           
                             </div>
@@ -1488,7 +1512,10 @@ OPTIONAL {
         border-radius: 3px;
         font-size: medium;
         margin: 0.5vh;
-        text-align: justify;
+    }
+    .grid-demo b{
+        font-weight: 500 !important;
+    color: #636363 !important;
     }
     .grid-demo:hover{
         box-shadow: 0px 2px 4px 0px #ededed;
@@ -1520,5 +1547,13 @@ OPTIONAL {
     .miradorViewerPopup .modal-title{
         text-align: center;
     }
-
+    .dataSourceIcon{
+        border-radius: 5px; 
+        box-shadow: 1px 1px 1px 1px #ededed; 
+        height: 5vh;
+    }
+    .dataSourceIcon:hover{
+        transition: 0.2s ease-in;
+        filter: contrast(0.8);
+    }
 </style>
