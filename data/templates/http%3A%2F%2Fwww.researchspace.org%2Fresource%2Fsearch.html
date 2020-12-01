@@ -1,14 +1,20 @@
-<div id="main-container" class="container-fluid">
-  <!-- /main container open -->
+<div class="row row-center">
+  <div id="main-container" class="col-md-10 col-xs-10">
+    <!-- /main container open -->
 
-  <link href="/assets/styles/annotation.css" rel="stylesheet" />
+    <link href="/assets/styles/annotation.css" rel="stylesheet" />
 
-  <div class="row">
-    <div class="col-sm-8 col-sm-offset-2">
-      <header>
-        <h1>Discover Drawings</h1>
-        <h3><i>Use filters to search and discover the dataset of more than 8000 drawings</i></h3>
-        <!-- <semantic-query
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2">
+        <header>
+          <h1>Discover Drawings</h1>
+          <h3>
+            <i
+              >Use filters to search and discover the dataset of more than 8000
+              drawings</i
+            >
+          </h3>
+          <!-- <semantic-query
         query=" 
         PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -26,12 +32,12 @@
           {{/each}}
         </template>
       </semantic-query> -->
-      </header>
+        </header>
+      </div>
     </div>
-  </div>
 
-  <semantic-search
-    relations='{
+    <semantic-search
+      relations='{
     "<https://florentinedrawings.itatti.harvard.edu/resource/field/Artist_Attribution>":[
       {
         "kind": "resource",
@@ -80,7 +86,7 @@
       }"
   }]
   }'
-    search-profile='{
+      search-profile='{
     "categories":  
     [
       {
@@ -138,10 +144,10 @@
       }
     ]
   }'
-  >
-    <semantic-search-query-constant
-      domain="<http://www.cidoc-crm.org/cidoc-crm/E22_Man-Made_Object>"
-      query=" SELECT DISTINCT ?subject ?artist ?recto_title_1938 ?recto_title_1961
+    >
+      <semantic-search-query-constant
+        domain="<http://www.cidoc-crm.org/cidoc-crm/E22_Man-Made_Object>"
+        query=" SELECT DISTINCT ?subject ?artist ?recto_title_1938 ?recto_title_1961
       WHERE {
        ?subject crm:P108i_was_produced_by ?production.
        ?production crm:P14_was_carried_out_by ?artist.
@@ -165,23 +171,27 @@
          }
        }
       }"
-    >
-    </semantic-search-query-constant>
+      >
+      </semantic-search-query-constant>
 
-    <div class="row">
-      <bs-col lg="2" md="4" sm="5" class="fade-in" style="margin-top: 8px">
-        <div class="filter-title">Filters</div>
-        <semantic-search-facet  open-by-default="true"></semantic-search-facet>
-      </bs-col>
-      <bs-col lg="10" md="8" sm="7">
-        <semantic-search-result-holder>
-          <bs-tabs unmount-on-exit="true" id="search-results" animation="false">
-            <bs-tab event-key="2" title="Grid">
-              <semantic-search-result>
-                <semantic-table
-                  id="grid-result"
-                  number-of-displayed-rows="10"
-                  query="
+      <div class="row">
+        <bs-col lg="2" md="4" sm="5" class="fade-in" style="margin-top: 8px">
+          <div class="filter-title">Filters</div>
+          <semantic-search-facet open-by-default="true"></semantic-search-facet>
+        </bs-col>
+        <bs-col lg="10" md="8" sm="7">
+          <semantic-search-result-holder>
+            <bs-tabs
+              unmount-on-exit="true"
+              id="search-results"
+              animation="false"
+            >
+              <bs-tab event-key="2" title="Grid">
+                <semantic-search-result>
+                  <semantic-table
+                    id="grid-result"
+                    number-of-displayed-rows="10"
+                    query="
                   SELECT DISTINCT ?subject ?artist ?artist_name ?recto_title_1938 ?recto_title_1961
                    WHERE {
                     ?subject crm:P108i_was_produced_by ?production.
@@ -208,64 +218,71 @@
                     }
                    }
                 "
-                  tuple-template="{{>tupleTemplate}}"
-                >
-                  <template id="tupleTemplate">
-                    <div
-                      class="rs-grid-element panel panel-default artwork-card fade-in"
-                    >
-                    <semantic-link-container uri="{{subject.value}}">
-                      <div class="panel-body">
-                        <bs-col md="4" xs="12">
-                          <div class="row-center">
-                            <semantic-query
-                              query='SELECT DISTINCT ?imgUrl WHERE{
+                    tuple-template="{{>tupleTemplate}}"
+                  >
+                    <template id="tupleTemplate">
+                      <div
+                        class="rs-grid-element panel panel-default artwork-card fade-in"
+                      >
+                        <semantic-link-container uri="{{subject.value}}">
+                          <div class="panel-body">
+                            <bs-col md="4" xs="12">
+                              <div class="row-center">
+                                <semantic-query
+                                  query='SELECT DISTINCT ?imgUrl WHERE{
                               BIND(CONCAT("https://s3-eu-west-1.amazonaws.com/florentinedrawings/thumbs/",REPLACE(STR(REPLACE(STR({{subject}}),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2"),".jpg") AS ?imgUrl)
                             }'
-                              template="{{> imageThumbnail}}"
-                            >
-                              <template id="imageThumbnail">
-                                <object data="{{bindings.0.imgUrl.value}}" type="image/jpeg"class="thumbnailImage"></object>
-                              </template>
-                            </semantic-query>
-                          </div>
-                        </bs-col>
-                        <bs-col md="7" xs="12">
-                          <div data-flex-layout="row md-column center-stretch">
-                            <bs-row>
-                              <mp-field-visualization
-                              subject="{{subject.value}}"
-                              fields='[[fieldDefinitions  
+                                  template="{{> imageThumbnail}}"
+                                >
+                                  <template id="imageThumbnail">
+                                    <object
+                                      data="{{bindings.0.imgUrl.value}}"
+                                      type="image/jpeg"
+                                      class="thumbnailImage"
+                                    ></object>
+                                  </template>
+                                </semantic-query>
+                              </div>
+                            </bs-col>
+                            <bs-col md="7" xs="12">
+                              <div
+                                data-flex-layout="row md-column center-stretch"
+                              >
+                                <bs-row>
+                                  <mp-field-visualization
+                                    subject="{{subject.value}}"
+                                    fields='[[fieldDefinitions  
                               Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1961"
                               English_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1938"  
                               Inv.Number="https://florentinedrawings.itatti.harvard.edu/resource/field/Inventory_Number"
                               Artist ="https://florentinedrawings.itatti.harvard.edu/resource/field/Artist_Attribution"
                               Technique="https://florentinedrawings.itatti.harvard.edu/resource/field/Technique"
                               ]]'
-                            
-                              template='{{>generalInfo}}'
-                              >
-                              <template id="generalInfo">
-                                  [[> rsp:ResourceFieldBasedVisualization subject=[[this]]  ]]
-                              </template>
-                            </mp-field-visualization>
-                            </bs-row>
+                                    template="{{>generalInfo}}"
+                                  >
+                                    <template id="generalInfo">
+                                      [[> rsp:ResourceFieldBasedVisualization
+                                      subject=[[this]] ]]
+                                    </template>
+                                  </mp-field-visualization>
+                                </bs-row>
+                              </div>
+                            </bs-col>
                           </div>
-                        </bs-col>
+                        </semantic-link-container>
                       </div>
-                    </semantic-link-container>
-                    </div>
-                  </template>
-                </semantic-table>
-              </semantic-search-result>
-            </bs-tab>
-          </bs-tabs>
-        </semantic-search-result-holder>
-      </bs-col>
-    </div>
-  </semantic-search>
+                    </template>
+                  </semantic-table>
+                </semantic-search-result>
+              </bs-tab>
+            </bs-tabs>
+          </semantic-search-result-holder>
+        </bs-col>
+      </div>
+    </semantic-search>
 
-  <!-- main container end -->
+    <!-- main container end -->
+  </div>
 </div>
 
 <style>
@@ -278,10 +295,10 @@
   #search-results .rs-grid-element:hover {
     box-shadow: 1px 2px 8px 0 #761f0e35, 1px 3px 12px 2px rgba(0, 0, 0, 0.07);
   }
-  .panel-body{
+  .panel-body {
     cursor: pointer;
-    display:flex;
-    align-items:center;
+    display: flex;
+    align-items: center;
     flex-wrap: wrap;
   }
   .show-facet-button {
@@ -373,7 +390,7 @@
     border-radius: 5px;
   }
 
-  .facet__relation__header{
+  .facet__relation__header {
     border: none !important;
     border-radius: 4px !important;
     box-shadow: 1px 1px 4px 0px lightgrey;
@@ -394,30 +411,30 @@
     color: unset !important;
   }
 
-  header{
+  header {
     margin-top: 4vh;
   }
 
-  h1{
+  h1 {
     font-size: xx-large !important;
   }
 
-  .filter-title{
+  .filter-title {
     margin-left: 1.5vw;
     font-size: medium;
     text-transform: uppercase;
   }
 
-  .thumbnailImage{
+  .thumbnailImage {
     margin-top: 1vh;
     margin-left: 1vw;
   }
 
-  .drawingInfo{
+  .drawingInfo {
     margin-bottom: 2vh;
   }
 
-  .grid-info{
+  .grid-info {
     font-size: 16px !important;
   }
 
@@ -426,40 +443,39 @@
     animation: fade-in-fwd 0.8s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   }
 
-  .grid-demo b{
+  .grid-demo b {
     font-weight: normal;
     color: #777777;
-   }
+  }
 
-   #search-results .rs-grid-element .panel-body{
+  #search-results .rs-grid-element .panel-body {
     cursor: pointer;
     font-size: large;
     align-items: center;
     display: flex !important;
   }
-  .rs-application .table > tbody > tr > td{
+  .rs-application .table > tbody > tr > td {
     border-color: white !important;
     padding: 4px 8px;
   }
-  .rs-page__field{
+  .rs-page__field {
     display: flex;
     justify-content: flex-start;
   }
-  .rs-page__field-label{
+  .rs-page__field-label {
     font-weight: normal;
     color: #777777;
   }
-  .rs-page__field-label-holder{
+  .rs-page__field-label-holder {
     min-width: 10vw;
-}
-
-@media (max-width:800px){
-  .rs-page__field{
-    flex-direction:column;
   }
-  .table-responsive>.table{
-    overflow: hidden;
-  }
-}
 
+  @media (max-width: 800px) {
+    .rs-page__field {
+      flex-direction: column;
+    }
+    .table-responsive > .table {
+      overflow: hidden;
+    }
+  }
 </style>
