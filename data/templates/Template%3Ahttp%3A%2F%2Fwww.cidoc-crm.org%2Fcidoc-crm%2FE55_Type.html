@@ -134,14 +134,29 @@
   }
   .rs-application .table > tbody > tr > td{
     border-color: white !important;
-    min-width: 5vw;
-    text-align: justify;
-    padding: 8px 8px;
+    padding: 4px 8px;
+  }
+  .rs-page__field{
+    display: flex;
+    justify-content: flex-start;
   }
   .rs-page__field-label{
     font-weight: normal;
     color: #777777;
   }
+  .rs-page__field-label-holder{
+    min-width: 10vw;
+}
+
+@media (max-width:800px){
+  .rs-page__field{
+    flex-direction:column;
+    width: 43vw;
+  }
+  .table-responsive>.table{
+    overflow: hidden;
+  }
+}
 
 
   </style>

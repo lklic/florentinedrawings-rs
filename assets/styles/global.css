@@ -162,6 +162,7 @@ a:focus {
 
 .pagination{
   margin-bottom: 2vh !important ;
+  justify-content: center !important;
 }
 
 .pagination > li.active,
@@ -172,7 +173,7 @@ a:focus {
 }
 
 .pagination > li > a {
-  font-size: medium !important;
+  font-size: 18px !important;
 }
 
 .griddle .top-section input::placeholder {
@@ -195,11 +196,10 @@ a:focus {
 
 .thumbnailImage{
   height: 20vh;
+  max-height: 185px;
   background: url("/assets/images/image_placeholder.png");
 }
-.thumbnailImage{
-  height: 20vh;
-}
+
 .thumbnailImage::after{
   background: url("/assets/images/image_placeholder.png");
   top: 0;
