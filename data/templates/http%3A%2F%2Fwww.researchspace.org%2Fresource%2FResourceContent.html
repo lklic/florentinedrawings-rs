@@ -461,18 +461,33 @@
                                 <div class="container-fluid rs-summary-section">
                                     <!--  close row -->
                                     <semantic-table query=' SELECT DISTINCT
-                                    ?artist ?id_number ?location  ?catalogue_number
+                                    ?artist_1961 ?artist_1938 ?artist_1903 ?id_number ?location  ?catalogue_number
                                     ?recto_title_1903 ?verso_title_1903 ?recto_notes_1903 ?verso_notes_1903
                                     ?recto_title_1938 ?verso_title_1938 ?recto_notes_1938 ?verso_notes_1938
                                     ?recto_title_1961 ?verso_title_1961 ?recto_notes_1961 ?verso_notes_1961
                                     WHERE {
-                                    
-                                     ## ARTIST ##
-                                     OPTIONAL{
+                                        ## ARTIST ATTRIBUTIONS ##
                                         <[[this]]> crm:P108i_was_produced_by ?production.
-                                        ?production crm:P01i_is_domain_of ?domain.
-                                        ?domain crm:P02_has_range ?artist.
-                                      }
+                                        ## 1961 ##
+                                        OPTIONAL{
+                                            ?production crm:P01i_is_domain_of ?domain_1961.
+                                            FILTER(regex(str(?domain_1961),"/1961"))     
+                                            ?domain_1961 crm:P02_has_range ?artist_1961.    
+                                        }
+                                        ## 1938 ##
+                                        OPTIONAL{
+                                            ?production crm:P01i_is_domain_of ?domain_1938.
+                                            FILTER(regex(str(?domain_1938),"/1938"))     
+                                            ?domain_1938 crm:P02_has_range ?artist_1938.
+                                        }
+                                        ## 1903 ##
+                                        OPTIONAL{
+                                            ?production crm:P01i_is_domain_of ?domain_1903.
+                                            FILTER(regex(str(?domain_1903),"/1903"))     
+                                            ?domain_1903 crm:P02_has_range ?artist_1903.
+                                        }
+ 
+                       
                                     ## LOCATION ##
                                     OPTIONAL {
                                         <[[this]]>  crm:P30_custody_transferred_through ?transfer.
@@ -631,7 +646,7 @@
                                     
                                         <template id="editionRows">
                                             <bs-row class="row-center">
-                                                <bs-col xs=11 sm=10 md=8 lg=5 class="rs-summary-table">
+                                                <bs-col xs=11 sm=10 md=8 lg=7 class="rs-summary-table">
                                              <!-- 1961 EDITION FIELDS -->
                                                     <h1 style=" text-align: center;">1961 Edition</h1> 
                                                     <div  id="1961_edition_result">
@@ -686,7 +701,20 @@
                                                                     </bs-col>
                                                                     <bs-col md="8">
                                                                         <div class="grid-demo">
-                                                                            <semantic-link iri={{artist.value}}></semantic-link>
+                                                                            <semantic-link iri={{artist_1961.value}}></semantic-link>
+                                                                            <!-- <semantic-query query='
+                                                                            SELECT DISTINCT ?qualifier WHERE{}
+                                                                                <{{domain_1961.value}}> a crm:PC15_was_influenced_by .
+                                                                                <{{domain_1961.value}}> crm:P15.1_in_the_role_of ?qualifier.
+                                                                                ?qualifier rdfs:label ?qualifierLabel  
+                                                                            '> 
+                                                                            {{ifCond qualifierLabel.value "!==" undefined}}
+                                                                             ({{qualifierLabel.value}})
+                                                                            {{/ifCond}}
+                                                                            {{ifCond qualifierLabel.value "===" undefined}}
+                                                                             (by)
+                                                                            {{/ifCond}}
+                                                                        </semantic-query> -->
                                                                         </div>
                                                                     </bs-col>
                                                                     {{/ifCond}}
@@ -714,7 +742,7 @@
         
                                             <!-- 1938 EDITION FIELDS -->
                                             <bs-row class="row-center">
-                                                <bs-col xs=11 sm=10 md=8 lg=5 class="rs-summary-table">
+                                                <bs-col xs=11 sm=10 md=8 lg=7 class="rs-summary-table">
         
                                                     <h1 style=" text-align: center;">1938 Edition</h1>
                                                     <div id="1938_edition_result">
@@ -762,7 +790,7 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
-                                                                    {{#ifCond artist.value "!==" undefined}}
+                                                                    {{#ifCond artist_1938.value "!==" undefined}}
                                                                     <bs-col md="4">
                                                                         <div class="grid-demo">
                                                                             <b>Artist Attribution: </b>
@@ -770,7 +798,20 @@
                                                                     </bs-col>
                                                                     <bs-col md="8">
                                                                         <div class="grid-demo">
-                                                                            <semantic-link iri={{artist.value}}></semantic-link>
+                                                                            <semantic-link iri={{artist_1938.value}}></semantic-link>
+                                                                            <!-- <semantic-query query='
+                                                                            SELECT DISTINCT ?qualifier WHERE{}
+                                                                                <{{domain_1938.value}}> a crm:PC15_was_influenced_by .
+                                                                                <{{domain_1938.value}}> crm:P15.1_in_the_role_of ?qualifier.
+                                                                                ?qualifier rdfs:label ?qualifierLabel  
+                                                                            '> 
+                                                                            {{ifCond qualifierLabel.value "!==" undefined}}
+                                                                             ({{qualifierLabel.value}})
+                                                                            {{/ifCond}}
+                                                                            {{ifCond qualifierLabel.value "===" undefined}}
+                                                                             (by)
+                                                                            {{/ifCond}}
+                                                                        </semantic-query> -->
                                                                         </div>
                                                                     </bs-col>
                                                                     {{/ifCond}}
@@ -811,7 +852,7 @@
         
                                             <!-- 1903 EDITION FIELDS -->
                                             <bs-row class="row-center">
-                                                <bs-col xs=11 sm=10 md=8 lg=5 class="rs-summary-table">
+                                                <bs-col xs=11 sm=10 md=8 lg=7 class="rs-summary-table">
                                                     
                                                     <h1 style=" text-align: center;">1903 Edition</h1>
                                                         <div id="1903_edition_result">
@@ -860,7 +901,7 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
-                                                                    {{#ifCond artist.value "!==" undefined}}
+                                                                    {{#ifCond artist_1903.value "!==" undefined}}
                                                                     <bs-col md="4">
                                                                         <div class="grid-demo">
                                                                             <b>Artist Attribution: </b>
@@ -868,7 +909,20 @@
                                                                     </bs-col>
                                                                     <bs-col md="8">
                                                                         <div class="grid-demo">
-                                                                            <semantic-link iri={{artist.value}}></semantic-link>
+                                                                            <semantic-link iri={{artist_1903.value}}></semantic-link>
+                                                                            <!-- <semantic-query query='
+                                                                            SELECT DISTINCT ?qualifier WHERE{}
+                                                                                <{{domain_1903.value}}> a crm:PC15_was_influenced_by .
+                                                                                <{{domain_1903.value}}> crm:P15.1_in_the_role_of ?qualifier.
+                                                                                ?qualifier rdfs:label ?qualifierLabel  
+                                                                            '> 
+                                                                            {{ifCond qualifierLabel.value "!==" undefined}}
+                                                                             ({{qualifierLabel.value}})
+                                                                            {{/ifCond}}
+                                                                            {{ifCond qualifierLabel.value "===" undefined}}
+                                                                             (by)
+                                                                            {{/ifCond}}
+                                                                        </semantic-query> -->
                                                                         </div>
                                                                     </bs-col>
                                                                     {{/ifCond}}
@@ -1203,12 +1257,13 @@
     </div>
 </div> -->
 <!-- DATA ON PAGE HEADER (right by the image) -->
-<semantic-table query=' SELECT DISTINCT ?artist ?artistLabel ?id_number ?recto_title_1938 ?verso_title_1938 ?recto_title_1961 ?verso_title_1961 ?location ?locationLabel
+<semantic-table query=' SELECT DISTINCT ?artist ?artistLabel ?id_number ?geonames ?recto_title_1938 ?verso_title_1938 ?recto_title_1961 ?verso_title_1961 ?location ?locationLabel
 WHERE {
 
     OPTIONAL{
         <[[this]]> crm:P108i_was_produced_by ?production.
         ?production crm:P01i_is_domain_of ?domain.
+        FILTER(regex(str(?domain),"https://florentinedrawings.itatti.harvard.edu/resource/carried_out_by/1961"))      
         ?domain crm:P02_has_range ?artist.
         ?artist rdfs:label ?artistLabel.
     }
@@ -1216,12 +1271,13 @@ WHERE {
     OPTIONAL {
         <[[this]]>  crm:P30_custody_transferred_through ?transfer.
         ?transfer crm:P29_custody_recieved_by ?location.
-        ?location rdfs:label ?locationLabel
+        ?location rdfs:label ?locationLabel.
+        ?location crm:P74_has_current_or_former_resindence ?geonames.
     }
     
     ## PREFERRED IDENTIFIER (Inventory Number) ##
     OPTIONAL {
-        <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
+        <[[this]]> crm:P48_has_preferred_identifier ?id .
         ?id rdfs:label ?id_number
     }        
 
@@ -1352,7 +1408,7 @@ WHERE {
                         {{#ifCond artist.value "!==" undefined}}
                         <bs-col lg="5" md="12"> 
                             <div class="grid-demo"> 
-                                <b>Artist Attribution: </b>
+                                <b>Artist Attribution (by): </b>
                             </div> 
                         </bs-col>
                         <bs-col md="7">
@@ -1417,23 +1473,27 @@ WHERE {
                         </bs-col>
                         {{/ifCond}}
                         <bs-col md="12">
-                            
                             <div class="grid-demo">
                                 <b>Data sources: </b>
                                 <div style="display:flex; flex-wrap: nowrap; margin-top: 8px;" class="row">
+                            {{#ifCond location.value "!==" undefined}}
+                            <div style="margin-right:1vw">
+                              <a target="_null" title={{locationLabel.value}} href={{location.value}}>
+                                  <img class="dataSourceIcon" alt="VIAF" src="../../assets/images/viaf_source.png">
+                              </a>
+                            </div>
+                            <div style="margin-right:1vw">
+                                <a target="_null" title={{locationLabel.value}} href={{geonames.value}}>
+                                    <img class="dataSourceIcon" alt="GeoNames" src="../../assets/images/geonames_source.png">
+                                </a>
+                              </div>
+                            {{/ifCond}}
                             <div style="margin-right:1vw">
                                 {{#ifCond artist.value "!==" undefined}}
-                                <a title={{artistLabel.value}} href={{artist.value}}>
+                                <a target="_null" title={{artistLabel.value}} href={{artist.value}}>
                                     <img class="dataSourceIcon" alt="ULAN" src="../../assets/images/ulan_source.png">
                                 </a>
                                 {{/ifCond}}
-                            </div>
-                            <div style="margin-right:1vw">
-                              {{#ifCond location.value "!==" undefined}}
-                              <a title={{locationLabel.value}} href={{location.value}}>
-                                  <img class="dataSourceIcon" alt="VIAF" src="../../assets/images/viaf_source.png">
-                              </a>
-                              {{/ifCond}}
                             </div>
                             <div style="margin-right:1vw">
                                 {{#ifCond recto_title_1961.value "!==" undefined}}
@@ -1451,7 +1511,7 @@ WHERE {
                                         template="{{> aatDataSource}}"
                                         ><template id="aatDataSource">
                                             {{#each bindings}}
-                                            <div style="margin-right:1vw"><a title={{techniqueLabel.value}} href="{{technique.value}}">  
+                                            <div style="margin-right:1vw"><a target="_null" title={{techniqueLabel.value}} href="{{technique.value}}">  
                                                 <img class="dataSourceIcon" alt="AAT" src="../../assets/images/aat_source.png">
                                               </a></div>
                                             {{/each}}

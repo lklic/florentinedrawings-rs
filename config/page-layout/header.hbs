@@ -2,7 +2,11 @@
   <div class="rs-header">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a class="rs-header-logo" href="/"><img src="../../images/logo.png" alt="{{deploymentTitle}}" /></a>
+      <a class="rs-header-logo" href="/"><img src="../../images/logo.png" alt="{{deploymentTitle}}" />
+        <div class="subtitle">
+          by Bernard Berenson
+        </div>
+      </a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -24,14 +28,13 @@
           <semantic-search>
 
             <semantic-search-query-keyword domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
-              placeholder="Search for an artist e.g. Michelangelo" escape-lucene-syntax='false' query='
+              placeholder="Search for a painting or artist e.g. Michelangelo" escape-lucene-syntax='false' query='
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 						PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
             SELECT ?subject WHERE {
-            ?production crm:P14_was_carried_out_by ?subject.
-            ?subject rdfs:label ?artistName. 
-            ?artistName bds:search ?__token__ .
-            ?artistName bds:minRelevance "0.5"^^xsd:double;
+            ?subject rdfs:label ?someLabel. 
+            ?someLabel bds:search ?__token__ .
+            ?someLabel bds:minRelevance "0.3"^^xsd:double;
             bds:matchAllTerms "true"  .
             BIND( xsd:integer(substr(str(?value), 33)) as ?q)
             } ORDER BY ?q
@@ -72,7 +75,7 @@
               <div class="dropdownTitle">Contact</div>
             </bs-menu-item>
 
-              <hr/>
+            <hr />
 
             <bs-menu-item href="http://data.itatti.harvard.edu/" title='Data'>
               <div class="dropdownTitle">Data</div>
