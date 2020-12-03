@@ -460,16 +460,19 @@
                             <bs-tab-pane event-key="raw-data">
                                 <div class="container-fluid rs-summary-section">
                                     <!--  close row -->
-                                    <semantic-table query=' SELECT 
+                                    <semantic-table query=' SELECT DISTINCT
                                     ?artist ?id_number ?location  ?catalogue_number
                                     ?recto_title_1903 ?verso_title_1903 ?recto_notes_1903 ?verso_notes_1903
                                     ?recto_title_1938 ?verso_title_1938 ?recto_notes_1938 ?verso_notes_1938
                                     ?recto_title_1961 ?verso_title_1961 ?recto_notes_1961 ?verso_notes_1961
                                     WHERE {
                                     
-                                     <[[this]]> crm:P108i_was_produced_by ?production.
-                                     ?production crm:P14_was_carried_out_by ?artist.
-                                    
+                                     ## ARTIST ##
+                                     OPTIONAL{
+                                        <[[this]]> crm:P108i_was_produced_by ?production.
+                                        ?production crm:P01i_is_domain_of ?domain.
+                                        ?domain crm:P02_has_range ?artist.
+                                      }
                                     ## LOCATION ##
                                     OPTIONAL {
                                         <[[this]]>  crm:P30_custody_transferred_through ?transfer.
@@ -1200,75 +1203,77 @@
     </div>
 </div> -->
 <!-- DATA ON PAGE HEADER (right by the image) -->
-<semantic-table query=' SELECT ?artist ?artistLabel ?id_number ?recto_title_1938 ?verso_title_1938 ?recto_title_1961 ?verso_title_1961 ?location ?locationLabel
+<semantic-table query=' SELECT DISTINCT ?artist ?artistLabel ?id_number ?recto_title_1938 ?verso_title_1938 ?recto_title_1961 ?verso_title_1961 ?location ?locationLabel
 WHERE {
 
- <[[this]]> crm:P108i_was_produced_by ?production.
- ?production crm:P14_was_carried_out_by ?artist.
- ?artist rdfs:label ?artistLabel.
+    OPTIONAL{
+        <[[this]]> crm:P108i_was_produced_by ?production.
+        ?production crm:P01i_is_domain_of ?domain.
+        ?domain crm:P02_has_range ?artist.
+        ?artist rdfs:label ?artistLabel.
+    }
+    ## LOCATION ##
+    OPTIONAL {
+        <[[this]]>  crm:P30_custody_transferred_through ?transfer.
+        ?transfer crm:P29_custody_recieved_by ?location.
+        ?location rdfs:label ?locationLabel
+    }
+    
+    ## PREFERRED IDENTIFIER (Inventory Number) ##
+    OPTIONAL {
+        <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
+        ?id rdfs:label ?id_number
+    }        
 
-## LOCATION ##
-OPTIONAL {
-    <[[this]]>  crm:P30_custody_transferred_through ?transfer.
-     ?transfer crm:P29_custody_recieved_by ?location.
-     ?location rdfs:label ?locationLabel
-}
-  
- ## PREFERRED IDENTIFIER (Inventory Number) ##
- OPTIONAL {
-     <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
-     ?id rdfs:label ?id_number
- }        
+    ## RECTO TITLE 1938 (Title) ##
+    OPTIONAL {
+    <[[this]]> crm:P56_bears_feature ?feature.
+    ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+    ?feature a crm:E25_Man-Made_Feature.
+    ?feature crm:P138_has_representation ?visual_item.
+    ?visual_item a crm:E36_Visual_Item.
+    ?visual_item crm:P102_has_title ?value_uri.
+    ?value_uri a crm:E35_Title.
+    ?value_uri rdfs:label ?recto_title_1938.
+    ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>
+    }
 
- ## RECTO TITLE 1938 (Title) ##
- OPTIONAL {
-   <[[this]]> crm:P56_bears_feature ?feature.
-   ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
-   ?feature a crm:E25_Man-Made_Feature.
-   ?feature crm:P138_has_representation ?visual_item.
-   ?visual_item a crm:E36_Visual_Item.
-   ?visual_item crm:P102_has_title ?value_uri.
-   ?value_uri a crm:E35_Title.
-   ?value_uri rdfs:label ?recto_title_1938.
-   ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>
- }
+    ## VERSO TITLE 1938 (English Title) ##
+    OPTIONAL {
+        <[[this]]> crm:P56_bears_feature ?feature_vb.
+        ?feature_vb crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+        ?feature_vb crm:P138_has_representation ?visual_item_vb.
+        ?visual_item_vb a crm:E36_Visual_Item.
+        ?visual_item_vb crm:P102_has_title ?value_uri_vb.
+        ?value_uri_vb a crm:E35_Title.
+        ?value_uri_vb rdfs:label ?verso_title_1938.
+        ?value_uri_vb crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
+    }
 
- ## VERSO TITLE 1938 (English Title) ##
- OPTIONAL {
-    <[[this]]> crm:P56_bears_feature ?feature_vb.
-    ?feature_vb crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
-    ?feature_vb crm:P138_has_representation ?visual_item_vb.
-    ?visual_item_vb a crm:E36_Visual_Item.
-    ?visual_item_vb crm:P102_has_title ?value_uri_vb.
-    ?value_uri_vb a crm:E35_Title.
-    ?value_uri_vb rdfs:label ?verso_title_1938.
-    ?value_uri_vb crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
-  }
-
- ## RECTO TITLE 1961 (English Title) ##
- OPTIONAL {
-   <[[this]]> crm:P56_bears_feature ?feature_b.
-   ?feature_b crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
-   ?feature_b a crm:E25_Man-Made_Feature.
-   ?feature_b crm:P138_has_representation ?visual_item_b.
-   ?visual_item_b a crm:E36_Visual_Item.
-   ?visual_item_b crm:P102_has_title ?value_uri_b.
-   ?value_uri_b a crm:E35_Title.
-   ?value_uri_b rdfs:label ?recto_title_1961.
-   ?value_uri_b crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>
- }
- 
- ## VERSO TITLE 1961 (English Title) ##
- OPTIONAL {
-    <[[this]]> crm:P56_bears_feature ?feature_va.
-    ?feature_va crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
-    ?feature_va crm:P138_has_representation ?visual_item_va.
-    ?visual_item_va a crm:E36_Visual_Item.
-    ?visual_item_va crm:P102_has_title ?value_uri_va.
-    ?value_uri_va a crm:E35_Title.
-    ?value_uri_va rdfs:label ?verso_title_1961.
-    ?value_uri_va crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
-  }
+    ## RECTO TITLE 1961 (English Title) ##
+    OPTIONAL {
+    <[[this]]> crm:P56_bears_feature ?feature_b.
+    ?feature_b crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+    ?feature_b a crm:E25_Man-Made_Feature.
+    ?feature_b crm:P138_has_representation ?visual_item_b.
+    ?visual_item_b a crm:E36_Visual_Item.
+    ?visual_item_b crm:P102_has_title ?value_uri_b.
+    ?value_uri_b a crm:E35_Title.
+    ?value_uri_b rdfs:label ?recto_title_1961.
+    ?value_uri_b crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>
+    }
+    
+    ## VERSO TITLE 1961 (English Title) ##
+    OPTIONAL {
+        <[[this]]> crm:P56_bears_feature ?feature_va.
+        ?feature_va crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+        ?feature_va crm:P138_has_representation ?visual_item_va.
+        ?visual_item_va a crm:E36_Visual_Item.
+        ?visual_item_va crm:P102_has_title ?value_uri_va.
+        ?value_uri_va a crm:E35_Title.
+        ?value_uri_va rdfs:label ?verso_title_1961.
+        ?value_uri_va crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
+    }
 
 }' options='{"showFilter":false}' tuple-template='{{>headerDefaultData}}'>
 
@@ -1416,21 +1421,6 @@ OPTIONAL {
                             <div class="grid-demo">
                                 <b>Data sources: </b>
                                 <div style="display:flex; flex-wrap: nowrap; margin-top: 8px;" class="row">
-                                <div style="margin-right:1vw">
-                                <semantic-query
-                                query='SELECT DISTINCT ?dataSourceUrl ?dataSourceLabel WHERE{
-                                BIND(REPLACE(STR(REPLACE(STR("[[this]]"),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?dataSourceLabel).
-                                BIND(CONCAT("http://data.itatti.harvard.edu/resource/florentinedrawings/",?dataSourceLabel) AS ?dataSourceUrl)
-                              }'
-                                template="{{> itattiDataSource}}"
-                              >
-                              <template id="itattiDataSource">
-                                <a title={{bindings.0.dataSourceLabel.value}} href="{{bindings.0.dataSourceUrl.value}}">
-                                    <img class="dataSourceIcon" alt="ITATTI" src="../../assets/images/itatti_source.png">
-                                </a>
-                              </template>
-                              </semantic-query>
-                            </div>
                             <div style="margin-right:1vw">
                                 {{#ifCond artist.value "!==" undefined}}
                                 <a title={{artistLabel.value}} href={{artist.value}}>

@@ -44,10 +44,23 @@
         "queryPattern": "
           {
             $subject crm:P108i_was_produced_by ?production.
-            ?production crm:P14_was_carried_out_by ?__value__.
+            ?production crm:P01i_is_domain_of ?domain.
+            ?domain a crm:PC14_carried_out_by.
+            ?domain crm:P02_has_range ?__value__.
           }"
       }
   ],
+  "<https://florentinedrawings.itatti.harvard.edu/resource/field/Attribution_Qualifier>":[
+  {
+    "kind": "resource",
+    "queryPattern": "
+      {
+        $subject crm:P108i_was_produced_by ?production.
+        ?production crm:P01i_is_domain_of ?domain.
+        ?domain a ?__value__.
+      }"
+  }
+],
   "<https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Technique>": [
   {
     "kind": "resource",
@@ -119,6 +132,12 @@
         "hasRange":"<http://www.cidoc-crm.org/cidoc-crm/E21_Person>"
       },
       {
+        "iri": "<https://florentinedrawings.itatti.harvard.edu/resource/field/Attribution_Qualifier>",
+        "label":"Artist Attribution",
+        "hasDomain":"<http://www.cidoc-crm.org/cidoc-crm/E22_Man-Made_Object>",
+        "hasRange":"<http://www.cidoc-crm.org/cidoc-crm/E21_Person>"
+      },
+      {
         "iri":"<https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Technique>",
         "label":"Technique",
         "hasDomain":"<http://www.cidoc-crm.org/cidoc-crm/E22_Man-Made_Object>",
@@ -147,10 +166,9 @@
     >
       <semantic-search-query-constant
         domain="<http://www.cidoc-crm.org/cidoc-crm/E22_Man-Made_Object>"
-        query=" SELECT DISTINCT ?subject ?artist ?recto_title_1938 ?recto_title_1961
+        query=" SELECT DISTINCT ?subject ?recto_title_1938 ?recto_title_1961
       WHERE {
-       ?subject crm:P108i_was_produced_by ?production.
-       ?production crm:P14_was_carried_out_by ?artist.
+       ?subject a crm:E22_Man-Made_Object.
        OPTIONAL{
          ?subject crm:P56_bears_feature ?feature_a.
          ?feature_a crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
@@ -192,11 +210,14 @@
                     id="grid-result"
                     number-of-displayed-rows="10"
                     query="
-                  SELECT DISTINCT ?subject ?artist ?artist_name ?recto_title_1938 ?recto_title_1961
+                  SELECT DISTINCT ?subject ?artist ?recto_title_1938 ?recto_title_1961
                    WHERE {
-                    ?subject crm:P108i_was_produced_by ?production.
-                    ?production crm:P14_was_carried_out_by ?artist.
-                    ?artist rdfs:label ?artist_name.
+                    ?subject a crm:E22_Man-Made_Object.
+                    OPTIONAL{
+                      ?subject crm:P108i_was_produced_by ?production.
+                      ?production crm:P01i_is_domain_of ?domain.
+                      ?domain crm:P02_has_range ?artist.
+                    }
                     OPTIONAL{
                       ?subject crm:P56_bears_feature ?feature_a.
                       ?feature_a crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
