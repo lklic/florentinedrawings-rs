@@ -672,7 +672,49 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
-                               
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?qualifierLabel ?artist_1961 WHERE{
+                                                                        ## ARTIST ATTRIBUTIONS ##
+                                                                        ## ARTIST ATTRIBUTIONS ##
+                                                                        <[[this]]> crm:P108i_was_produced_by ?production.
+                                                                        
+                                                                            ?production crm:P01i_is_domain_of ?domain_1961.
+                                                                            FILTER(regex(str(?domain_1961),"/1961"))     
+                                                                            ?domain_1961 crm:P02_has_range ?artist_1961.
+                                                                        
+                                                                        ## 1961 ##
+                                                                        OPTIONAL{
+                                                                            ?domain_1961 a crm:PC15_was_influenced_by .
+                                                                            ?domain_1961 crm:P15.1_in_the_role_of ?qualifier.
+                                                                            ?qualifier rdfs:label ?qualifierLabel
+                                                                        }
+                                                                    }  
+                                                                    ' 
+                                                                    template="{{> qualifierTemplate1961}}"
+                                                                    > 
+                                                                    <template id="qualifierTemplate1961">
+                                                                        {{#each bindings}}
+                                                                           {{#ifCond artist_1961.value "!==" undefined}}
+                                                                        <bs-col md="4">
+                                                                            <div class="grid-demo">
+                                                                                <b>Artist Attribution: </b>
+                                                                            </div>
+                                                                        </bs-col>
+                                                                        <bs-col md="8">
+                                                                            <div class="grid-demo">
+                                                                                <semantic-link iri={{artist_1961.value}}></semantic-link>
+                                                                                    {{#ifCond qualifierLabel.value "!==" undefined}}
+                                                                                    {{qualifierLabel.value}}
+                                                                                    {{/ifCond}}
+                                                                                    {{#ifCond qualifierLabel.value "===" undefined}}
+                                                                                    (by)
+                                                                                    {{/ifCond}}
+                                                                            </div>
+                                                                            </bs-col>
+                                                                        {{/ifCond}}
+                                                                        {{/each}}
+                                                                    </template>
+                                                                    </semantic-query>
 
                                                                     {{#ifCond recto_notes_1961.value "!==" undefined}}
                                                                     <bs-col md="4">
@@ -745,7 +787,49 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
-
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?qualifierLabel ?artist_1938 WHERE{
+                                                                        ## ARTIST ATTRIBUTIONS ##
+                                                                        ## ARTIST ATTRIBUTIONS ##
+                                                                        <[[this]]> crm:P108i_was_produced_by ?production.
+                                                                        
+                                                                            ?production crm:P01i_is_domain_of ?domain_1938.
+                                                                            FILTER(regex(str(?domain_1938),"/1938"))     
+                                                                            ?domain_1938 crm:P02_has_range ?artist_1938.
+                                                                        
+                                                                        ## 1938 ##
+                                                                        OPTIONAL{
+                                                                            ?domain_1938 a crm:PC15_was_influenced_by .
+                                                                            ?domain_1938 crm:P15.1_in_the_role_of ?qualifier.
+                                                                            ?qualifier rdfs:label ?qualifierLabel
+                                                                        }
+                                                                    }  
+                                                                    ' 
+                                                                    template="{{> qualifierTemplate1938}}"
+                                                                    > 
+                                                                    <template id="qualifierTemplate1938">
+                                                                        {{#each bindings}}
+                                                                           {{#ifCond artist_1938.value "!==" undefined}}
+                                                                        <bs-col md="4">
+                                                                            <div class="grid-demo">
+                                                                                <b>Artist Attribution: </b>
+                                                                            </div>
+                                                                        </bs-col>
+                                                                        <bs-col md="8">
+                                                                            <div class="grid-demo">
+                                                                                <semantic-link iri={{artist_1938.value}}></semantic-link>
+                                                                                    {{#ifCond qualifierLabel.value "!==" undefined}}
+                                                                                    {{qualifierLabel.value}}
+                                                                                    {{/ifCond}}
+                                                                                    {{#ifCond qualifierLabel.value "===" undefined}}
+                                                                                    (by)
+                                                                                    {{/ifCond}}
+                                                                            </div>
+                                                                            </bs-col>
+                                                                        {{/ifCond}}
+                                                                        {{/each}}
+                                                                    </template>
+                                                                    </semantic-query>
 
                                                                     {{#ifCond recto_notes_1938.value "!==" undefined}}
                                                                     <bs-col md="4">
@@ -832,7 +916,50 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
-                                   
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?qualifierLabel ?artist_1903 WHERE{
+                                                                        ## ARTIST ATTRIBUTIONS ##
+                                                                        ## ARTIST ATTRIBUTIONS ##
+                                                                        <[[this]]> crm:P108i_was_produced_by ?production.
+                                                                        
+                                                                            ?production crm:P01i_is_domain_of ?domain_1903.
+                                                                            FILTER(regex(str(?domain_1903),"/1903"))     
+                                                                            ?domain_1903 crm:P02_has_range ?artist_1903.
+                                                                        
+                                                                        ## 1903 ##
+                                                                        OPTIONAL{
+                                                                            ?domain_1903 a crm:PC15_was_influenced_by .
+                                                                            ?domain_1903 crm:P15.1_in_the_role_of ?qualifier.
+                                                                            ?qualifier rdfs:label ?qualifierLabel
+                                                                        }
+                                                                    }  
+                                                                    ' 
+                                                                    template="{{> qualifierTemplate1903}}"
+                                                                    > 
+                                                                    <template id="qualifierTemplate1903">
+                                                                        {{#each bindings}}
+                                                                           {{#ifCond artist_1903.value "!==" undefined}}
+                                                                        <bs-col md="4">
+                                                                            <div class="grid-demo">
+                                                                                <b>Artist Attribution: </b>
+                                                                            </div>
+                                                                        </bs-col>
+                                                                        <bs-col md="8">
+                                                                            <div class="grid-demo">
+                                                                                <semantic-link iri={{artist_1903.value}}></semantic-link>
+                                                                                    {{#ifCond qualifierLabel.value "!==" undefined}}
+                                                                                    {{qualifierLabel.value}}
+                                                                                    {{/ifCond}}
+                                                                                    {{#ifCond qualifierLabel.value "===" undefined}}
+                                                                                    (by)
+                                                                                    {{/ifCond}}
+                                                                                    
+                                                                            </div>
+                                                                            </bs-col>
+                                                                        {{/ifCond}}
+                                                                        {{/each}}
+                                                                    </template>
+                                                                    </semantic-query>
 
                                                                     {{#ifCond recto_notes_1903.value "!==" undefined}}
                                                                     <bs-col md="4">
