@@ -1293,14 +1293,7 @@
 <!-- DATA ON PAGE HEADER (right by the image) -->
 <semantic-table query=' SELECT DISTINCT ?artist ?artistLabel ?id_number ?geonames ?recto_title_1938 ?verso_title_1938 ?recto_title_1961 ?verso_title_1961 ?location ?locationLabel
 WHERE {
-
-    OPTIONAL{
-        <[[this]]> crm:P108i_was_produced_by ?production.
-        ?production crm:P01i_is_domain_of ?domain.
-        FILTER(regex(str(?domain),"https://florentinedrawings.itatti.harvard.edu/resource/carried_out_by/1961"))      
-        ?domain crm:P02_has_range ?artist.
-        ?artist rdfs:label ?artistLabel.
-    }
+    
     ## LOCATION ##
     OPTIONAL {
         <[[this]]>  crm:P30_custody_transferred_through ?transfer.
@@ -1439,18 +1432,46 @@ WHERE {
                         </bs-col>
                         {{/ifCond}}
 
-                        {{#ifCond artist.value "!==" undefined}}
-                        <bs-col lg="5" md="12"> 
-                            <div class="grid-demo"> 
-                                <b>Artist Attribution (by): </b>
-                            </div> 
-                        </bs-col>
-                        <bs-col md="7">
-                            <div class="grid-demo">
-                                <semantic-link iri={{artist.value}}></semantic-link>
-                            </div>
-                        </bs-col>
-                        {{/ifCond}}
+                        <semantic-query query='
+                        SELECT DISTINCT ?qualifierLabel ?artist WHERE{
+                            <[[this]]> crm:P108i_was_produced_by ?production.
+                            
+                                ?production crm:P01i_is_domain_of ?domain.
+                                FILTER(regex(str(?domain),"/1961"))     
+                                ?domain crm:P02_has_range ?artist.
+                            OPTIONAL{
+                                ?domain a crm:PC15_was_influenced_by .
+                                ?domain crm:P15.1_in_the_role_of ?qualifier.
+                                ?qualifier rdfs:label ?qualifierLabel
+                            }
+                        }  
+                        ' 
+                        template="{{> artistTemplate}}"
+                        > 
+                        <template id="artistTemplate">
+                            {{#each bindings}}
+                            {{#ifCond artist.value "!==" undefined}}
+                            <bs-col lg="5" md="12"> 
+                                <div class="grid-demo"> 
+                                    <b>Artist Attribution (1961): </b>
+                                </div> 
+                            </bs-col>
+                            <bs-col md="7">
+                                <div class="grid-demo">
+                                    <semantic-link iri={{artist.value}}></semantic-link>
+                                    {{#ifCond qualifierLabel.value "!==" undefined}}
+                                    {{qualifierLabel.value}}
+                                    {{/ifCond}}
+                                    {{#ifCond qualifierLabel.value "===" undefined}}
+                                    (by)
+                                    {{/ifCond}}
+                                </div>
+                            </bs-col>
+                            {{/ifCond}}
+                            {{/each}}
+                        </template>
+                        </semantic-query>
+
 
                         {{#ifCond recto_title_1961.value "!==" undefined}}
                         <bs-col lg="5" md="12"> 
