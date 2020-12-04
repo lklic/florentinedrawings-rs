@@ -1437,13 +1437,13 @@ WHERE {
                             <[[this]]> crm:P108i_was_produced_by ?production.
                             
                                 ?production crm:P01i_is_domain_of ?domain.
-                                FILTER(regex(str(?domain),"/1961"))     
                                 ?domain crm:P02_has_range ?artist.
-                            OPTIONAL{
-                                ?domain a crm:PC15_was_influenced_by .
-                                ?domain crm:P15.1_in_the_role_of ?qualifier.
-                                ?qualifier rdfs:label ?qualifierLabel
-                            }
+                                FILTER(regex(str(?domain),"/1961"))     
+                                OPTIONAL{
+                                    ?domain a crm:PC15_was_influenced_by .
+                                    ?domain crm:P15.1_in_the_role_of ?qualifier.
+                                    ?qualifier rdfs:label ?qualifierLabel
+                                }
                         }  
                         ' 
                         template="{{> artistTemplate}}"
