@@ -461,33 +461,12 @@
                                 <div class="container-fluid rs-summary-section">
                                     <!--  close row -->
                                     <semantic-table query=' SELECT DISTINCT
-                                    ?artist_1961 ?artist_1938 ?artist_1903 ?id_number ?location  ?catalogue_number
+                                    ?id_number ?location  ?catalogue_number
                                     ?recto_title_1903 ?verso_title_1903 ?recto_notes_1903 ?verso_notes_1903
                                     ?recto_title_1938 ?verso_title_1938 ?recto_notes_1938 ?verso_notes_1938
                                     ?recto_title_1961 ?verso_title_1961 ?recto_notes_1961 ?verso_notes_1961
                                     WHERE {
-                                        ## ARTIST ATTRIBUTIONS ##
-                                        <[[this]]> crm:P108i_was_produced_by ?production.
-                                        ## 1961 ##
-                                        OPTIONAL{
-                                            ?production crm:P01i_is_domain_of ?domain_1961.
-                                            FILTER(regex(str(?domain_1961),"/1961"))     
-                                            ?domain_1961 crm:P02_has_range ?artist_1961.    
-                                        }
-                                        ## 1938 ##
-                                        OPTIONAL{
-                                            ?production crm:P01i_is_domain_of ?domain_1938.
-                                            FILTER(regex(str(?domain_1938),"/1938"))     
-                                            ?domain_1938 crm:P02_has_range ?artist_1938.
-                                        }
-                                        ## 1903 ##
-                                        OPTIONAL{
-                                            ?production crm:P01i_is_domain_of ?domain_1903.
-                                            FILTER(regex(str(?domain_1903),"/1903"))     
-                                            ?domain_1903 crm:P02_has_range ?artist_1903.
-                                        }
- 
-                       
+                      
                                     ## LOCATION ##
                                     OPTIONAL {
                                         <[[this]]>  crm:P30_custody_transferred_through ?transfer.
@@ -693,31 +672,7 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
-                                                                    {{#ifCond artist.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Artist Attribution: </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            <semantic-link iri={{artist_1961.value}}></semantic-link>
-                                                                            <!-- <semantic-query query='
-                                                                            SELECT DISTINCT ?qualifier WHERE{}
-                                                                                <{{domain_1961.value}}> a crm:PC15_was_influenced_by .
-                                                                                <{{domain_1961.value}}> crm:P15.1_in_the_role_of ?qualifier.
-                                                                                ?qualifier rdfs:label ?qualifierLabel  
-                                                                            '> 
-                                                                            {{ifCond qualifierLabel.value "!==" undefined}}
-                                                                             ({{qualifierLabel.value}})
-                                                                            {{/ifCond}}
-                                                                            {{ifCond qualifierLabel.value "===" undefined}}
-                                                                             (by)
-                                                                            {{/ifCond}}
-                                                                        </semantic-query> -->
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
+                               
 
                                                                     {{#ifCond recto_notes_1961.value "!==" undefined}}
                                                                     <bs-col md="4">
@@ -790,31 +745,10 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
-                                                                    {{#ifCond artist_1938.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Artist Attribution: </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            <semantic-link iri={{artist_1938.value}}></semantic-link>
-                                                                            <!-- <semantic-query query='
-                                                                            SELECT DISTINCT ?qualifier WHERE{}
-                                                                                <{{domain_1938.value}}> a crm:PC15_was_influenced_by .
-                                                                                <{{domain_1938.value}}> crm:P15.1_in_the_role_of ?qualifier.
-                                                                                ?qualifier rdfs:label ?qualifierLabel  
-                                                                            '> 
-                                                                            {{ifCond qualifierLabel.value "!==" undefined}}
-                                                                             ({{qualifierLabel.value}})
-                                                                            {{/ifCond}}
-                                                                            {{ifCond qualifierLabel.value "===" undefined}}
-                                                                             (by)
-                                                                            {{/ifCond}}
-                                                                        </semantic-query> -->
                                                                         </div>
                                                                     </bs-col>
                                                                     {{/ifCond}}
+                                                                </template>
 
                                                                     {{#ifCond recto_notes_1938.value "!==" undefined}}
                                                                     <bs-col md="4">
@@ -901,31 +835,7 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
-                                                                    {{#ifCond artist_1903.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Artist Attribution: </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            <semantic-link iri={{artist_1903.value}}></semantic-link>
-                                                                            <!-- <semantic-query query='
-                                                                            SELECT DISTINCT ?qualifier WHERE{}
-                                                                                <{{domain_1903.value}}> a crm:PC15_was_influenced_by .
-                                                                                <{{domain_1903.value}}> crm:P15.1_in_the_role_of ?qualifier.
-                                                                                ?qualifier rdfs:label ?qualifierLabel  
-                                                                            '> 
-                                                                            {{ifCond qualifierLabel.value "!==" undefined}}
-                                                                             ({{qualifierLabel.value}})
-                                                                            {{/ifCond}}
-                                                                            {{ifCond qualifierLabel.value "===" undefined}}
-                                                                             (by)
-                                                                            {{/ifCond}}
-                                                                        </semantic-query> -->
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
+                                   
 
                                                                     {{#ifCond recto_notes_1903.value "!==" undefined}}
                                                                     <bs-col md="4">
