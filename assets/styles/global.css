@@ -236,6 +236,15 @@ a:focus {
   align-items: center;
 }
 
+.table>tbody>tr>td .rs-page__field-value{
+  word-break: break-word;
+}
+
+.table-responsive>.table>tbody>tr>td, .table-responsive>.table>tbody>tr>th, .table-responsive>.table>tfoot>tr>td, .table-responsive>.table>tfoot>tr>th, .table-responsive>.table>thead>tr>td, .table-responsive>.table>thead>tr>th
+{
+  white-space: unset !important;
+}
+
 @-webkit-keyframes fade-in-fwd {
   0% {
     -webkit-transform: translateZ(-80px);

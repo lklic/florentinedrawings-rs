@@ -159,3 +159,20 @@ header h1 {
 .pagination{
   margin-bottom: 2vh !important;
 }
+
+@media(max-width:1350px)
+{
+  .artwork_list_body .semantic-table-holder {
+    width: 60%;
+    left: 20%;
+    right: 20%;
+  }
+}
+@media(max-width:850px)
+{
+  .artwork_list_body .semantic-table-holder {
+    width: 83%;
+    left: 5%;
+    right: 5%;
+  }
+}
