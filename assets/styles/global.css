@@ -197,11 +197,12 @@ a:focus {
 .thumbnailImage{
   height: 20vh;
   max-height: 185px;
-  background: url("/assets/images/image_placeholder.png");
+  background: url("/assets/images/image_placeholder.png") no-repeat;
+  background-position: center;
 }
 
 .thumbnailImage::after{
-  background: url("/assets/images/image_placeholder.png");
+  background: url("/assets/images/image_placeholder.png") no-repeat;
   top: 0;
   left: 0;
   display: block;
@@ -210,6 +211,7 @@ a:focus {
   height: 100%;
   content: "";
   border: none;
+  background-position: center;
 }
 
 .about{
