@@ -371,31 +371,12 @@
           </bs-nav-dropdown>
         </li>
 
-        <mp-anonymous-hidden>
-          <li>
-            <mp-link url="/sparql" class="rs-body-m-M">Sparql</mp-link>
-          </li>
-        </mp-anonymous-hidden>
 
 
-        <mp-anonymous-hidden>
-          <li class="rs-only-xs">
-            <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings">
-              Setting
-            </semantic-link>
-          </li>
-        </mp-anonymous-hidden>
 
-        <mp-anonymous-hidden>
-          <li class="rs-xs-none">
-            <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings"
-              class="rs-setting-icon">
-              <i class="fa fa-cog"></i>
-            </semantic-link>
-          </li>
-        </mp-anonymous-hidden>
 
-        <mp-anonymous-hidden alt='<div></div>'>
+
+          {{!-- <mp-anonymous-hidden alt='<div></div>'>
           <bs-nav-dropdown title="Account" id="rs-account-dropdown" class="rs-account-dropdown">
 
             <bs-menu-item title='userPrincipal'>
@@ -413,7 +394,7 @@
               </semantic-query>
             </bs-menu-item>
 
-            {{!-- <semantic-link-container uri="http://www.researchspace.org/resource/MyImages">
+            <semantic-link-container uri="http://www.researchspace.org/resource/MyImages">
                   <bs-menu-item title='my images'>My Images</bs-menu-item>
                 </semantic-link-container>
 
@@ -425,8 +406,38 @@
                   <bs-menu-item title='my maps'>My Knowledge Maps</bs-menu-item>
                 </semantic-link-container>
                 
-                <bs-menu-item divider="true"></bs-menu-item> --}}
-            <bs-menu-item href="/login" title='logout'>
+                <bs-menu-item divider="true"></bs-menu-item>
+         
+
+          </bs-nav-dropdown>
+        </mp-anonymous-hidden> --}}
+
+      </ul>
+
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+  <div style="position: fixed; bottom:0; right:0; z-index:100">
+            <mp-anonymous-hidden>
+          <bs-nav-dropdown  title="Admin" id="rs-about-dropdown" class="dropup admin">
+
+            <bs-menu-item href="background" title='Background'>
+              <div class="dropdownTitle">
+                <mp-link url="/sparql" class="rs-body-m-M">Sparql</mp-link>
+              </div>
+            </bs-menu-item>
+            <bs-menu-item href="credits" title='Credits'>
+              <div class="dropdownTitle">
+                <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings"
+                  class="rs-setting-icon">
+                  <i class="fa fa-cog"></i>
+                </semantic-link>
+              </div>
+            </bs-menu-item>
+       
+
+            <hr />
+
+             <bs-menu-item href="/login" title='logout'>
               <div class="user-dropdown_item">
                 <img src="/assets/images/icons/Actions/logout_dark.svg" class="rs-xs-none user-dropdown_img">
                 <span>Logout</span>
@@ -435,9 +446,5 @@
 
           </bs-nav-dropdown>
         </mp-anonymous-hidden>
-
-      </ul>
-
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+  </div>
 </nav>
