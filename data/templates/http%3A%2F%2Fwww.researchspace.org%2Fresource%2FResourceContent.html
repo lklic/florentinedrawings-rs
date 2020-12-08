@@ -190,9 +190,8 @@
                                             [[#block "imageContent"]]
                                             <mp-overlay-dialog title="Inspect image in detail" class="miradorViewerPopup">
                                                 <mp-overlay-dialog-trigger>
-                                                  <a>
                                                     <div class="rs-page__summary-image">
-                                                        <semantic-query query='SELECT distinct ?label (bound(?mainRepresentationImage) AS ?isMainRep) (STR(COALESCE(?mainRepresentationImage,?representationImage)) AS ?imgURL)
+                                                        <semantic-query query='SELECT distinct ?locationLabel ?label (bound(?mainRepresentationImage) AS ?isMainRep) (STR(COALESCE(?mainRepresentationImage,?representationImage)) AS ?imgURL)
                                                         WHERE {
                                                             {
                                                                 <[[this]]> rso:displayLabel ?label .
@@ -201,14 +200,17 @@
                                                                 <[[this]]> crm:P56_bears_feature ?feat.             
                                                                 ?feat crm:P136_has_representation ?img_visual.
                                                                 ?img_visual crm:P129i_is_subject_of ?mainRepresentationImage.        
+                                                                <[[this]]>  crm:P30_custody_transferred_through ?transfer.
+                                                                ?transfer crm:P29_custody_recieved_by ?location.
+                                                                ?location rdfs:label ?locationLabel.
                                                             }
                                                         }' template='{{> imageThumbnail}}'>
                                                        <template id="imageThumbnail">
                                                         <img style="height:20vh" src="{{bindings.0.imgURL.value}}"/>
+                                                        <div class="subtitle"><i>Image from {{bindings.0.locationLabel.value}}</i></div>
                                                        </template>
                                                      </semantic-query>
                                                     </div>
-                                                  </a>
                                                 </mp-overlay-dialog-trigger>
                                                 <mp-overlay-dialog-content>
                                                    <div style='height: 80vh; width: 100%;'>
@@ -1638,11 +1640,18 @@ WHERE {
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
+        cursor: pointer;
     }
+    .rs-page__summary-image .subtitle{
+        margin: 10px 0px 10px 0px;
+        text-decoration: none !important;
+        color:#636363 !important;
+    }
+
     .rs-page__summary-image img{
         min-height: 35vh;
         max-height: 38vh;
-    
     }
     .miradorViewerPopup .grid-demo{
         height: 92vh;
