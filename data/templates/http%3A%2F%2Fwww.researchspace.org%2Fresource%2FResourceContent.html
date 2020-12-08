@@ -481,14 +481,6 @@
                                          ?id rdfs:label ?id_number
                                      }        
                                     
-                                     ## BERENSON CAT. NO. ##
-                                     OPTIONAL {
-                                        <[[this]]> crm:P1_is_identified_by ?cat_no.
-                                        ?cat_no a crm:E42_Identifier.
-                                        ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
-                                        ?cat_no rdfs:label ?catalogue_number.
-                                     }
-
                                      ## RECTO TITLE 1903 (Title) ##
                                      OPTIONAL {
                                        <[[this]]> crm:P56_bears_feature ?feature_rta.
@@ -661,7 +653,20 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
-                                                                    {{#ifCond catalogue_number.value "!==" undefined}}
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?pageNumber WHERE {
+                                                                        <[[this]]> crm:P129i_is_subject_of ?edition.
+                                                                        ?edition a crm:E73_Information_Object.
+                                                                        ?edition crm:P148_is_component_of ?page.
+                                                                        ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
+                                                                        ?page rdfs:label ?pageNumber
+                                                                        FILTER(regex(str(?edition),"/1961"))   
+                                                                      }
+                                                                ' 
+                                                                template="{{> pageNumberTemplate1961}}"
+                                                                > 
+                                                                <template id="pageNumberTemplate1961">
+                                                                       {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
                                                                     <bs-col md="4">
                                                                         <div class="grid-demo">
                                                                             <b>Berenson Cat.No.:</b>
@@ -669,32 +674,37 @@
                                                                     </bs-col>
                                                                     <bs-col md="8">
                                                                         <div class="grid-demo">
-                                                                            {{catalogue_number.value}}
+                                                                            {{#each bindings}}
+                                                                                {{pageNumber.value}}  
+                                                                            {{/each}}
                                                                         </div>
-                                                                    </bs-col>
+                                                                        </bs-col>
                                                                     {{/ifCond}}
-
+                                                                </template>
+                                                                    </semantic-query>
+             
                                                                     <semantic-query query='
-                                                                    SELECT DISTINCT ?qualifierLabel ?artist_1961 WHERE{
-                                                                        ## ARTIST ATTRIBUTIONS ##
-                                                                        ## ARTIST ATTRIBUTIONS ##
-                                                                        <[[this]]> crm:P108i_was_produced_by ?production.
-                                                                        
-                                                                            ?production crm:P01i_is_domain_of ?domain_1961.
-                                                                            FILTER(regex(str(?domain_1961),"/1961"))     
-                                                                            ?domain_1961 crm:P02_has_range ?artist_1961.
-                                                                        
-                                                                        ## 1961 ##
-                                                                        OPTIONAL{
-                                                                            ?domain_1961 a crm:PC15_was_influenced_by .
-                                                                            ?domain_1961 crm:P15.1_in_the_role_of ?qualifier.
-                                                                            ?qualifier rdfs:label ?qualifierLabel
-                                                                        }
-                                                                    }  
+                                                                        SELECT DISTINCT ?artist_1961 ?label WHERE {
+                                                                            <[[this]]> crm:P108i_was_produced_by ?production.
+                                                                            ?production crm:P01i_is_domain_of ?domain.
+                                                                            ?domain crm:P02_has_range ?artist_1961.
+                                                                            ?artist_1961 rdfs:label ?artistLabel.
+                                                                             {
+                                                                                ?domain a crm:PC15_was_influenced_by.
+                                                                                ?domain crm:P15.1_in_the_role_of ?qualifier.
+                                                                                ?qualifier rdfs:label ?qualifierLabel.
+                                                                             } union {
+                                                                                FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
+                                                                                BIND("by" as ?qualifierLabel)
+                                                                              } 
+                                                                            BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
+                                                                             FILTER(regex(str(?domain),"/1961"))   
+                                                                          }
                                                                     ' 
                                                                     template="{{> qualifierTemplate1961}}"
                                                                     > 
                                                                     <template id="qualifierTemplate1961">
+                                                                        {{log bindings}}
                                                                         {{#each bindings}}
                                                                            {{#ifCond artist_1961.value "!==" undefined}}
                                                                         <bs-col md="4">
@@ -704,13 +714,7 @@
                                                                         </bs-col>
                                                                         <bs-col md="8">
                                                                             <div class="grid-demo">
-                                                                                <semantic-link iri={{artist_1961.value}}></semantic-link>
-                                                                                    {{#ifCond qualifierLabel.value "!==" undefined}}
-                                                                                    {{qualifierLabel.value}}
-                                                                                    {{/ifCond}}
-                                                                                    {{#ifCond qualifierLabel.value "===" undefined}}
-                                                                                    (by)
-                                                                                    {{/ifCond}}
+                                                                                <semantic-link iri={{artist_1961.value}}>{{label.value}}</semantic-link>                                                                     
                                                                             </div>
                                                                             </bs-col>
                                                                         {{/ifCond}}
@@ -776,36 +780,53 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
-                                                                    {{#ifCond catalogue_number.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Berenson Cat.No.:</b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{catalogue_number.value}}
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?pageNumber WHERE {
+                                                                        <[[this]]> crm:P129i_is_subject_of ?edition.
+                                                                        ?edition a crm:E73_Information_Object.
+                                                                        ?edition crm:P148_is_component_of ?page.
+                                                                        ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
+                                                                        ?page rdfs:label ?pageNumber
+                                                                        FILTER(regex(str(?edition),"/1938"))   
+                                                                      }
+                                                                    ' 
+                                                                    template="{{> pageNumberTemplate1938}}"
+                                                                    > 
+                                                                        <template id="pageNumberTemplate1938">
+                                                                            {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Berenson Cat.No.:</b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{#each bindings}}
+                                                                                        {{pageNumber.value}}                                                             
+                                                                                    {{/each}}
+                                                                                </div>
+                                                                                </bs-col>
+                                                                            {{/ifCond}}
+                                                                        </template>
+                                                                    </semantic-query>
 
                                                                     <semantic-query query='
-                                                                    SELECT DISTINCT ?qualifierLabel ?artist_1938 WHERE{
-                                                                        ## ARTIST ATTRIBUTIONS ##
-                                                                        ## ARTIST ATTRIBUTIONS ##
+                                                                    SELECT DISTINCT ?artist_1938 ?label WHERE {
                                                                         <[[this]]> crm:P108i_was_produced_by ?production.
-                                                                        
-                                                                            ?production crm:P01i_is_domain_of ?domain_1938.
-                                                                            FILTER(regex(str(?domain_1938),"/1938"))     
-                                                                            ?domain_1938 crm:P02_has_range ?artist_1938.
-                                                                        
-                                                                        ## 1938 ##
-                                                                        OPTIONAL{
-                                                                            ?domain_1938 a crm:PC15_was_influenced_by .
-                                                                            ?domain_1938 crm:P15.1_in_the_role_of ?qualifier.
-                                                                            ?qualifier rdfs:label ?qualifierLabel
-                                                                        }
-                                                                    }  
+                                                                        ?production crm:P01i_is_domain_of ?domain.
+                                                                        ?domain crm:P02_has_range ?artist_1938.
+                                                                        ?artist_1938 rdfs:label ?artistLabel.
+                                                                         {
+                                                                            ?domain a crm:PC15_was_influenced_by.
+                                                                            ?domain crm:P15.1_in_the_role_of ?qualifier.
+                                                                            ?qualifier rdfs:label ?qualifierLabel.
+                                                                         } union {
+                                                                            FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
+                                                                            BIND("by" as ?qualifierLabel)
+                                                                          } 
+                                                                        BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
+                                                                         FILTER(regex(str(?domain),"/1938"))   
+                                                                      }
                                                                     ' 
                                                                     template="{{> qualifierTemplate1938}}"
                                                                     > 
@@ -819,13 +840,7 @@
                                                                         </bs-col>
                                                                         <bs-col md="8">
                                                                             <div class="grid-demo">
-                                                                                <semantic-link iri={{artist_1938.value}}></semantic-link>
-                                                                                    {{#ifCond qualifierLabel.value "!==" undefined}}
-                                                                                    {{qualifierLabel.value}}
-                                                                                    {{/ifCond}}
-                                                                                    {{#ifCond qualifierLabel.value "===" undefined}}
-                                                                                    (by)
-                                                                                    {{/ifCond}}
+                                                                                <semantic-link iri={{artist_1938.value}}>{{label.value}}</semantic-link>
                                                                             </div>
                                                                             </bs-col>
                                                                         {{/ifCond}}
@@ -905,36 +920,53 @@
                                                                         </bs-col>
                                                                     {{/ifCond}}
 
-                                                                    {{#ifCond catalogue_number.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Berenson Cat.No.:</b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{catalogue_number.value}}
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?pageNumber WHERE {
+                                                                        <[[this]]> crm:P129i_is_subject_of ?edition.
+                                                                        ?edition a crm:E73_Information_Object.
+                                                                        ?edition crm:P148_is_component_of ?page.
+                                                                        ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
+                                                                        ?page rdfs:label ?pageNumber
+                                                                        FILTER(regex(str(?edition),"/1903"))   
+                                                                      }
+                                                                    ' 
+                                                                    template="{{> pageNumberTemplate1903}}"
+                                                                    > 
+                                                                        <template id="pageNumberTemplate1903">
+                                                                            {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Berenson Cat.No.:</b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                            {{#each bindings}}
+                                                                                    {{pageNumber.value}}                                                             
+                                                                                    {{/each}}
+                                                                                </div>
+                                                                                </bs-col>
+                                                                            {{/ifCond}}
+                                                                        </template>
+                                                                    </semantic-query>
 
                                                                     <semantic-query query='
-                                                                    SELECT DISTINCT ?qualifierLabel ?artist_1903 WHERE{
-                                                                        ## ARTIST ATTRIBUTIONS ##
-                                                                        ## ARTIST ATTRIBUTIONS ##
+                                                                    SELECT DISTINCT ?artist_1903 ?label WHERE {
                                                                         <[[this]]> crm:P108i_was_produced_by ?production.
-                                                                        
-                                                                            ?production crm:P01i_is_domain_of ?domain_1903.
-                                                                            FILTER(regex(str(?domain_1903),"/1903"))     
-                                                                            ?domain_1903 crm:P02_has_range ?artist_1903.
-                                                                        
-                                                                        ## 1903 ##
-                                                                        OPTIONAL{
-                                                                            ?domain_1903 a crm:PC15_was_influenced_by .
-                                                                            ?domain_1903 crm:P15.1_in_the_role_of ?qualifier.
-                                                                            ?qualifier rdfs:label ?qualifierLabel
-                                                                        }
-                                                                    }  
+                                                                        ?production crm:P01i_is_domain_of ?domain.
+                                                                        ?domain crm:P02_has_range ?artist_1903.
+                                                                        ?artist_1903 rdfs:label ?artistLabel.
+                                                                         {
+                                                                            ?domain a crm:PC15_was_influenced_by.
+                                                                            ?domain crm:P15.1_in_the_role_of ?qualifier.
+                                                                            ?qualifier rdfs:label ?qualifierLabel.
+                                                                         } union {
+                                                                            FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
+                                                                            BIND("by" as ?qualifierLabel)
+                                                                          } 
+                                                                        BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
+                                                                         FILTER(regex(str(?domain),"/1903"))   
+                                                                      }
                                                                     ' 
                                                                     template="{{> qualifierTemplate1903}}"
                                                                     > 
@@ -948,14 +980,7 @@
                                                                         </bs-col>
                                                                         <bs-col md="8">
                                                                             <div class="grid-demo">
-                                                                                <semantic-link iri={{artist_1903.value}}></semantic-link>
-                                                                                    {{#ifCond qualifierLabel.value "!==" undefined}}
-                                                                                    {{qualifierLabel.value}}
-                                                                                    {{/ifCond}}
-                                                                                    {{#ifCond qualifierLabel.value "===" undefined}}
-                                                                                    (by)
-                                                                                    {{/ifCond}}
-                                                                                    
+                                                                                <semantic-link iri={{artist_1903.value}}>{{label.value}}</semantic-link>      
                                                                             </div>
                                                                             </bs-col>
                                                                         {{/ifCond}}
@@ -1435,18 +1460,22 @@ WHERE {
                         {{/ifCond}}
 
                         <semantic-query query='
-                        SELECT DISTINCT ?qualifierLabel ?artist WHERE{
+                        SELECT DISTINCT ?artist ?label WHERE {
                             <[[this]]> crm:P108i_was_produced_by ?production.
-                            
-                                ?production crm:P01i_is_domain_of ?domain.
-                                ?domain crm:P02_has_range ?artist.
-                                FILTER(regex(str(?domain),"/1961"))     
-                                OPTIONAL{
-                                    ?domain a crm:PC15_was_influenced_by .
-                                    ?domain crm:P15.1_in_the_role_of ?qualifier.
-                                    ?qualifier rdfs:label ?qualifierLabel
-                                }
-                        }  
+                            ?production crm:P01i_is_domain_of ?domain.
+                            ?domain crm:P02_has_range ?artist.
+                            ?artist rdfs:label ?artistLabel.
+                             {
+                                ?domain a crm:PC15_was_influenced_by.
+                                ?domain crm:P15.1_in_the_role_of ?qualifier.
+                                ?qualifier rdfs:label ?qualifierLabel.
+                             } union {
+                                FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
+                                BIND("by" as ?qualifierLabel)
+                              } 
+                            BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
+                             FILTER(regex(str(?domain),"/1961"))   
+                          }
                         ' 
                         template="{{> artistTemplate}}"
                         > 
@@ -1460,13 +1489,7 @@ WHERE {
                             </bs-col>
                             <bs-col md="7">
                                 <div class="grid-demo">
-                                    <semantic-link iri={{artist.value}}></semantic-link>
-                                    {{#ifCond qualifierLabel.value "!==" undefined}}
-                                    {{qualifierLabel.value}}
-                                    {{/ifCond}}
-                                    {{#ifCond qualifierLabel.value "===" undefined}}
-                                    (by)
-                                    {{/ifCond}}
+                                    <semantic-link iri={{artist.value}}>{{label.value}}</semantic-link>
                                 </div>
                             </bs-col>
                             {{/ifCond}}
