@@ -90,11 +90,12 @@
 }
 
 #header-search {
-  width: 20vw;
+  width: 28vw;
   display: flex;
   align-items: center;
   z-index: 100;
   color: gray !important;
+  margin-left: 40px;
 }
 
 #header-search .semantic-form-input-decorator__header {
@@ -115,9 +116,14 @@
 }
 #header-search  .cardinality-support__group-instance
 {
+  padding: 0 !important;
   box-shadow:  none !important;
 }
 #header-search .form-switch__content{
+  margin: 0 !important;
+}
+
+#header-search .semantic-form-input-decorator{
   margin: 0 !important;
 }
 
