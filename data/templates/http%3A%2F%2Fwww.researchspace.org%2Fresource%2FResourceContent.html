@@ -142,14 +142,16 @@
                         <bs-row class="row-center" style="padding:32px 0px 8px 0px;">
                             <bs-col xs=11 sm=10 lg=8 style="padding: 0px;">
                                 <div class="row" style="height:100%;">
-                                    <semantic-query template='{{> imageViewer}}' query="
-                                    SELECT  (count(?image) as ?count) 
+                                    <semantic-query template='{{> imageViewer}}' query='
+                                    SELECT (count(?mainRepresentationImage) as ?count) 
                                     WHERE { 
                                         <[[this]]> crm:P56_bears_feature ?feat.             
-                                        ?feat crm:P136_has_representation ?img_visual.
-                                        ?img_visual crm:P129i_is_subject_of ?image .                                     
+                                        ?feat ?has ?img_visual.
+                                        ?img_visual crm:P129i_is_subject_of ?mainRepresentationImage.     
+                                        ?mainRepresentationImage crm:P2_has_type <http://iiif.io/api/image>.                                  
+                                        FILTER (regex(str(?mainRepresentationImage),".jpg"))                               
                                     }
-                                    ">
+                                    '>
                                     <template id='imageViewer'>
 
                                         {{#ifCond bindings.0.count.value "!==" "0"}}
@@ -187,49 +189,59 @@
 
                                             </div>
                                             -->
+
                                             [[#block "imageContent"]]
-                                            <mp-overlay-dialog title="Inspect image in detail" class="miradorViewerPopup">
-                                                <mp-overlay-dialog-trigger>
-                                                    <div class="rs-page__summary-image">
-                                                        <semantic-query query='SELECT distinct ?locationLabel ?label (bound(?mainRepresentationImage) AS ?isMainRep) (STR(COALESCE(?mainRepresentationImage,?representationImage)) AS ?imgURL)
-                                                        WHERE {
-                                                            {
-                                                                <[[this]]> rso:displayLabel ?label .
-                                                            }
-                                                            UNION{
-                                                                <[[this]]> crm:P56_bears_feature ?feat.             
-                                                                ?feat crm:P136_has_representation ?img_visual.
-                                                                ?img_visual crm:P129i_is_subject_of ?mainRepresentationImage.        
-                                                                <[[this]]>  crm:P30_custody_transferred_through ?transfer.
-                                                                ?transfer crm:P29_custody_recieved_by ?location.
-                                                                ?location rdfs:label ?locationLabel.
-                                                            }
-                                                        }' template='{{> imageThumbnail}}'>
-                                                       <template id="imageThumbnail">
-                                                        <img style="height:20vh" src="{{bindings.0.imgURL.value}}"/>
-                                                        <div class="subtitle"><i>Image from {{bindings.0.locationLabel.value}}</i></div>
-                                                       </template>
-                                                     </semantic-query>
-                                                    </div>
-                                                </mp-overlay-dialog-trigger>
-                                                <mp-overlay-dialog-content>
-                                                   <div style='height: 80vh; width: 100%;'>
-                                                        <rs-iiif-mirador
-                                                        image-or-region="[[this]]" 
-            
-                                                        image-id-pattern='
-                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                        <[[this]]> crm:P56_bears_feature ?feat.             
-                                                        ?feat crm:P136_has_representation ?img_visual.
-                                                        ?img_visual crm:P129i_is_subject_of ?image . 
-                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                        '
-                                                        iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
-                                                        >
-                                                        </rs-iiif-mirador>
-                                                    </div>
-                                                </mp-overlay-dialog-content>
-                                              </mp-overlay-dialog>
+  
+
+                                            <rs-object-representations query='SELECT ?label (bound(?mainRepresentationImage) AS ?isMainRep) (STR(COALESCE(,?representationImage)) AS ?imgURL)
+                                            WHERE {
+                                                {
+                                                    <[[this]]>  crm:P30_custody_transferred_through ?transfer.
+                                                    ?transfer crm:P29_custody_recieved_by ?location.
+                                                    ?location rdfs:label ?locationLabel.
+                                                    BIND(CONCAT("Image from ",?locationLabel) as ?label)
+                                                  }
+                                                  UNION
+                                                 {
+                                                    <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P46_is_composed_of> ?main_feat.             
+                                                    ?main_feat <http://www.cidoc-crm.org/cidoc-crm/P138_has_representation> ?main_visual.
+                                                    ?main_visual crm:P129i_is_subject_of ?mainRepresentationImage.        
+                                                     }
+                                               UNION {
+                                                      <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?feat.             
+                                                        ?feat <http://www.cidoc-crm.org/cidoc-crm/P148_is_component_of> ?img_visual.
+                                                        ?img_visual crm:P129i_is_subject_of ?representationImage.  
+                                                        ?representationImage crm:P2_has_type <http://iiif.io/api/image>
+                                                        FILTER (regex(str(?representationImage),".jpg"))  
+                                                }
+                       
+                                            
+
+                                              
+ }'
+                                           template='{{>imageTemplate}}'
+                                           >
+                                           
+                                            <template id="imageTemplate">
+                                                    <img class="object-representations__image--rep" src="{{imgURL.value}}"/>
+                                                    <!-- <div class="subtitle"><i>Image from {{label.value}}</i></div> -->
+                                            </template>
+                                            </rs-object-representations>
+
+                                            <semantic-query template='{{> imageLabel}}' query='
+                                                SELECT ?label
+                                                WHERE { 
+                                                    <[[this]]>  crm:P30_custody_transferred_through ?transfer.
+                                                    ?transfer crm:P29_custody_recieved_by ?location.
+                                                    ?location rdfs:label ?locationLabel.
+                                                    BIND(CONCAT("Image from ",?locationLabel) as ?label)             
+                                                }
+                                                '>
+                                                <template id='imageLabel'>
+                                                    <div class="subtitle"><i>{{bindings.0.label.value}}</i></div>
+                                                    </template>
+                                                `    </semantic-query>
+
 
                                             <!-- <rs-iiif-mirador
                                             image-or-region="[[this]]" 
@@ -669,7 +681,7 @@
                                                                        {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
                                                                     <bs-col md="4">
                                                                         <div class="grid-demo">
-                                                                            <b>Berenson Cat.No.:</b>
+                                                                            <b>Page number:</b>
                                                                         </div>
                                                                     </bs-col>
                                                                     <bs-col md="8">
@@ -683,6 +695,35 @@
                                                                 </template>
                                                                     </semantic-query>
              
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?catalogueNumber WHERE {
+                                                                        <[[this]]> crm:P1_is_identified_by ?cat_no.
+                                                                        ?cat_no a crm:E42_Identifier.
+                                                                        ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
+                                                                        ?cat_no rdfs:label ?catalogueNumber.
+                                                                        FILTER(regex(str(?cat_no),"/1961"))   
+                                                                      }
+                                                                    ' 
+                                                                    template="{{> catalogueNumberTemplate1961}}"
+                                                                    > 
+                                                                        <template id="catalogueNumberTemplate1961">
+                                                                            {{#ifCond bindings.0.catalogueNumber.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Berenson Cat. No.:</b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{#each bindings}}
+                                                                                        {{catalogueNumber.value}}                                                             
+                                                                                    {{/each}}
+                                                                                </div>
+                                                                                </bs-col>
+                                                                            {{/ifCond}}
+                                                                        </template>
+                                                                    </semantic-query>
+
                                                                     <semantic-query query='
                                                                         SELECT DISTINCT ?artist_1961 ?label WHERE {
                                                                             <[[this]]> crm:P108i_was_produced_by ?production.
@@ -780,6 +821,36 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
+                                                                    
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?catalogueNumber WHERE {
+                                                                        <[[this]]> crm:P1_is_identified_by ?cat_no.
+                                                                        ?cat_no a crm:E42_Identifier.
+                                                                        ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
+                                                                        ?cat_no rdfs:label ?catalogueNumber.
+                                                                        FILTER(regex(str(?cat_no),"/1938"))   
+                                                                      }
+                                                                    ' 
+                                                                    template="{{> catalogueNumberTemplate1938}}"
+                                                                    > 
+                                                                        <template id="catalogueNumberTemplate1938">
+                                                                            {{#ifCond bindings.0.catalogueNumber.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Berenson Cat. No.:</b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{#each bindings}}
+                                                                                        {{catalogueNumber.value}}                                                             
+                                                                                    {{/each}}
+                                                                                </div>
+                                                                                </bs-col>
+                                                                            {{/ifCond}}
+                                                                        </template>
+                                                                    </semantic-query>
+
                                                                     <semantic-query query='
                                                                     SELECT DISTINCT ?pageNumber WHERE {
                                                                         <[[this]]> crm:P129i_is_subject_of ?edition.
@@ -796,7 +867,7 @@
                                                                             {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
                                                                             <bs-col md="4">
                                                                                 <div class="grid-demo">
-                                                                                    <b>Berenson Cat.No.:</b>
+                                                                                    <b>Page number:</b>
                                                                                 </div>
                                                                             </bs-col>
                                                                             <bs-col md="8">
@@ -919,7 +990,34 @@
                                                                             </div>
                                                                         </bs-col>
                                                                     {{/ifCond}}
-
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?catalogueNumber WHERE {
+                                                                        <[[this]]> crm:P1_is_identified_by ?cat_no.
+                                                                        ?cat_no a crm:E42_Identifier.
+                                                                        ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
+                                                                        ?cat_no rdfs:label ?catalogueNumber.
+                                                                        FILTER(regex(str(?cat_no),"/1903"))   
+                                                                      }
+                                                                    ' 
+                                                                    template="{{> catalogueNumberTemplate1903}}"
+                                                                    > 
+                                                                        <template id="catalogueNumberTemplate1903">
+                                                                            {{#ifCond bindings.0.catalogueNumber.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Berenson Cat. No.:</b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{#each bindings}}
+                                                                                        {{catalogueNumber.value}}                                                             
+                                                                                    {{/each}}
+                                                                                </div>
+                                                                                </bs-col>
+                                                                            {{/ifCond}}
+                                                                        </template>
+                                                                    </semantic-query>
                                                                     <semantic-query query='
                                                                     SELECT DISTINCT ?pageNumber WHERE {
                                                                         <[[this]]> crm:P129i_is_subject_of ?edition.
@@ -936,7 +1034,7 @@
                                                                             {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
                                                                             <bs-col md="4">
                                                                                 <div class="grid-demo">
-                                                                                    <b>Berenson Cat.No.:</b>
+                                                                                    <b>Page number:</b>
                                                                                 </div>
                                                                             </bs-col>
                                                                             <bs-col md="8">
@@ -1667,11 +1765,17 @@ WHERE {
         cursor: pointer;
     }
     .rs-page__summary-image .subtitle{
+        text-align: center;
         margin: 10px 0px 10px 0px;
         text-decoration: none !important;
         color:#636363 !important;
     }
-
+    .subtitle{
+        text-align: center;
+        margin: 10px 0px 10px 0px;
+        text-decoration: none !important;
+        color:#636363 !important;
+    }
     .rs-page__summary-image img{
         min-height: 35vh;
         max-height: 38vh;

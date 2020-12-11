@@ -144,6 +144,11 @@
   width: 20vw;
 }
 
+#header-search .researchspace-table-widget-holder{
+  box-shadow: 2px 2px 10px 0px lightgrey;
+  border-radius: 0px 0px 10px 10px;
+}
+
 #header-search input {
   color: black !important;
   border-radius: 0px 20px 20px 0px;
@@ -152,6 +157,9 @@
   align-self: center;
   background: white;
   box-shadow: 0px 0px 12px -5px #ababab;
+}
+#header-search .table > tbody > tr > td {
+  border-bottom-color: #cacaca !important;
 }
 
 #header-search .form-group {
