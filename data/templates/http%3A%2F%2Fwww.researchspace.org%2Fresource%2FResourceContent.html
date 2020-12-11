@@ -193,7 +193,7 @@
                                             [[#block "imageContent"]]
   
 
-                                            <rs-object-representations query='SELECT ?label (bound(?mainRepresentationImage) AS ?isMainRep) (STR(COALESCE(,?representationImage)) AS ?imgURL)
+                                            <rs-object-representations query='SELECT ?label (bound(?mainRepresentationImage) AS ?isMainRep) (STR(COALESCE(?mainRepresentationImage,?representationImage)) AS ?imgURL)
                                             WHERE {
                                                 {
                                                     <[[this]]>  crm:P30_custody_transferred_through ?transfer.
@@ -234,7 +234,7 @@
                                                     <[[this]]>  crm:P30_custody_transferred_through ?transfer.
                                                     ?transfer crm:P29_custody_recieved_by ?location.
                                                     ?location rdfs:label ?locationLabel.
-                                                    BIND(CONCAT("Image from ",?locationLabel) as ?label)             
+                                                    BIND(CONCAT("Images from ",?locationLabel) as ?label)             
                                                 }
                                                 '>
                                                 <template id='imageLabel'>
