@@ -319,7 +319,7 @@
                                               </mp-overlay-dialog>
                                   
                                               <!-- THUMBNAILS FOR PAGES -->
-                                              <mp-overlay-dialog title="Inspect image in detail" class="miradorViewerPopup">
+                                              <mp-overlay-dialog title="" class="miradorViewerPopup">
                                                 <mp-overlay-dialog-trigger>
                                                     <div >
                                                         <semantic-query query='SELECT  ?pageImage
@@ -393,9 +393,10 @@
                                                     ?feat crm:P129i_is_subject_of ?plate.
                                                     ?plate crm:P129i_is_subject_of ?image.  
                                                     ?image crm:P2_has_type <http://iiif.io/api/image>.
-                                                    BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                    BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imagio)
+                                                    BIND(REPLACE(STR(REPLACE(STR(?imagio),"florentinedrawings!","florentinedrawings!plates!")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
                                                     '
-                                                    iiif-server-url="https://ids.lib.harvard.edu/ids/iiif" 
+                                                    iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
                                                     >
                                                     </rs-iiif-mirador>
                                                 </div>
