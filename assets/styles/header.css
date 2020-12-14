@@ -89,13 +89,30 @@
   width: 100%;
 }
 
-#header-search {
-  width: 28vw;
+#header-search.search-page {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   z-index: 100;
   color: gray !important;
-  margin-left: 40px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 4vh;
+  margin-bottom: 4vh;
+}
+
+
+#header-search.home-page {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 100;
+  color: gray !important;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  flex-direction: column;
 }
 
 #header-search .semantic-form-input-decorator__header {
@@ -109,15 +126,18 @@
 #header-search .cardinality-support__add-value {
   display: none;
 }
+
 #header-search .form-switch {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 #header-search .cardinality-support__group-instance {
   padding: 0 !important;
   box-shadow: none !important;
 }
+
 #header-search .form-switch__content {
   margin: 0 !important;
 }
@@ -138,39 +158,67 @@
   cursor: pointer;
 }
 
-#header-search .semantic-table-holder {
-  display: none;
-  position: absolute;
-  width: 20vw;
-}
 
-#header-search .researchspace-table-widget-holder{
+/* #header-search .researchspace-table-widget-holder{
   box-shadow: 2px 2px 10px 0px lightgrey;
   border-radius: 0px 0px 10px 10px;
-}
+} */
 
-#header-search input {
+#header-search.search-page input{
   color: black !important;
   border-radius: 0px 20px 20px 0px;
-  width: 20vw;
+  width: 56vw;
   height: 5vh;
   align-self: center;
   background: white;
   box-shadow: 0px 0px 12px -5px #ababab;
 }
-#header-search .table > tbody > tr > td {
-  border-bottom-color: #cacaca !important;
+
+#header-search.home-page  input {
+  color: black !important;
+  border-radius: 0px 20px 20px 0px;
+  width: 41vw;
+  height: 5vh;
+  align-self: center;
+  background: white;
+  box-shadow: 0px 0px 12px -5px #ababab;
 }
+
+#header-search input:focus {
+  border: none !important;
+}
+
+
+/* #header-search .table > tbody > tr > td {
+  border-bottom-color: #cacaca !important;
+} */
 
 #header-search .form-group {
   margin: 0 !important;
 }
 
-#header-search .form-group:focus-within + .semantic-table-holder {
+#header-search-results {
+  display: none;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+#search:focus-within  #header-search-results {
   display: block !important;
 }
 
-#header-search .semantic-table-holder:hover {
+#search #header-search-results:hover {
+  display: block !important;
+}
+#search:focus-within  #header-search-results{
+  display: block !important;
+}
+
+#searchContent:focus-within + #homepageContent{
+  display: none !important;
+}
+
+#search #header-search-results:hover {
   display: block !important;
 }
 
@@ -178,9 +226,7 @@
   color: gray !important;
 }
 
-#header-search .semantic-table-holder {
-  background: white !important;
-}
+
 
 #header-search-select select {
   height: 5vh !important;

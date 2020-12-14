@@ -5,9 +5,9 @@
     <link href="/assets/styles/annotation.css" rel="stylesheet" />
 
     <div class="row">
-      <div class="col-sm-8 col-sm-offset-2">
-        <header>
-          <h1>Discover Drawings</h1>
+      <div class="col-sm-7">
+        <header style="margin-left: 20px;">
+          <h1 >Discover Drawings</h1>
           <h3>
             <i
               >Use filters to search and discover the dataset of more than 8000
@@ -160,32 +160,209 @@
     >
       <semantic-search-query-constant
         domain="<http://www.cidoc-crm.org/cidoc-crm/E22_Man-Made_Object>"
-        query=" SELECT DISTINCT ?subject  ?recto_title_1938 ?recto_title_1961
+        query=" SELECT DISTINCT ?subject 
       WHERE {
        ?subject a crm:E22_Man-Made_Object.
-       
-       OPTIONAL{
-         ?subject crm:P56_bears_feature ?feature_a.
-         ?feature_a crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
-         ?feature_a a crm:E25_Man-Made_Feature.
-         ?feature_a crm:P138_has_representation ?visual_item_a.
-         ?visual_item_a a crm:E36_Visual_Item.
-         OPTIONAL{
-           ?visual_item_a crm:P102_has_title ?value_uri_a.
-           ?value_uri_a a crm:E35_Title.
-           ?value_uri_a rdfs:label ?recto_title_1961.
-           ?value_uri_a crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
-          }
-         OPTIONAL{
-           ?visual_item_a crm:P102_has_title ?value_uri.
-           ?value_uri a crm:E35_Title.
-           ?value_uri rdfs:label ?recto_title_1938.
-           ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
-         }
-       }
       }"
       >
       </semantic-search-query-constant>
+      <div id="header-search" class="search-page">
+          <semantic-form new-subject-template='http://www.example.com/switch/actions/{{UUID}}' post-action='redirect'
+            browser-persistence=true form-id='example-8' fields='[
+          {
+            "id": "switch-action-type",
+            "label": "Switch",
+            "description": "Allows to select different forms",
+            "xsdDatatype": "xsd:anyURI",
+            "selectPattern": "SELECT $value WHERE { $subject <http://www.example.com/switch/has-action> $value }",
+            "insertPattern": "INSERT { $subject <http://www.example.com/switch/has-action> $value } WHERE {}",
+            "deletePattern": "DELETE { $subject <http://www.example.com/switch/has-action> $value } WHERE {}"
+          }
+        ]'>
+            <semantic-form-switch for="switch-action-type" switch-on-field="switch-case-type">
+              <semantic-form-switch-case label="All fields">
+                <semantic-form-composite-input for="switch-action-type"
+                  new-subject-template='http://www.example.com/switch/action/allfields' fields='[
+                {
+                  "id": "switch-case-type",
+                  "xsdDatatype": "xsd:anyURI",
+                  "minOccurs": "1",
+                  "maxOccurs": "1",
+                  "selectPattern": "SELECT ?value WHERE { $subject <http://www.example.com/switch/has-action-type> ?value }",
+                  "insertPattern": "INSERT { $subject <http://www.example.com/switch/has-action-type> ?value } WHERE {}",
+                  "deletePattern": "DELETE { $subject <http://www.example.com/switch/has-action-type> ?value } WHERE {}"
+                }
+              ]'>
+
+                  <semantic-form-hidden-input for="switch-case-type"
+                    default-value="http://www.example.com/switch/type/send">
+                  </semantic-form-hidden-input>
+
+                    <semantic-search-query-keyword domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
+                      placeholder="Search for any field e.g. Michelangelo" escape-lucene-syntax='false' query='
+                      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+                      SELECT ?subject WHERE {
+
+                      {
+                      ?artwork a crm:E22_Man-Made_Object.
+                      ?artwork crm:P108i_was_produced_by ?production.
+                      ?production crm:P01i_is_domain_of ?domain.
+                      ?domain crm:P02_has_range ?subject.
+                      ?subject rdfs:label ?someLabel. 
+                      ?someLabel bds:search ?__token__ .
+                      ?someLabel bds:minRelevance "0.3"^^xsd:double;
+                      bds:matchAllTerms "true"  .
+                      BIND( xsd:integer(substr(str(?value), 33)) as ?q)
+                      }
+                      UNION
+                      {
+                    ?subject a crm:E22_Man-Made_Object.
+                      ?subject  <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
+                      ?id rdfs:label ?someLabel. 
+                      ?someLabel bds:search ?__token__ .
+                      ?someLabel bds:minRelevance "0.3"^^xsd:double;
+                      bds:matchAllTerms "true"  .
+                      BIND( xsd:integer(substr(str(?value), 33)) as ?q)
+                      }
+                      UNION
+                      {
+                        ?subject a crm:E22_Man-Made_Object.
+                      ?subject crm:P56_bears_feature ?feature.
+                      ?feature crm:P2_has_type ?featureType.
+                      ?feature a crm:E25_Man-Made_Feature.
+                      ?feature crm:P138_has_representation ?visual_item.
+                      ?visual_item a crm:E36_Visual_Item.
+                      ?visual_item crm:P102_has_title ?value_uri.
+                      ?value_uri a crm:E35_Title.
+                      ?value_uri rdfs:label ?someLabel.
+                      ?value_uri crm:P141i_was_assigned_by ?editionAttributeAssignment.
+                      ?someLabel bds:search ?__token__ .
+                      ?someLabel bds:minRelevance "0.3"^^xsd:double;
+                      bds:matchAllTerms "true"  .
+                      BIND( xsd:integer(substr(str(?value), 33)) as ?q)
+                      }
+                      
+                      
+                      } ORDER BY ?q
+                    '></semantic-search-query-keyword>
+                </semantic-form-composite-input>
+              </semantic-form-switch-case>
+              <semantic-form-switch-case label="Artist">
+                <semantic-form-composite-input for="switch-action-type"
+                  new-subject-template='http://www.example.com/switch/action/artist' fields='[
+                {
+                  "id": "switch-case-type",
+                  "xsdDatatype": "xsd:anyURI",
+                  "minOccurs": "1",
+                  "maxOccurs": "1",
+                  "selectPattern": "SELECT ?value WHERE { $subject <http://www.example.com/switch/has-action-type> ?value }",
+                  "insertPattern": "INSERT { $subject <http://www.example.com/switch/has-action-type> ?value } WHERE {}",
+                  "deletePattern": "DELETE { $subject <http://www.example.com/switch/has-action-type> ?value } WHERE {}"
+                }
+              ]'>
+                  <semantic-form-hidden-input for="switch-case-type"
+                    default-value="http://www.example.com/switch/type/move">
+                  </semantic-form-hidden-input>
+
+                    <semantic-search-query-keyword domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
+                      placeholder="Search for an artist e.g. Michelangelo" escape-lucene-syntax='false' query='
+                      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+                      SELECT ?subject WHERE {
+                      ?subject a crm:E22_Man-Made_Object.
+                      ?subject crm:P108i_was_produced_by ?production.
+                      ?production crm:P01i_is_domain_of ?domain.
+                      ?domain crm:P02_has_range ?artist.
+                      ?artist rdfs:label ?someLabel. 
+                      ?someLabel bds:search ?__token__ .
+                      ?someLabel bds:minRelevance "0.3"^^xsd:double;
+                      bds:matchAllTerms "true"  .
+                      BIND( xsd:integer(substr(str(?value), 33)) as ?q)
+                      } ORDER BY ?q
+                    '></semantic-search-query-keyword>
+
+                </semantic-form-composite-input>
+              </semantic-form-switch-case>
+              <semantic-form-switch-case label="Title">
+                <semantic-form-composite-input for="switch-action-type"
+                  new-subject-template="http://www.example.com/switch/action/title" fields='[
+                {
+                  "id": "switch-case-type",
+                  "xsdDatatype": "xsd:anyURI",
+                  "minOccurs": "1",
+                  "maxOccurs": "1",
+                  "selectPattern": "SELECT ?value WHERE { $subject <http://www.example.com/switch/has-action-type> ?value }",
+                  "insertPattern": "INSERT { $subject <http://www.example.com/switch/has-action-type> ?value } WHERE {}",
+                  "deletePattern": "DELETE { $subject <http://www.example.com/switch/has-action-type> ?value } WHERE {}"
+                }
+              ]'>
+                  <semantic-form-hidden-input for="switch-case-type"
+                    default-value="http://www.example.com/switch/type/receive">
+                  </semantic-form-hidden-input>
+
+                    <semantic-search-query-keyword domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
+                      placeholder="Search for a title e.g. Madonna con.." escape-lucene-syntax='false' query='
+                      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+                      SELECT ?subject WHERE {
+                      ?subject a crm:E22_Man-Made_Object.
+                      ?subject crm:P56_bears_feature ?feature.
+                      ?feature crm:P2_has_type ?featureType.
+                      ?feature a crm:E25_Man-Made_Feature.
+                      ?feature crm:P138_has_representation ?visual_item.
+                      ?visual_item a crm:E36_Visual_Item.
+                      ?visual_item crm:P102_has_title ?value_uri.
+                      ?value_uri a crm:E35_Title.
+                      ?value_uri rdfs:label ?someLabel.
+                      ?value_uri crm:P141i_was_assigned_by ?editionAttributeAssignment.
+                      ?someLabel bds:search ?__token__ .
+                      ?someLabel bds:minRelevance "0.3"^^xsd:double;
+                      bds:matchAllTerms "true"  .
+                      BIND( xsd:integer(substr(str(?value), 33)) as ?q)
+                      } ORDER BY ?q
+                    '></semantic-search-query-keyword>
+
+                </semantic-form-composite-input>
+              </semantic-form-switch-case>
+              <semantic-form-switch-case label="Inventory Number">
+                <semantic-form-composite-input for="switch-action-type"
+                  new-subject-template="http://www.example.com/switch/action/inv.number" fields='[
+                {
+                  "id": "switch-case-type",
+                  "xsdDatatype": "xsd:anyURI",
+                  "minOccurs": "1",
+                  "maxOccurs": "1",
+                  "selectPattern": "SELECT ?value WHERE { $subject <http://www.example.com/switch/has-action-type> ?value }",
+                  "insertPattern": "INSERT { $subject <http://www.example.com/switch/has-action-type> ?value } WHERE {}",
+                  "deletePattern": "DELETE { $subject <http://www.example.com/switch/has-action-type> ?value } WHERE {}"
+                }
+              ]'>
+                  <semantic-form-hidden-input for="switch-case-type"
+                    default-value="http://www.example.com/switch/type/allfields">
+                  </semantic-form-hidden-input>
+
+                    <semantic-search-query-keyword domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
+                      placeholder="Search for an inventory number e.g. 1856,0621.1" escape-lucene-syntax='false' query='
+                      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+                      SELECT ?subject ?someLabel WHERE {
+                      ?subject a crm:E22_Man-Made_Object.
+                      ?subject  <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
+                      ?id rdfs:label ?someLabel. 
+                      ?someLabel bds:search ?__token__ .
+                      ?someLabel bds:minRelevance "0.3"^^xsd:double;
+                      bds:matchAllTerms "true"  .
+                      BIND( xsd:integer(substr(str(?value), 33)) as ?q)
+                      } ORDER BY ?q
+                    '></semantic-search-query-keyword>
+
+                </semantic-form-composite-input>
+              </semantic-form-switch-case>
+            </semantic-form-switch>
+
+          </semantic-form>
+      </div>
 
       <div class="row">
         <bs-col lg="3" md="4" sm="5" class="fade-in" style="margin-top: 8px">
@@ -201,33 +378,17 @@
             >
               <bs-tab event-key="2" title="Grid">
                 <semantic-search-result>
+
                   <semantic-table
                     id="grid-result"
+                    options='{
+                      "showFilter":false
+                    }'
                     number-of-displayed-rows="10"
                     query="
                   SELECT DISTINCT ?subject  ?recto_title_1938 ?recto_title_1961
                    WHERE {
                     ?subject a crm:E22_Man-Made_Object.
-
-                    OPTIONAL{
-                      ?subject crm:P56_bears_feature ?feature_a.
-                      ?feature_a crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
-                      ?feature_a a crm:E25_Man-Made_Feature.
-                      ?feature_a crm:P138_has_representation ?visual_item_a.
-                      ?visual_item_a a crm:E36_Visual_Item.
-                      OPTIONAL{
-                        ?visual_item_a crm:P102_has_title ?value_uri_a.
-                        ?value_uri_a a crm:E35_Title.
-                        ?value_uri_a rdfs:label ?recto_title_1961.
-                        ?value_uri_a crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
-                       }
-                      OPTIONAL{
-                        ?visual_item_a crm:P102_has_title ?value_uri.
-                        ?value_uri a crm:E35_Title.
-                        ?value_uri rdfs:label ?recto_title_1938.
-                        ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
-                      }
-                    }
                    }
                 "
                     tuple-template="{{>tupleTemplate}}"
@@ -286,9 +447,23 @@
                       </div>
                     </template>
                   </semantic-table>
+                  <mp-sparql-result-counts id='query-count'
+                  query="SELECT DISTINCT ?subject {         ?subject a crm:E22_Man-Made_Object. }"
+                  template='{{>countTemplate}}'>
+  
+                            <template id="countTemplate">
+                              {{#if hasLimit}} 
+                              <!-- <bs-alert bs-style="info">
+                                Showing {{numberOfResults}} of {{totalNumberOfResults}} matches. 
+                              </bs-alert> -->
+                                {{else}} <bs-alert bs-style="warning">
+                                  Found {{numberOfResults}} matches.  <strong>Please, refine your search.</strong> </bs-alert> {{/if}}
+                            </template>
+                  </mp-sparql-result-counts>
                 </semantic-search-result>
               </bs-tab>
             </bs-tabs>
+            
           </semantic-search-result-holder>
         </bs-col>
       </div>
@@ -299,6 +474,7 @@
 </div>
 
 <style>
+
   .artwork-card {
     width: 100% !important;
     min-height: 23vh;
