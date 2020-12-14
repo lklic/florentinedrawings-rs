@@ -1141,6 +1141,23 @@
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
+                                                                    <semantic-if query='ASK { <[[this]]> <https://florentinedrawings.itatti.harvard.edu/resource/field/Has_Edition> ?edition1903
+                                                                        FILTER(regex(str(?edition),"/1903"))      
+                                                                     }'
+                                                                        then='{{> then}}' else='{{> else}}'>
+                                                                        <!-- Show recto or verso as main image if exists -->
+                                                                        <template id="then">
+                                                                            
+                                                                        </template>
+                                                                        <!-- Else show the page or plate image as main image-->
+                                                                        <template id="else">
+                                                                            <bs-col style="font-size: 16px; text-align: center;" md="12">
+                                                                            <i>Was not cataloged in the 1903 edition</i>
+                                                                                </bs-col>
+                                                                                
+                                                                        </template>
+                                                                    </semantic-if>
+
                                                                                     
                                                                     {{#ifCond recto_title_1903.value "!==" undefined}}
                                                                     <bs-col md="4">
@@ -1208,6 +1225,8 @@
                                                                                 </div>
                                                                                 </bs-col>
                                                                             {{/ifCond}}
+                                                                           
+
                                                                         </template>
                                                                     </semantic-query>
                                                                     <semantic-query query='
@@ -1275,6 +1294,7 @@
                                                                             </bs-col>
                                                                         {{/ifCond}}
                                                                         {{/each}}
+                                                                     
                                                                     </template>
                                                                     </semantic-query>
 
