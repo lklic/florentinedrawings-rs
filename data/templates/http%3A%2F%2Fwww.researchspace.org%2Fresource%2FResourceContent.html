@@ -308,7 +308,7 @@
                                                         BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
                                                         <[[this]]> crm:P56_bears_feature ?feat.             
                                                         ?feat crm:P138_has_representation ?img_visual.
-                                                        ?img_visual crm:P129i_is_subject_of ?image . 
+                                                        ?img_visual crm:P129i_is_subject_of ?image. 
                                                         BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
                                                         '
                                                         iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
@@ -318,23 +318,23 @@
                                                 </mp-overlay-dialog-content>
                                               </mp-overlay-dialog>
                                   
-                                              <!-- THUMBNAILS FOR PAGES & PLATES -->
+                                              <!-- THUMBNAILS FOR PAGES -->
                                               <mp-overlay-dialog title="Inspect image in detail" class="miradorViewerPopup">
                                                 <mp-overlay-dialog-trigger>
                                                     <div >
-                                                        <semantic-query query='SELECT  ?pageplateImage
+                                                        <semantic-query query='SELECT  ?pageImage
                                                        WHERE {
                                                             OPTIONAL {
                                                                 <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?feat.             
                                                                 ?feat <http://www.cidoc-crm.org/cidoc-crm/P148_is_component_of> ?img_visual.
-                                                                ?img_visual crm:P129i_is_subject_of ?pageplateImage.  
-                                                                ?pageplateImage crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/500px>
-                                                                FILTER (regex(str(?pageplateImage),".jpg"))   
+                                                                ?img_visual crm:P129i_is_subject_of ?pageImage.  
+                                                                ?pageImage crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/500px>
+                                                                FILTER (regex(str(?pageImage),".jpg"))   
                                                             }
                                                         }' template='{{> imagesThumbnail}}'>
                                                        <template id="imagesThumbnail">
                                                            {{#each bindings}}
-                                                            <img class="object-representations__image--rep" src="{{pageplateImage.value}}"/>
+                                                            <img class="object-representations__image--rep" src="{{pageImage.value}}"/>
                                                            {{/each}}
                                                        </template>
                                                      </semantic-query>
@@ -359,6 +359,49 @@
                                                     </div>
                                                 </mp-overlay-dialog-content>
                                               </mp-overlay-dialog>
+
+                                            <!-- THUMBNAILS FOR PLATES -->
+                                            <mp-overlay-dialog title="Inspect image in detail" class="miradorViewerPopup">
+                                            <mp-overlay-dialog-trigger>
+                                                <div >
+                                                    <semantic-query query='SELECT  ?plateImage
+                                                    WHERE {
+                                                        OPTIONAL {
+                                                            <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?feature.
+                                                            ?feature <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?plate.
+                                                            ?plate crm:P129i_is_subject_of ?plateImage.  
+                                                            ?plateImage crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Thumbnail/200>
+                                                            FILTER (regex(str(?plateImage),".jpg"))   
+                                                        }
+                                                    }' template='{{> imagesThumbnail}}'>
+                                                    <template id="imagesThumbnail">
+                                                        {{#each bindings}}
+                                                        <img class="object-representations__image--rep" src="{{plateImage.value}}"/>
+                                                        {{/each}}
+                                                    </template>
+                                                    </semantic-query>
+                                                </div>
+                                            </mp-overlay-dialog-trigger>
+                                            <mp-overlay-dialog-content>
+                                                <div style='height: 80vh; width: 100%;'>
+                                                    <rs-iiif-mirador
+                                                    image-or-region="[[this]]" 
+        
+                                                    image-id-pattern='
+                                                    BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                    <[[this]]> crm:P56_bears_feature ?feat.             
+                                                    ?feat crm:P129i_is_subject_of ?plate.
+                                                    ?plate crm:P129i_is_subject_of ?image.  
+                                                    ?image crm:P2_has_type <http://iiif.io/api/image>.
+                                                    BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                    '
+                                                    iiif-server-url="https://ids.lib.harvard.edu/ids/iiif" 
+                                                    >
+                                                    </rs-iiif-mirador>
+                                                </div>
+                                            </mp-overlay-dialog-content>
+                                            </mp-overlay-dialog>
+
                                               {{/ifCond}}
                                             [[/block]]
                                             </div>
