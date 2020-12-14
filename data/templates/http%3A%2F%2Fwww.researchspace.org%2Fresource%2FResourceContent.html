@@ -621,7 +621,7 @@
                                 <div class="container-fluid rs-summary-section">
                                     <!--  close row -->
                                     <semantic-table query=' SELECT DISTINCT
-                                    ?id_number ?location  ?catalogue_number
+                                    ?id_number ?location  ?catalogue_number ?plate_number
                                     ?recto_title_1903 ?verso_title_1903 ?recto_notes_1903 ?verso_notes_1903
                                     ?recto_title_1938 ?verso_title_1938 ?recto_notes_1938 ?verso_notes_1938
                                     ?recto_title_1961 ?verso_title_1961 ?recto_notes_1961 ?verso_notes_1961
@@ -638,6 +638,13 @@
                                          <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
                                          ?id rdfs:label ?id_number
                                      }        
+
+                                     OPTIONAL{
+                                        <[[this]]> crm:P56_bears_feature ?plate_feat.             
+                                        ?plate_feat crm:P129i_is_subject_of ?plate.
+                                        ?plate crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Plate>.
+                                        ?plate rdfs:label ?plate_number
+                                     }
                                     
                                      ## RECTO TITLE 1903 (Title) ##
                                      OPTIONAL {
@@ -811,6 +818,19 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
+                                                                    {{#ifCond plate_number.value "!==" undefined}}
+                                                                    <bs-col md="4">
+                                                                        <div class="grid-demo">
+                                                                            <b>Plate number: </b>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    <bs-col md="8">
+                                                                        <div class="grid-demo">
+                                                                            {{plate_number.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+
                                                                     <semantic-query query='
                                                                     SELECT DISTINCT ?pageNumber WHERE {
                                                                         <[[this]]> crm:P129i_is_subject_of ?edition.
@@ -967,6 +987,18 @@
                                                                     </bs-col>
                                                                     {{/ifCond}}
 
+                                                                    {{#ifCond plate_number.value "!==" undefined}}
+                                                                    <bs-col md="4">
+                                                                        <div class="grid-demo">
+                                                                            <b>Plate number: </b>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    <bs-col md="8">
+                                                                        <div class="grid-demo">
+                                                                            {{plate_number.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
                                                                     
                                                                     <semantic-query query='
                                                                     SELECT DISTINCT ?catalogueNumber WHERE {
@@ -1136,6 +1168,20 @@
                                                                             </div>
                                                                         </bs-col>
                                                                     {{/ifCond}}
+
+                                                                    {{#ifCond plate_number.value "!==" undefined}}
+                                                                    <bs-col md="4">
+                                                                        <div class="grid-demo">
+                                                                            <b>Plate number: </b>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    <bs-col md="8">
+                                                                        <div class="grid-demo">
+                                                                            {{plate_number.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+
                                                                     <semantic-query query='
                                                                     SELECT DISTINCT ?catalogueNumber WHERE {
                                                                         <[[this]]> crm:P1_is_identified_by ?cat_no.
