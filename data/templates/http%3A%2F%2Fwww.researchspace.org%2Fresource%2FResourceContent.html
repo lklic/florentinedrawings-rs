@@ -200,7 +200,7 @@
                                                 then='{{> then}}' else='{{> else}}'>
                                                 <!-- Show recto or verso as main image if exists -->
                                                 <template id="then">
-                                                    <mp-overlay-dialog title="Inspect image in detail" class="miradorViewerPopup">
+                                                    <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
                                                         <mp-overlay-dialog-trigger>
                                                             <div class="rs-page__summary-image">
                                                                 <semantic-query query='SELECT distinct ?imgURL ?label
@@ -243,7 +243,7 @@
                                                 </template>
                                                 <!-- Else show the page or plate image as main image-->
                                                 <template id="else">
-                                                    <mp-overlay-dialog title="Inspect image in detail" class="miradorViewerPopup">
+                                                    <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
                                                         <mp-overlay-dialog-trigger>
                                                             <div class="rs-page__summary-image">
                                                                 <semantic-query query='SELECT distinct ?pageplateImage
@@ -285,7 +285,7 @@
 
                                             {{#ifCond bindings.0.count.value ">" "1"}}
                                               <!-- THUMBNAILS FOR RECTO & VERSO -->
-                                              <mp-overlay-dialog title="Inspect image in detail" class="miradorViewerPopup">
+                                              <mp-overlay-dialog title="‎‎" class="miradorViewerPopup">
                                                 <mp-overlay-dialog-trigger>
                                                     <div >
                                                         <semantic-query query='SELECT DISTINCT ?imgUrl WHERE{
@@ -319,7 +319,7 @@
                                               </mp-overlay-dialog>
                                   
                                               <!-- THUMBNAILS FOR PAGES -->
-                                              <mp-overlay-dialog title="" class="miradorViewerPopup">
+                                              <mp-overlay-dialog title="‎‎" class="miradorViewerPopup">
                                                 <mp-overlay-dialog-trigger>
                                                     <div >
                                                         <semantic-query query='SELECT  ?pageImage
@@ -361,7 +361,7 @@
                                               </mp-overlay-dialog>
 
                                             <!-- THUMBNAILS FOR PLATES -->
-                                            <mp-overlay-dialog title="Inspect image in detail" class="miradorViewerPopup">
+                                            <mp-overlay-dialog title="	" class="miradorViewerPopup">
                                             <mp-overlay-dialog-trigger>
                                                 <div >
                                                     <semantic-query query='SELECT  ?plateImage
@@ -793,156 +793,169 @@
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
-                                                                    {{#ifCond recto_title_1961.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Recto Title (1961): </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{recto_title_1961.value}}
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
-
-                                                                    {{#ifCond verso_title_1961.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Verso Title (1961): </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{verso_title_1961.value}}
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
-
-                                                                    {{#ifCond plate_number.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Plate number: </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{plate_number.value}}
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
-
-                                                                    <semantic-query query='
-                                                                    SELECT DISTINCT ?pageNumber WHERE {
-                                                                        <[[this]]> crm:P129i_is_subject_of ?edition.
-                                                                        ?edition a crm:E73_Information_Object.
-                                                                        ?edition crm:P148_is_component_of ?page.
-                                                                        ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
-                                                                        ?page rdfs:label ?pageNumber
-                                                                        FILTER(regex(str(?edition),"/1961"))   
-                                                                      }
-                                                                ' 
-                                                                template="{{> pageNumberTemplate1961}}"
-                                                                > 
-                                                                <template id="pageNumberTemplate1961">
-                                                                       {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Page number:</b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{#each bindings}}
-                                                                                {{pageNumber.value}}  
-                                                                            {{/each}}
-                                                                        </div>
-                                                                        </bs-col>
-                                                                    {{/ifCond}}
-                                                                </template>
-                                                                    </semantic-query>
-             
-                                                                    <semantic-query query='
-                                                                    SELECT DISTINCT ?catalogueNumber WHERE {
-                                                                        <[[this]]> crm:P1_is_identified_by ?cat_no.
-                                                                        ?cat_no a crm:E42_Identifier.
-                                                                        ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
-                                                                        ?cat_no rdfs:label ?catalogueNumber.
-                                                                        FILTER(regex(str(?cat_no),"/1961"))   
-                                                                      }
-                                                                    ' 
-                                                                    template="{{> catalogueNumberTemplate1961}}"
-                                                                    > 
-                                                                        <template id="catalogueNumberTemplate1961">
-                                                                            {{#ifCond bindings.0.catalogueNumber.value "!==" undefined}}
+                                                                    <semantic-if query='ASK { <[[this]]> <https://florentinedrawings.itatti.harvard.edu/resource/field/Has_Edition> ?edition
+                                                                        FILTER(regex(str(?edition),"/1938"))      
+                                                                     }'
+                                                                        then='{{> then}}' else='{{> else}}'>
+                                                                        <!-- Show recto or verso as main image if exists -->
+                                                                        <template id="then">
+                                                                            {{#ifCond recto_title_1961.value "!==" undefined}}
                                                                             <bs-col md="4">
                                                                                 <div class="grid-demo">
-                                                                                    <b>Berenson Cat. No.:</b>
+                                                                                    <b>Recto Title (1961): </b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{recto_title_1961.value}}
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            {{/ifCond}}
+        
+                                                                            {{#ifCond verso_title_1961.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Verso Title (1961): </b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{verso_title_1961.value}}
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            {{/ifCond}}
+        
+                                                                            {{#ifCond plate_number.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Plate number: </b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{plate_number.value}}
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            {{/ifCond}}
+        
+                                                                            <semantic-query query='
+                                                                            SELECT DISTINCT ?pageNumber WHERE {
+                                                                                <[[this]]> crm:P129i_is_subject_of ?edition.
+                                                                                ?edition a crm:E73_Information_Object.
+                                                                                ?edition crm:P148_is_component_of ?page.
+                                                                                ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
+                                                                                ?page rdfs:label ?pageNumber
+                                                                                FILTER(regex(str(?edition),"/1961"))   
+                                                                              }
+                                                                        ' 
+                                                                        template="{{> pageNumberTemplate1961}}"
+                                                                        > 
+                                                                        <template id="pageNumberTemplate1961">
+                                                                               {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Page number:</b>
                                                                                 </div>
                                                                             </bs-col>
                                                                             <bs-col md="8">
                                                                                 <div class="grid-demo">
                                                                                     {{#each bindings}}
-                                                                                        {{catalogueNumber.value}}                                                             
+                                                                                        {{pageNumber.value}}  
                                                                                     {{/each}}
                                                                                 </div>
                                                                                 </bs-col>
                                                                             {{/ifCond}}
                                                                         </template>
-                                                                    </semantic-query>
-
-                                                                    <semantic-query query='
-                                                                        SELECT DISTINCT ?artist_1961 ?label WHERE {
-                                                                            <[[this]]> crm:P108i_was_produced_by ?production.
-                                                                            ?production crm:P01i_is_domain_of ?domain.
-                                                                            ?domain crm:P02_has_range ?artist_1961.
-                                                                            ?artist_1961 rdfs:label ?artistLabel.
-                                                                             {
-                                                                                ?domain a crm:PC15_was_influenced_by.
-                                                                                ?domain crm:P15.1_in_the_role_of ?qualifier.
-                                                                                ?qualifier rdfs:label ?qualifierLabel.
-                                                                             } union {
-                                                                                FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
-                                                                                BIND("by" as ?qualifierLabel)
-                                                                              } 
-                                                                            BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
-                                                                             FILTER(regex(str(?domain),"/1961"))   
-                                                                          }
-                                                                    ' 
-                                                                    template="{{> qualifierTemplate1961}}"
-                                                                    > 
-                                                                    <template id="qualifierTemplate1961">
-                                                                        {{log bindings}}
-                                                                        {{#each bindings}}
-                                                                           {{#ifCond artist_1961.value "!==" undefined}}
-                                                                        <bs-col md="4">
-                                                                            <div class="grid-demo">
-                                                                                <b>Artist Attribution: </b>
-                                                                            </div>
-                                                                        </bs-col>
-                                                                        <bs-col md="8">
-                                                                            <div class="grid-demo">
-                                                                                <semantic-link iri={{artist_1961.value}}>{{label.value}}</semantic-link>                                                                     
-                                                                            </div>
+                                                                            </semantic-query>
+                     
+                                                                            <semantic-query query='
+                                                                            SELECT DISTINCT ?catalogueNumber WHERE {
+                                                                                <[[this]]> crm:P1_is_identified_by ?cat_no.
+                                                                                ?cat_no a crm:E42_Identifier.
+                                                                                ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
+                                                                                ?cat_no rdfs:label ?catalogueNumber.
+                                                                                FILTER(regex(str(?cat_no),"/1961"))   
+                                                                              }
+                                                                            ' 
+                                                                            template="{{> catalogueNumberTemplate1961}}"
+                                                                            > 
+                                                                                <template id="catalogueNumberTemplate1961">
+                                                                                    {{#ifCond bindings.0.catalogueNumber.value "!==" undefined}}
+                                                                                    <bs-col md="4">
+                                                                                        <div class="grid-demo">
+                                                                                            <b>Berenson Cat. No.:</b>
+                                                                                        </div>
+                                                                                    </bs-col>
+                                                                                    <bs-col md="8">
+                                                                                        <div class="grid-demo">
+                                                                                            {{#each bindings}}
+                                                                                                {{catalogueNumber.value}}                                                             
+                                                                                            {{/each}}
+                                                                                        </div>
+                                                                                        </bs-col>
+                                                                                    {{/ifCond}}
+                                                                                </template>
+                                                                            </semantic-query>
+        
+                                                                            <semantic-query query='
+                                                                                SELECT DISTINCT ?artist_1961 ?label WHERE {
+                                                                                    <[[this]]> crm:P108i_was_produced_by ?production.
+                                                                                    ?production crm:P01i_is_domain_of ?domain.
+                                                                                    ?domain crm:P02_has_range ?artist_1961.
+                                                                                    ?artist_1961 rdfs:label ?artistLabel.
+                                                                                     {
+                                                                                        ?domain a crm:PC15_was_influenced_by.
+                                                                                        ?domain crm:P15.1_in_the_role_of ?qualifier.
+                                                                                        ?qualifier rdfs:label ?qualifierLabel.
+                                                                                     } union {
+                                                                                        FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
+                                                                                        BIND("by" as ?qualifierLabel)
+                                                                                      } 
+                                                                                    BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
+                                                                                     FILTER(regex(str(?domain),"/1961"))   
+                                                                                  }
+                                                                            ' 
+                                                                            template="{{> qualifierTemplate1961}}"
+                                                                            > 
+                                                                            <template id="qualifierTemplate1961">
+                                                                                {{log bindings}}
+                                                                                {{#each bindings}}
+                                                                                   {{#ifCond artist_1961.value "!==" undefined}}
+                                                                                <bs-col md="4">
+                                                                                    <div class="grid-demo">
+                                                                                        <b>Artist Attribution: </b>
+                                                                                    </div>
+                                                                                </bs-col>
+                                                                                <bs-col md="8">
+                                                                                    <div class="grid-demo">
+                                                                                        <semantic-link iri={{artist_1961.value}}>{{label.value}}</semantic-link>                                                                     
+                                                                                    </div>
+                                                                                    </bs-col>
+                                                                                {{/ifCond}}
+                                                                                {{/each}}
+                                                                            </template>
+                                                                            </semantic-query>
+        
+                                                                            {{#ifCond recto_notes_1961.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Recto Notes (1961): </b>
+                                                                                </div>
                                                                             </bs-col>
-                                                                        {{/ifCond}}
-                                                                        {{/each}}
-                                                                    </template>
-                                                                    </semantic-query>
-
-                                                                    {{#ifCond recto_notes_1961.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Recto Notes (1961): </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{recto_notes_1961.value}}
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}             
-                                
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{recto_notes_1961.value}}
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            {{/ifCond}} 
+                                                                        </template>
+                                                                        <!-- Else show the page or plate image as main image-->
+                                                                        <template id="else">
+                                                                            <bs-col style="font-size: 16px; text-align: center;" md="12">
+                                                                                <i>Was not cataloged in the 1961 edition</i>
+                                                                            </bs-col>
+                                                                        </template>
+                                                                    </semantic-if>      
                                                                 </div>
                                                               </bs-row>
                                                             </div>
@@ -954,176 +967,187 @@
                                             <!-- 1938 EDITION FIELDS -->
                                             <bs-row class="row-center">
                                                 <bs-col xs=11 sm=10 md=8 lg=7 class="rs-summary-table">
-        
                                                     <h1 style=" text-align: center;">1938 Edition</h1>
                                                     <div id="1938_edition_result">
                                                         <bs-col>
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
-                                                                                    
-                                                                    {{#ifCond recto_title_1938.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Recto Title (1938): </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{recto_title_1938.value}}
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
-
-                                                                    {{#ifCond verso_title_1938.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Verso Title (1938): </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{verso_title_1938.value}}
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
-
-                                                                    {{#ifCond plate_number.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Plate number: </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{plate_number.value}}
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
-                                                                    
-                                                                    <semantic-query query='
-                                                                    SELECT DISTINCT ?catalogueNumber WHERE {
-                                                                        <[[this]]> crm:P1_is_identified_by ?cat_no.
-                                                                        ?cat_no a crm:E42_Identifier.
-                                                                        ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
-                                                                        ?cat_no rdfs:label ?catalogueNumber.
-                                                                        FILTER(regex(str(?cat_no),"/1938"))   
-                                                                      }
-                                                                    ' 
-                                                                    template="{{> catalogueNumberTemplate1938}}"
-                                                                    > 
-                                                                        <template id="catalogueNumberTemplate1938">
-                                                                            {{#ifCond bindings.0.catalogueNumber.value "!==" undefined}}
+                                                                    <semantic-if query='ASK { <[[this]]> <https://florentinedrawings.itatti.harvard.edu/resource/field/Has_Edition> ?edition
+                                                                        FILTER(regex(str(?edition),"/1938"))      
+                                                                     }'
+                                                                        then='{{> then}}' else='{{> else}}'>
+                                                                        <!-- Show recto or verso as main image if exists -->
+                                                                        <template id="then">
+                                                                            {{#ifCond recto_title_1938.value "!==" undefined}}
                                                                             <bs-col md="4">
                                                                                 <div class="grid-demo">
-                                                                                    <b>Berenson Cat. No.:</b>
+                                                                                    <b>Recto Title (1938): </b>
                                                                                 </div>
                                                                             </bs-col>
                                                                             <bs-col md="8">
                                                                                 <div class="grid-demo">
-                                                                                    {{#each bindings}}
-                                                                                        {{catalogueNumber.value}}                                                             
-                                                                                    {{/each}}
+                                                                                    {{recto_title_1938.value}}
                                                                                 </div>
-                                                                                </bs-col>
+                                                                            </bs-col>
                                                                             {{/ifCond}}
-                                                                        </template>
-                                                                    </semantic-query>
-
-                                                                    <semantic-query query='
-                                                                    SELECT DISTINCT ?pageNumber WHERE {
-                                                                        <[[this]]> crm:P129i_is_subject_of ?edition.
-                                                                        ?edition a crm:E73_Information_Object.
-                                                                        ?edition crm:P148_is_component_of ?page.
-                                                                        ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
-                                                                        ?page rdfs:label ?pageNumber
-                                                                        FILTER(regex(str(?edition),"/1938"))   
-                                                                      }
-                                                                    ' 
-                                                                    template="{{> pageNumberTemplate1938}}"
-                                                                    > 
-                                                                        <template id="pageNumberTemplate1938">
-                                                                            {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
+        
+                                                                            {{#ifCond verso_title_1938.value "!==" undefined}}
                                                                             <bs-col md="4">
                                                                                 <div class="grid-demo">
-                                                                                    <b>Page number:</b>
+                                                                                    <b>Verso Title (1938): </b>
                                                                                 </div>
                                                                             </bs-col>
                                                                             <bs-col md="8">
                                                                                 <div class="grid-demo">
-                                                                                    {{#each bindings}}
-                                                                                        {{pageNumber.value}}                                                             
-                                                                                    {{/each}}
+                                                                                    {{verso_title_1938.value}}
                                                                                 </div>
+                                                                            </bs-col>
+                                                                            {{/ifCond}}
+        
+                                                                            {{#ifCond plate_number.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Plate number: </b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{plate_number.value}}
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            {{/ifCond}}
+                                                                            
+                                                                            <semantic-query query='
+                                                                            SELECT DISTINCT ?catalogueNumber WHERE {
+                                                                                <[[this]]> crm:P1_is_identified_by ?cat_no.
+                                                                                ?cat_no a crm:E42_Identifier.
+                                                                                ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
+                                                                                ?cat_no rdfs:label ?catalogueNumber.
+                                                                                FILTER(regex(str(?cat_no),"/1938"))   
+                                                                              }
+                                                                            ' 
+                                                                            template="{{> catalogueNumberTemplate1938}}"
+                                                                            > 
+                                                                                <template id="catalogueNumberTemplate1938">
+                                                                                    {{#ifCond bindings.0.catalogueNumber.value "!==" undefined}}
+                                                                                    <bs-col md="4">
+                                                                                        <div class="grid-demo">
+                                                                                            <b>Berenson Cat. No.:</b>
+                                                                                        </div>
+                                                                                    </bs-col>
+                                                                                    <bs-col md="8">
+                                                                                        <div class="grid-demo">
+                                                                                            {{#each bindings}}
+                                                                                                {{catalogueNumber.value}}                                                             
+                                                                                            {{/each}}
+                                                                                        </div>
+                                                                                        </bs-col>
+                                                                                    {{/ifCond}}
+                                                                                </template>
+                                                                            </semantic-query>
+        
+                                                                            <semantic-query query='
+                                                                            SELECT DISTINCT ?pageNumber WHERE {
+                                                                                <[[this]]> crm:P129i_is_subject_of ?edition.
+                                                                                ?edition a crm:E73_Information_Object.
+                                                                                ?edition crm:P148_is_component_of ?page.
+                                                                                ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
+                                                                                ?page rdfs:label ?pageNumber
+                                                                                FILTER(regex(str(?edition),"/1938"))   
+                                                                              }
+                                                                            ' 
+                                                                            template="{{> pageNumberTemplate1938}}"
+                                                                            > 
+                                                                                <template id="pageNumberTemplate1938">
+                                                                                    {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
+                                                                                    <bs-col md="4">
+                                                                                        <div class="grid-demo">
+                                                                                            <b>Page number:</b>
+                                                                                        </div>
+                                                                                    </bs-col>
+                                                                                    <bs-col md="8">
+                                                                                        <div class="grid-demo">
+                                                                                            {{#each bindings}}
+                                                                                                {{pageNumber.value}}                                                             
+                                                                                            {{/each}}
+                                                                                        </div>
+                                                                                        </bs-col>
+                                                                                    {{/ifCond}}
+                                                                                </template>
+                                                                            </semantic-query>
+        
+                                                                            <semantic-query query='
+                                                                            SELECT DISTINCT ?artist_1938 ?label WHERE {
+                                                                                <[[this]]> crm:P108i_was_produced_by ?production.
+                                                                                ?production crm:P01i_is_domain_of ?domain.
+                                                                                ?domain crm:P02_has_range ?artist_1938.
+                                                                                ?artist_1938 rdfs:label ?artistLabel.
+                                                                                 {
+                                                                                    ?domain a crm:PC15_was_influenced_by.
+                                                                                    ?domain crm:P15.1_in_the_role_of ?qualifier.
+                                                                                    ?qualifier rdfs:label ?qualifierLabel.
+                                                                                 } union {
+                                                                                    FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
+                                                                                    BIND("by" as ?qualifierLabel)
+                                                                                  } 
+                                                                                BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
+                                                                                 FILTER(regex(str(?domain),"/1938"))   
+                                                                              }
+                                                                            ' 
+                                                                            template="{{> qualifierTemplate1938}}"
+                                                                            > 
+                                                                            <template id="qualifierTemplate1938">
+                                                                                {{#each bindings}}
+                                                                                   {{#ifCond artist_1938.value "!==" undefined}}
+                                                                                <bs-col md="4">
+                                                                                    <div class="grid-demo">
+                                                                                        <b>Artist Attribution: </b>
+                                                                                    </div>
                                                                                 </bs-col>
+                                                                                <bs-col md="8">
+                                                                                    <div class="grid-demo">
+                                                                                        <semantic-link iri={{artist_1938.value}}>{{label.value}}</semantic-link>
+                                                                                    </div>
+                                                                                    </bs-col>
+                                                                                {{/ifCond}}
+                                                                                {{/each}}
+                                                                            </template>
+                                                                            </semantic-query>
+        
+                                                                            {{#ifCond recto_notes_1938.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Recto Notes (1938): </b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{recto_notes_1938.value}}
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            {{/ifCond}}
+        
+                                                                            {{#ifCond verso_notes_1938.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Verso Notes (1938): </b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{verso_notes_1938.value}}
+                                                                                </div>
+                                                                            </bs-col>
                                                                             {{/ifCond}}
                                                                         </template>
-                                                                    </semantic-query>
-
-                                                                    <semantic-query query='
-                                                                    SELECT DISTINCT ?artist_1938 ?label WHERE {
-                                                                        <[[this]]> crm:P108i_was_produced_by ?production.
-                                                                        ?production crm:P01i_is_domain_of ?domain.
-                                                                        ?domain crm:P02_has_range ?artist_1938.
-                                                                        ?artist_1938 rdfs:label ?artistLabel.
-                                                                         {
-                                                                            ?domain a crm:PC15_was_influenced_by.
-                                                                            ?domain crm:P15.1_in_the_role_of ?qualifier.
-                                                                            ?qualifier rdfs:label ?qualifierLabel.
-                                                                         } union {
-                                                                            FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
-                                                                            BIND("by" as ?qualifierLabel)
-                                                                          } 
-                                                                        BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
-                                                                         FILTER(regex(str(?domain),"/1938"))   
-                                                                      }
-                                                                    ' 
-                                                                    template="{{> qualifierTemplate1938}}"
-                                                                    > 
-                                                                    <template id="qualifierTemplate1938">
-                                                                        {{#each bindings}}
-                                                                           {{#ifCond artist_1938.value "!==" undefined}}
-                                                                        <bs-col md="4">
-                                                                            <div class="grid-demo">
-                                                                                <b>Artist Attribution: </b>
-                                                                            </div>
-                                                                        </bs-col>
-                                                                        <bs-col md="8">
-                                                                            <div class="grid-demo">
-                                                                                <semantic-link iri={{artist_1938.value}}>{{label.value}}</semantic-link>
-                                                                            </div>
+                                                                        <!-- Else show the page or plate image as main image-->
+                                                                        <template id="else">
+                                                                            <bs-col style="font-size: 16px; text-align: center;" md="12">
+                                                                                <i>Was not cataloged in the 1938 edition</i>
                                                                             </bs-col>
-                                                                        {{/ifCond}}
-                                                                        {{/each}}
-                                                                    </template>
-                                                                    </semantic-query>
-
-                                                                    {{#ifCond recto_notes_1938.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Recto Notes (1938): </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{recto_notes_1938.value}}
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
-
-                                                                    {{#ifCond verso_notes_1938.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Verso Notes (1938): </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{verso_notes_1938.value}}
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    {{/ifCond}}
-                                                            
+                                                                        </template>
+                                                                    </semantic-if>              
                                                                 </div>
                                                               </bs-row>
                                                             </div>
@@ -1142,25 +1166,13 @@
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
-                                                                    <semantic-if query='ASK { <[[this]]> <https://florentinedrawings.itatti.harvard.edu/resource/field/Has_Edition> ?edition1903
+                                                                    <semantic-if query='ASK { <[[this]]> <https://florentinedrawings.itatti.harvard.edu/resource/field/Has_Edition> ?edition
                                                                         FILTER(regex(str(?edition),"/1903"))      
                                                                      }'
                                                                         then='{{> then}}' else='{{> else}}'>
                                                                         <!-- Show recto or verso as main image if exists -->
                                                                         <template id="then">
-                                                                            
-                                                                        </template>
-                                                                        <!-- Else show the page or plate image as main image-->
-                                                                        <template id="else">
-                                                                            <bs-col style="font-size: 16px; text-align: center;" md="12">
-                                                                            <i>Was not cataloged in the 1903 edition</i>
-                                                                                </bs-col>
-                                                                                
-                                                                        </template>
-                                                                    </semantic-if>
-
-                                                                                    
-                                                                    {{#ifCond recto_title_1903.value "!==" undefined}}
+                                                                            {{#ifCond recto_title_1903.value "!==" undefined}}
                                                                     <bs-col md="4">
                                                                         <div class="grid-demo">
                                                                             <b>Recto Title (1903): </b>
@@ -1324,8 +1336,15 @@
                                                                         </div>
                                                                     </bs-col>
                                                                     {{/ifCond}}
-                                                                                        
-                                                            
+                                                                        </template>
+                                                                        <!-- Else show the page or plate image as main image-->
+                                                                        <template id="else">
+                                                                            <bs-col style="font-size: 16px; text-align: center;" md="12">
+                                                                            <i>Was not cataloged in the 1903 edition</i>
+                                                                                </bs-col>
+                                                                                
+                                                                        </template>
+                                                                    </semantic-if>
                                                                 </div>
                                                               </bs-row>
                                                             </div>
