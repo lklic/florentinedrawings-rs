@@ -193,137 +193,217 @@
                                             [[#block "imageContent"]]
   
                                             <!-- MAIN REPRESENTATION (bigger image) -->
-                                            <semantic-if query='ASK { <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?main_feat.             
-                                                ?main_feat <http://www.cidoc-crm.org/cidoc-crm/P138_has_representation> ?main_visual.
-                                                ?main_visual crm:P129i_is_subject_of ?imgURL.   
-                                             }'
-                                                then='{{> then}}' else='{{> else}}'>
-                                                <!-- Show recto or verso as main image if exists -->
-                                                <template id="then">
-                                                    <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
-                                                        <mp-overlay-dialog-trigger>
-                                                            <div class="rs-page__summary-image">
-                                                                <semantic-query query='SELECT distinct ?imgURL ?label
-                                                                WHERE {
-                                                                    <[[this]]>  crm:P30_custody_transferred_through ?transfer.
-                                                                    ?transfer crm:P29_custody_recieved_by ?location.
-                                                                    ?location rdfs:label ?locationLabel.
-                                                                    BIND(CONCAT("Image from ",?locationLabel) as ?label).             
+                                  
+                                         
+                                                    <semantic-if query='ASK { <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?main_feat.             
+                                                        ?main_feat <http://www.cidoc-crm.org/cidoc-crm/P138_has_representation> ?main_visual.
+                                                        ?main_visual crm:P129i_is_subject_of ?imgURL.   
+                                                    }'
+                                                        then='{{> then}}' else='{{> else}}'>
+                                                        <!-- Show recto or verso as main image if exists -->
+                                                        <template id="then">
+                                                            <mp-event-target-template-render id='event-target' template='{{> mainImageTemplate}}'>
+                                                                <template id='mainImageTemplate'>
+                                                                    {{log this}}
+                                                            <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
+                                                                <mp-overlay-dialog-trigger>
+                                                                    {{#ifCond imgURL "!==" undefined}}
+                                                                        <div class="rs-page__summary-image">
+                                                                            <img style="height:20vh" src="{{imgURL}}"/>
+                                                                            <div class="subtitle"><i>{{label}}</i></div>
+                                                                        </div>
+                                                                    {{/ifCond}}
+                                                                    {{#ifCond imgURL "===" undefined}}
+                                                                    <div class="rs-page__summary-image">
+                                                                        <semantic-query query='SELECT distinct ?imgURL ?label
+                                                                        WHERE {
+                                                                            <[[this]]>  crm:P30_custody_transferred_through ?transfer.
+                                                                            ?transfer crm:P29_custody_recieved_by ?location.
+                                                                            ?location rdfs:label ?locationLabel.
+                                                                            BIND(CONCAT("Image from ",?locationLabel) as ?label).             
 
-                                                                    <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?main_feat.             
-                                                                    ?main_feat <http://www.cidoc-crm.org/cidoc-crm/P138_has_representation> ?main_visual.
-                                                                    ?main_visual crm:P129i_is_subject_of ?imgURL.   
-                                                                    ?imgURL crm:P2_has_type <http://iiif.io/api/image>.
-                                                                }' template='{{> imageThumbnail}}'>
-                                                               <template id="imageThumbnail">
-                                                                <img style="height:20vh" src="{{bindings.0.imgURL.value}}"/>
-                                                                <div class="subtitle"><i>{{bindings.0.label.value}}</i></div>
-                                                               </template>
-                                                             </semantic-query>
-                                                            </div>
-                                                        </mp-overlay-dialog-trigger>
-                                                        <mp-overlay-dialog-content>
-                                                           <div style='height: 80vh; width: 100%;'>
-                                                                <rs-iiif-mirador
-                                                                image-or-region="[[this]]" 
-                    
-                                                                image-id-pattern='
-                                                                BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                                <[[this]]> crm:P56_bears_feature ?feat.             
-                                                                ?feat crm:P138_has_representation ?img_visual.
-                                                                ?img_visual crm:P129i_is_subject_of ?image . 
-                                                                BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                                '
-                                                                iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
-                                                                >
-                                                                </rs-iiif-mirador>
-                                                            </div>
-                                                        </mp-overlay-dialog-content>
-                                                     </mp-overlay-dialog>
-                                                </template>
-                                                <!-- Else show the page or plate image as main image-->
-                                                <template id="else">
-                                                    <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
-                                                        <mp-overlay-dialog-trigger>
-                                                            <div class="rs-page__summary-image">
-                                                                <semantic-query query='SELECT distinct ?pageplateImage
-                                                                WHERE {
-                                                                    <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?feat.             
-                                                                    ?feat <http://www.cidoc-crm.org/cidoc-crm/P148_is_component_of> ?img_visual.
-                                                                    ?img_visual crm:P129i_is_subject_of ?pageplateImage.  
-                                                                    ?pageplateImage crm:P2_has_type <http://iiif.io/api/image>
-                                                                    FILTER (regex(str(?pageplateImage),".jpg"))   
-                                                                }' template='{{> imageThumbnail}}'>
-                                                               <template id="imageThumbnail">
-                                                                <img style="height:20vh" src="{{bindings.0.pageplateImage.value}}"/>
-                                                                <div class="subtitle"><i>Page from the 1903 edition book</i></div>
-                                                               </template>
-                                                             </semantic-query>
-                                                            </div>
-                                                        </mp-overlay-dialog-trigger>
-                                                        <mp-overlay-dialog-content>
-                                                           <div style='height: 80vh; width: 100%;'>
-                                                                <rs-iiif-mirador
-                                                                image-or-region="[[this]]" 
-                    
-                                                                image-id-pattern='
-                                                                BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                                <[[this]]> crm:P129i_is_subject_of ?feat.             
-                                                                ?feat crm:P148_is_component_of ?img_visual.
-                                                                ?img_visual crm:P129i_is_subject_of ?image . 
-                                                                ?image crm:P2_has_type <http://iiif.io/api/image>.
-                                                                BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                                '
-                                                                iiif-server-url="https://ids.lib.harvard.edu/ids/iiif" 
-                                                                >
-                                                                </rs-iiif-mirador>
-                                                            </div>
-                                                        </mp-overlay-dialog-content>
-                                                     </mp-overlay-dialog>
-                                                </template>
-                                            </semantic-if>
+                                                                            <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?main_feat.             
+                                                                            ?main_feat <http://www.cidoc-crm.org/cidoc-crm/P138_has_representation> ?main_visual.
+                                                                            ?main_visual crm:P129i_is_subject_of ?imgURL.   
+                                                                            ?imgURL crm:P2_has_type <http://iiif.io/api/image>.
+                                                                        }' template='{{> imageThumbnail}}'>
+                                                                    <template id="imageThumbnail">
+                                                                        <img style="height:20vh" src="{{bindings.0.imgURL.value}}"/>
+                                                                        <div class="subtitle"><i>{{bindings.0.label.value}}</i></div>
+                                                                    </template>
+                                                                    </semantic-query>
+                                                                    </div>
+                                                                    {{/ifCond}}
+                                                                </mp-overlay-dialog-trigger>
+                                                                <mp-overlay-dialog-content>
+                                                                <div style='height: 80vh; width: 100%;'>
+                                                                 {{#ifCond iiifServer "===" undefined}}
+                                                                        <rs-iiif-mirador
+                                                                        image-or-region="[[this]]" 
+                            
+                                                                        image-id-pattern='
+                                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                        <[[this]]> crm:P56_bears_feature ?feat.             
+                                                                        ?feat crm:P138_has_representation ?img_visual.
+                                                                        ?img_visual crm:P129i_is_subject_of ?image . 
+                                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                        '
+                                                                        iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
+                                                                        >
+                                                                        </rs-iiif-mirador>
+                                                                 {{/ifCond}}
+                                                                 {{#ifCond iiifServer "!==" undefined}}
+                                                                    {{#ifCond imageType "===" "plate"}}
+                                                                        <rs-iiif-mirador
+                                                                        id="plate_mirador"
+                                                                        image-or-region="[[this]]" 
+                                                                        image-id-pattern='BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                        ?? crm:P56_bears_feature ?feat.
+                                                                        ?feat crm:P129i_is_subject_of ?plate.
+                                                                        ?plate crm:P129i_is_subject_of ?image. 
+                                                                        ?image crm:P2_has_type <http://iiif.io/api/image>.
+                                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imagio).
+                                                                        BIND(REPLACE(STR(REPLACE(STR(?imagio),"florentinedrawings!","florentinedrawings!plates!")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                        '                                                                       
+                                                                        iiif-server-url={{iiifServer}} 
+                                                                        >
+                                                                        </rs-iiif-mirador>
+                                                                    {{/ifCond}}
+                                                                    {{#ifCond imageType "!==" "plate"}}
+                                                                        <rs-iiif-mirador
+                                                                        id="rectoversopage_mirador"
+                                                                        image-or-region="[[this]]" 
+                                                                        image-id-pattern='
+                                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                        {{iiifPattern}}
+                                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                        '                                                                       
+                                                                        iiif-server-url={{iiifServer}} 
+                                                                        >
+                                                                        </rs-iiif-mirador>
+                                                                    {{/ifCond}}
+                                                                {{/ifCond}}
+
+                                                                    </div>
+                                                                </mp-overlay-dialog-content>
+                                                            </mp-overlay-dialog>
+                                                            </template>
+                                                            </mp-event-target-template-render>
+                                                        </template>
+                                                        <!-- Else show the page or plate image as main image-->
+                                                        <template id="else">
+                                                            <mp-event-target-template-render id='event-target' template='{{> mainImageTemplate}}'>
+                                                                <template id='mainImageTemplate'>
+                                                            <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
+                                                                <mp-overlay-dialog-trigger>
+                                                                    {{#ifCond imgURL "!==" undefined}}
+                                                                        <div class="rs-page__summary-image">
+                                                                            <img style="height:20vh" src="{{imgURL}}"/>
+                                                                            <div class="subtitle"><i>{{label}}</i></div>
+                                                                        </div>
+                                                                    {{/ifCond}}
+                                                                    {{#ifCond imgURL "===" undefined}}
+                                                                     <div class="rs-page__summary-image">
+                                                                        <semantic-query query='SELECT distinct ?pageplateImage
+                                                                        WHERE {
+                                                                            <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?feat.             
+                                                                            ?feat <http://www.cidoc-crm.org/cidoc-crm/P148_is_component_of> ?img_visual.
+                                                                            ?img_visual crm:P129i_is_subject_of ?pageplateImage.  
+                                                                            ?pageplateImage crm:P2_has_type <http://iiif.io/api/image>
+                                                                            FILTER (regex(str(?pageplateImage),".jpg"))   
+                                                                        }' template='{{> imageThumbnail}}'>
+                                                                    <template id="imageThumbnail">
+                                                                        <img style="height:20vh" src="{{bindings.0.pageplateImage.value}}"/>
+                                                                        <div class="subtitle"><i>Page from the 1903 edition book</i></div>
+                                                                    </template>
+                                                                    </semantic-query>
+                                                                    </div>
+                                                                    {{/ifCond}}
+                                                                </mp-overlay-dialog-trigger>
+                                                                <mp-overlay-dialog-content>
+                                                                <div style='height: 80vh; width: 100%;'>
+                                                                       {{#ifCond iiifServer "===" undefined}}
+                                                                        <rs-iiif-mirador
+                                                                        image-or-region="[[this]]" 
+                            
+                                                                        image-id-pattern='
+                                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                        <[[this]]> crm:P129i_is_subject_of ?feat.             
+                                                                        ?feat crm:P148_is_component_of ?img_visual.
+                                                                        ?img_visual crm:P129i_is_subject_of ?image . 
+                                                                        ?image crm:P2_has_type <http://iiif.io/api/image>.
+                                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                        '
+                                                                        iiif-server-url="https://ids.lib.harvard.edu/ids/iiif" 
+                                                                        >
+                                                                        </rs-iiif-mirador>
+                                                                        {{/ifCond}}
+
+                                                                        {{#ifCond iiifServer "!==" undefined}}
+                                                                          {{#ifCond imageType "===" "plate"}}
+                                                                          {{log imageType}}
+                                                                          <rs-iiif-mirador
+                                                                          image-or-region="[[this]]" 
+                                                                          image-id-pattern='BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                          ?? crm:P56_bears_feature ?feat.
+                                                                          ?feat crm:P129i_is_subject_of ?plate.
+                                                                          ?plate crm:P129i_is_subject_of ?image. 
+                                                                          ?image crm:P2_has_type <http://iiif.io/api/image>.
+                                                                          BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imagio).
+                                                                          BIND(REPLACE(STR(REPLACE(STR(?imagio),"florentinedrawings!","florentinedrawings!plates!")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                          '                                                                       
+                                                                          iiif-server-url={{iiifServer}} 
+                                                                          >
+                                                                          </rs-iiif-mirador>
+                                                                        {{/ifCond}}
+                                                                        {{#ifCond imageType "!==" "plate"}}
+                                                                        <rs-iiif-mirador
+                                                                        image-or-region="[[this]]" 
+                                                                        image-id-pattern='
+                                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                        {{iiifPattern}}
+                                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                        '                                                                       
+                                                                        iiif-server-url={{iiifServer}} 
+                                                                        >
+                                                                        </rs-iiif-mirador>
+                                                                         {{/ifCond}}
+                                                                          
+                                                                            
+                                                                         {{/ifCond}}
+                                                                    </div>
+                                                                </mp-overlay-dialog-content>
+                                                            </mp-overlay-dialog>
+                                                            </template>
+                                                            </mp-event-target-template-render>
+                                                        </template>
+                                                    </semantic-if>
+                                   
+
 
                                             {{#ifCond bindings.0.count.value ">" "1"}}
                                               <!-- THUMBNAILS FOR RECTO & VERSO -->
-                                              <mp-overlay-dialog title="‎‎" class="miradorViewerPopup">
-                                                <mp-overlay-dialog-trigger>
-                                                    <div >
-                                                        <semantic-query query='SELECT DISTINCT ?imgUrl WHERE{
-                                                            BIND(CONCAT("https://s3-eu-west-1.amazonaws.com/florentinedrawings/thumbs/",REPLACE(STR(REPLACE(STR(<[[this]]>),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2"),".jpg") AS ?imgUrl)
-                                                          }' template='{{> imagesThumbnail}}'>
-                                                       <template id="imagesThumbnail">
-                                                           {{#each bindings}}
-                                                            <img class="object-representations__image--rep" src="{{imgUrl.value}}"/>
-                                                           {{/each}}
-                                                       </template>
-                                                     </semantic-query>
-                                                    </div>
-                                                </mp-overlay-dialog-trigger>
-                                                <mp-overlay-dialog-content>
-                                                   <div style='height: 80vh; width: 100%;'>
-                                                        <rs-iiif-mirador
-                                                        image-or-region="[[this]]" 
-            
-                                                        image-id-pattern='
-                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                        <[[this]]> crm:P56_bears_feature ?feat.             
-                                                        ?feat crm:P138_has_representation ?img_visual.
-                                                        ?img_visual crm:P129i_is_subject_of ?image. 
-                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                        '
-                                                        iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
-                                                        >
-                                                        </rs-iiif-mirador>
-                                                    </div>
-                                                </mp-overlay-dialog-content>
-                                              </mp-overlay-dialog>
-                                  
-                                              <!-- THUMBNAILS FOR PAGES -->
-                                              <mp-overlay-dialog title="‎‎" class="miradorViewerPopup">
-                                                <mp-overlay-dialog-trigger>
-                                                    <div >
-                                                        <semantic-query query='SELECT  ?pageImage
-                                                       WHERE {
+                                                <div>
+                                                    <semantic-query query='SELECT DISTINCT ?imgUrl ?imageLabel WHERE{
+                                                        <[[this]]>  crm:P30_custody_transferred_through ?transfer.
+                                                        ?transfer crm:P29_custody_recieved_by ?location.
+                                                        ?location rdfs:label ?locationLabel.
+                                                        BIND(CONCAT("Image from ",?locationLabel) as ?imageLabel).    
+                                                        BIND(CONCAT("https://s3-eu-west-1.amazonaws.com/florentinedrawings/thumbs/",REPLACE(STR(REPLACE(STR(<[[this]]>),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2"),".jpg") AS ?imgUrl)
+                                                        }' template='{{> imagesThumbnail}}'>
+                                                    <template id="imagesThumbnail">
+                                                        {{#each bindings}}
+                                                        <mp-event-trigger id='event-trigger' type='Component.TemplateUpdate' data='{"imgURL":"{{imgUrl.value}}","label":"{{imageLabel.value}}","imageType":"rectoverso","iiifServer":"https://iiif.itatti.harvard.edu/iiif/2","iiifPattern":"?? crm:P56_bears_feature ?feat. ?feat crm:P138_has_representation ?img_visual. ?img_visual crm:P129i_is_subject_of ?image."}' targets='["event-target"]'>
+                                                        <img class="object-representations__image--rep" src="{{imgUrl.value}}"/>
+                                                        </mp-event-trigger>
+                                                        {{/each}}
+                                                    </template>
+                                                    </semantic-query>
+                                                </div>
+                                                <!-- THUMBNAILS FOR PAGES -->  
+                                                <div>
+                                                    <semantic-query query='SELECT ?pageImage
+                                                        WHERE {
                                                             OPTIONAL {
                                                                 <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?feat.             
                                                                 ?feat <http://www.cidoc-crm.org/cidoc-crm/P148_is_component_of> ?img_visual.
@@ -331,78 +411,40 @@
                                                                 ?pageImage crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/500px>
                                                                 FILTER (regex(str(?pageImage),".jpg"))   
                                                             }
-                                                        }' template='{{> imagesThumbnail}}'>
-                                                       <template id="imagesThumbnail">
-                                                           {{#each bindings}}
+                                                    }' template='{{> imagesThumbnail}}'>
+                                                    <template id="imagesThumbnail">
+                                                        {{#each bindings}}
+                                                        <mp-event-trigger id='event-trigger' type='Component.TemplateUpdate' data='{"imgURL":"{{pageImage.value}}","label":"Page from the 1903 edition book","imageType":"page","iiifServer":"https://ids.lib.harvard.edu/ids/iiif","iiifPattern":" ?? crm:P129i_is_subject_of ?feat.?feat crm:P148_is_component_of ?img_visual.?img_visual crm:P129i_is_subject_of ?image .?image crm:P2_has_type <http://iiif.io/api/image>."}' targets='["event-target"]'>
                                                             <img class="object-representations__image--rep" src="{{pageImage.value}}"/>
-                                                           {{/each}}
-                                                       </template>
-                                                     </semantic-query>
-                                                    </div>
-                                                </mp-overlay-dialog-trigger>
-                                                <mp-overlay-dialog-content>
-                                                   <div style='height: 80vh; width: 100%;'>
-                                                        <rs-iiif-mirador
-                                                        image-or-region="[[this]]" 
-            
-                                                        image-id-pattern='
-                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                        <[[this]]> crm:P129i_is_subject_of ?feat.             
-                                                        ?feat crm:P148_is_component_of ?img_visual.
-                                                        ?img_visual crm:P129i_is_subject_of ?image . 
-                                                        ?image crm:P2_has_type <http://iiif.io/api/image>.
-                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                        '
-                                                        iiif-server-url="https://ids.lib.harvard.edu/ids/iiif" 
-                                                        >
-                                                        </rs-iiif-mirador>
-                                                    </div>
-                                                </mp-overlay-dialog-content>
-                                              </mp-overlay-dialog>
-
-                                            <!-- THUMBNAILS FOR PLATES -->
-                                            <mp-overlay-dialog title="	" class="miradorViewerPopup">
-                                            <mp-overlay-dialog-trigger>
-                                                <div >
-                                                    <semantic-query query='SELECT  ?plateImage
+                                                        </mp-event-trigger>
+                                                        {{/each}}
+                                                    </template>
+                                                    </semantic-query>
+                                                </div>
+                                                <!-- THUMBNAILS FOR PLATES -->
+                                                <div>
+                                                    <semantic-query query='SELECT ?plateImage ?plateLabel
                                                     WHERE {
                                                         OPTIONAL {
                                                             <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?feature.
                                                             ?feature <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?plate.
+                                                            ?plate crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Plate>.
+                                                            ?plate rdfs:label ?plate_number.
                                                             ?plate crm:P129i_is_subject_of ?plateImage.  
                                                             ?plateImage crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Thumbnail/200>
+                                                            BIND(CONCAT("Image of plate ",?plate_number) as ?plateLabel).    
                                                             FILTER (regex(str(?plateImage),".jpg"))   
                                                         }
                                                     }' template='{{> imagesThumbnail}}'>
                                                     <template id="imagesThumbnail">
                                                         {{#each bindings}}
-                                                        <img class="object-representations__image--rep" src="{{plateImage.value}}"/>
+                                                            <mp-event-trigger id='event-trigger' type='Component.TemplateUpdate' data='{"imgURL": "{{plateImage.value}}","label":"{{plateLabel.value}}","imageType":"plate","iiifServer":"https://iiif.itatti.harvard.edu/iiif/2"}' targets='["event-target"]'>
+                                                                <img class="object-representations__image--rep" src="{{plateImage.value}}"/>
+                                                            </mp-event-trigger>
                                                         {{/each}}
                                                     </template>
                                                     </semantic-query>
                                                 </div>
-                                            </mp-overlay-dialog-trigger>
-                                            <mp-overlay-dialog-content>
-                                                <div style='height: 80vh; width: 100%;'>
-                                                    <rs-iiif-mirador
-                                                    image-or-region="[[this]]" 
-        
-                                                    image-id-pattern='
-                                                    BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                    <[[this]]> crm:P56_bears_feature ?feat.             
-                                                    ?feat crm:P129i_is_subject_of ?plate.
-                                                    ?plate crm:P129i_is_subject_of ?image.  
-                                                    ?image crm:P2_has_type <http://iiif.io/api/image>.
-                                                    BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imagio)
-                                                    BIND(REPLACE(STR(REPLACE(STR(?imagio),"florentinedrawings!","florentinedrawings!plates!")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                    '
-                                                    iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
-                                                    >
-                                                    </rs-iiif-mirador>
-                                                </div>
-                                            </mp-overlay-dialog-content>
-                                            </mp-overlay-dialog>
-
                                               {{/ifCond}}
                                             [[/block]]
                                             </div>
@@ -918,7 +960,6 @@
                                                                             template="{{> qualifierTemplate1961}}"
                                                                             > 
                                                                             <template id="qualifierTemplate1961">
-                                                                                {{log bindings}}
                                                                                 {{#each bindings}}
                                                                                    {{#ifCond artist_1961.value "!==" undefined}}
                                                                                 <bs-col md="4">
