@@ -7,14 +7,30 @@
           by Bernard Berenson
         </div> --}}
       </a>
+      
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div>
+   
 
-      <ul style="    display: flex;
+      <ul style="    display: flex; align-items:center;
     justify-content: flex-end;">
-          <bs-nav-dropdown title="About" id="rs-about-dropdown" class="rs-dropdown about">
+      <a  style="min-width: 7vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;" href="/resource/search">
+       Search
+      <img
+        style="filter: hue-rotate(80deg); margin-left: 0.5vw"
+        src="/assets/images/icons/search.svg"
+      />
+       </a>
+     
+          <bs-nav-dropdown style="min-width: 7vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;"  title="About" id="rs-about-dropdown" class="rs-dropdown about">
 
             <bs-menu-item href="background" title='Background'>
               <div class="dropdownTitle"> Background</div>
@@ -37,7 +53,12 @@
       </ul>
 
     </div><!-- /.navbar-collapse -->
+  
+  
+  
+  
   </div><!-- /.container-fluid -->
+
   <div style="position: fixed; bottom:0; right:0; z-index:100">
             <mp-anonymous-hidden>
           <bs-nav-dropdown  title="Admin" id="rs-about-dropdown" class="dropup admin">
@@ -53,7 +74,6 @@
                   class="rs-setting-icon">
                   <i class="fa fa-cog"></i>
                 </semantic-link>
-              </div>
             </bs-menu-item>
        
 
@@ -69,4 +89,5 @@
           </bs-nav-dropdown>
         </mp-anonymous-hidden>
   </div>
+
 </nav>

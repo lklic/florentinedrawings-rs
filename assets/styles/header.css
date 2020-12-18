@@ -90,15 +90,14 @@
 }
 
 #header-search.search-page {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  z-index: 100;
-  color: gray !important;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-top: 4vh;
-  margin-bottom: 4vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    color: gray !important;
+    margin-top: 4vh;
+    margin-bottom: 4vh;
+    width: 100%;
 }
 
 
@@ -167,7 +166,7 @@
 #header-search.search-page input{
   color: black !important;
   border-radius: 0px 20px 20px 0px;
-  width: 56vw;
+  width: 54vw;
   height: 5vh;
   align-self: center;
   background: white;
