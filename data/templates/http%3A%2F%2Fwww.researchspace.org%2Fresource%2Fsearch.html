@@ -200,48 +200,14 @@
 
                     <semantic-search-query-keyword domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
                       placeholder="Search for any field e.g. Michelangelo" escape-lucene-syntax='false' query='
-                      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
                       SELECT ?subject WHERE {
 
-                      {
-                      ?artwork a crm:E22_Man-Made_Object.
-                      ?artwork crm:P108i_was_produced_by ?production.
-                      ?production crm:P01i_is_domain_of ?domain.
-                      ?domain crm:P02_has_range ?subject.
-                      ?subject rdfs:label ?someLabel. 
-                      ?someLabel bds:search ?__token__ .
-                      ?someLabel bds:minRelevance "0.3"^^xsd:double;
-                      bds:matchAllTerms "true"  .
-                      BIND( xsd:integer(substr(str(?value), 33)) as ?q)
-                      }
-                      UNION
-                      {
-                    ?subject a crm:E22_Man-Made_Object.
-                      ?subject  <http://www.cidoc-crm.org/cidoc-crm/P48_has_preferred_identifier> ?id .
-                      ?id rdfs:label ?someLabel. 
-                      ?someLabel bds:search ?__token__ .
-                      ?someLabel bds:minRelevance "0.3"^^xsd:double;
-                      bds:matchAllTerms "true"  .
-                      BIND( xsd:integer(substr(str(?value), 33)) as ?q)
-                      }
-                      UNION
-                      {
-                        ?subject a crm:E22_Man-Made_Object.
-                      ?subject crm:P56_bears_feature ?feature.
-                      ?feature crm:P2_has_type ?featureType.
-                      ?feature a crm:E25_Man-Made_Feature.
-                      ?feature crm:P138_has_representation ?visual_item.
-                      ?visual_item a crm:E36_Visual_Item.
-                      ?visual_item crm:P102_has_title ?value_uri.
-                      ?value_uri a crm:E35_Title.
-                      ?value_uri rdfs:label ?someLabel.
-                      ?value_uri crm:P141i_was_assigned_by ?editionAttributeAssignment.
-                      ?someLabel bds:search ?__token__ .
-                      ?someLabel bds:minRelevance "0.3"^^xsd:double;
-                      bds:matchAllTerms "true"  .
-                      BIND( xsd:integer(substr(str(?value), 33)) as ?q)
-                      }
+                        ?subject a crm:E22_Man-Made_Object .
+                        ?entity ?p	?someLabel .
+                        ?someLabel bds:search ?__token__  .
+                        ?someLabel bds:minRelevance "0.3"^^xsd:double;
+                        bds:matchAllTerms "true"  .
+                          BIND ( iri(replace(str(?entity), "Berenson/.*", "Berenson" )) AS ?subject) .
                       
                       
                       } ORDER BY ?q
