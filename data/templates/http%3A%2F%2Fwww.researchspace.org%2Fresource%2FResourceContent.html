@@ -155,7 +155,7 @@
                                     <template id='imageViewer'>
 
                                         {{#ifCond bindings.0.count.value "!==" "0"}}
-                                            <div class="col-sm-12 col-md-6 rs-image-container" style="height: 45vh;">
+                                            <div class="col-md-12 col-lg-6 rs-image-container" style="height: 45vh;">
 
                                             <!-- <div class="rs-resource-img__btngroup">
 
@@ -204,14 +204,23 @@
                                                         <template id="then">
                                                             <mp-event-target-template-render id='event-target' template='{{> mainImageTemplate}}'>
                                                                 <template id='mainImageTemplate'>
-                                                                    {{log this}}
+                                                                    <semantic-query query='SELECT DISTINCT ?imageUrl WHERE{
+                                                                        
+                                                                        BIND(REPLACE(STR("{{imgURL}}"),"text200","text500") AS ?pageImg).
+                                                                        BIND(REPLACE(STR(?pageImg),"plates200","plates500") AS ?imageUrl).
+
+
+                                                                     }' template='{{> mediumImageSize}}'>
+                                                                     <template id="mediumImageSize">                                                                    
                                                             <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
                                                                 <mp-overlay-dialog-trigger>
                                                                     {{#ifCond imgURL "!==" undefined}}
+
                                                                         <div class="rs-page__summary-image">
-                                                                            <img style="height:20vh" src="{{imgURL}}"/>
+                                                                            <img style="height:20vh" src="{{bindings.0.imageUrl.value}}"/>
                                                                             <div class="subtitle"><i>{{label}}</i></div>
                                                                         </div>
+                                                                    
                                                                     {{/ifCond}}
                                                                     {{#ifCond imgURL "===" undefined}}
                                                                     <div class="rs-page__summary-image">
@@ -287,6 +296,8 @@
                                                                     </div>
                                                                 </mp-overlay-dialog-content>
                                                             </mp-overlay-dialog>
+                                                        </template>
+                                                    </semantic-query>
                                                             </template>
                                                             </mp-event-target-template-render>
                                                         </template>
@@ -294,13 +305,23 @@
                                                         <template id="else">
                                                             <mp-event-target-template-render id='event-target' template='{{> mainImageTemplate}}'>
                                                                 <template id='mainImageTemplate'>
+                                                                    <semantic-query query='SELECT DISTINCT ?imageUrl WHERE{
+                                                                        
+                                                                        BIND(REPLACE(STR("{{imgURL}}"),"text200","text500") AS ?pageImg).
+                                                                        BIND(REPLACE(STR(?pageImg),"plates200","plates500") AS ?imageUrl).
+
+
+                                                                     }' template='{{> mediumImageSize}}'>
+                                                                     <template id="mediumImageSize">
                                                             <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
                                                                 <mp-overlay-dialog-trigger>
                                                                     {{#ifCond imgURL "!==" undefined}}
+                                                                   
                                                                         <div class="rs-page__summary-image">
-                                                                            <img style="height:20vh" src="{{imgURL}}"/>
+                                                                            <img style="height:20vh" src="{{bindings.0.imageUrl.value}}"/>
                                                                             <div class="subtitle"><i>{{label}}</i></div>
                                                                         </div>
+                                                                    
                                                                     {{/ifCond}}
                                                                     {{#ifCond imgURL "===" undefined}}
                                                                      <div class="rs-page__summary-image">
@@ -314,7 +335,7 @@
                                                                         }' template='{{> imageThumbnail}}'>
                                                                     <template id="imageThumbnail">
                                                                         <img style="height:20vh" src="{{bindings.0.pageplateImage.value}}"/>
-                                                                        <div class="subtitle"><i>Page from the 1903 edition book</i></div>
+                                                                        <div class="subtitle"><i>Page from 1903 edition</i></div>
                                                                     </template>
                                                                     </semantic-query>
                                                                     </div>
@@ -341,7 +362,6 @@
 
                                                                         {{#ifCond iiifServer "!==" undefined}}
                                                                           {{#ifCond imageType "===" "plate"}}
-                                                                          {{log imageType}}
                                                                           <rs-iiif-mirador
                                                                           image-or-region="[[this]]" 
                                                                           image-id-pattern='BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
@@ -374,6 +394,8 @@
                                                                     </div>
                                                                 </mp-overlay-dialog-content>
                                                             </mp-overlay-dialog>
+                                                        </template>
+                                                    </semantic-query>
                                                             </template>
                                                             </mp-event-target-template-render>
                                                         </template>
@@ -402,7 +424,7 @@
                                                 </div>
                                                 <!-- THUMBNAILS FOR PAGES -->  
                                                 <div>
-                                                    <semantic-query query='SELECT ?pageImage
+                                                    <semantic-query query='SELECT DISTINCT ?pageImage
                                                         WHERE {
                                                             OPTIONAL {
                                                                 <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?feat.             
@@ -414,7 +436,7 @@
                                                     }' template='{{> imagesThumbnail}}'>
                                                     <template id="imagesThumbnail">
                                                         {{#each bindings}}
-                                                        <mp-event-trigger id='event-trigger' type='Component.TemplateUpdate' data='{"imgURL":"{{pageImage.value}}","label":"Page from the 1903 edition book","imageType":"page","iiifServer":"https://ids.lib.harvard.edu/ids/iiif","iiifPattern":" ?? crm:P129i_is_subject_of ?feat.?feat crm:P148_is_component_of ?img_visual.?img_visual crm:P129i_is_subject_of ?image .?image crm:P2_has_type <http://iiif.io/api/image>."}' targets='["event-target"]'>
+                                                        <mp-event-trigger id='event-trigger' type='Component.TemplateUpdate' data='{"imgURL":"{{pageImage.value}}","label":"Page from 1903 edition","imageType":"page","iiifServer":"https://ids.lib.harvard.edu/ids/iiif","iiifPattern":" ?? crm:P129i_is_subject_of ?feat.?feat crm:P148_is_component_of ?img_visual.?img_visual crm:P129i_is_subject_of ?image .?image crm:P2_has_type <http://iiif.io/api/image>."}' targets='["event-target"]'>
                                                             <img class="object-representations__image--rep" src="{{pageImage.value}}"/>
                                                         </mp-event-trigger>
                                                         {{/each}}
@@ -423,18 +445,16 @@
                                                 </div>
                                                 <!-- THUMBNAILS FOR PLATES -->
                                                 <div>
-                                                    <semantic-query query='SELECT ?plateImage ?plateLabel
+                                                    <semantic-query query='SELECT DISTINCT ?plateImage ?plateLabel
                                                     WHERE {
-                                                        OPTIONAL {
                                                             <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?feature.
                                                             ?feature <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?plate.
                                                             ?plate crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Plate>.
                                                             ?plate rdfs:label ?plate_number.
                                                             ?plate crm:P129i_is_subject_of ?plateImage.  
                                                             ?plateImage crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Thumbnail/200>
-                                                            BIND(CONCAT("Image of plate ",?plate_number) as ?plateLabel).    
+                                                            BIND(CONCAT("Plate ",?plate_number," from 1903 edition") as ?plateLabel).    
                                                             FILTER (regex(str(?plateImage),".jpg"))   
-                                                        }
                                                     }' template='{{> imagesThumbnail}}'>
                                                     <template id="imagesThumbnail">
                                                         {{#each bindings}}
@@ -448,16 +468,16 @@
                                               {{/ifCond}}
                                             [[/block]]
                                             </div>
-                                            <div class="col-sm-12 col-md-6" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
+                                            <div class="col-md-12 col-lg-6" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
                                                 [[> resourceHeaderData image=true]]
                                             </div>
                                             {{/ifCond}}
 
                                             {{#ifCond bindings.0.count.value "===" "0"}}
-                                            <div class="col-xs-12 col-sm-6 rs-image-container" style="width:30vw; height: 45vh;">
+                                            <div class="col-md-12 col-lg-6 rs-image-container" style="width:30vw; height: 45vh;">
                                                 <img src='/assets/images/image_placeholder_large.png' style="width:100%"/>
                                             </div>
-                                                <div class="col-xs-6 col-md-6" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
+                                             <div class="col-md-6 col-lg-6" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
                                                 [[> resourceHeaderData image=true]]
                                             </div>
                                             {{/ifCond}}
@@ -664,7 +684,7 @@
                                 <div class="container-fluid rs-summary-section">
                                     <!--  close row -->
                                     <semantic-table query=' SELECT DISTINCT
-                                    ?id_number ?location  ?catalogue_number ?plate_number
+                                    ?id_number ?location  ?catalogue_number
                                     ?recto_title_1903 ?verso_title_1903 ?recto_notes_1903 ?verso_notes_1903
                                     ?recto_title_1938 ?verso_title_1938 ?recto_notes_1938 ?verso_notes_1938
                                     ?recto_title_1961 ?verso_title_1961 ?recto_notes_1961 ?verso_notes_1961
@@ -682,13 +702,7 @@
                                          ?id rdfs:label ?id_number
                                      }        
 
-                                     OPTIONAL{
-                                        <[[this]]> crm:P56_bears_feature ?plate_feat.             
-                                        ?plate_feat crm:P129i_is_subject_of ?plate.
-                                        ?plate crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Plate>.
-                                        ?plate rdfs:label ?plate_number
-                                     }
-                                    
+
                                      ## RECTO TITLE 1903 (Title) ##
                                      OPTIONAL {
                                        <[[this]]> crm:P56_bears_feature ?feature_rta.
@@ -835,8 +849,9 @@
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
-                                                                    <semantic-if query='ASK { <[[this]]> <https://florentinedrawings.itatti.harvard.edu/resource/field/Has_Edition> ?edition
-                                                                        FILTER(regex(str(?edition),"/1938"))      
+                                                                    <semantic-if query='ASK {  <[[this]]> crm:P129i_is_subject_of ?edition.
+                                                                        ?edition a crm:E73_Information_Object.
+                                                                        FILTER(regex(str(?edition),"/1961"))      
                                                                      }'
                                                                         then='{{> then}}' else='{{> else}}'>
                                                                         <!-- Show recto or verso as main image if exists -->
@@ -866,50 +881,7 @@
                                                                                 </div>
                                                                             </bs-col>
                                                                             {{/ifCond}}
-        
-                                                                            {{#ifCond plate_number.value "!==" undefined}}
-                                                                            <bs-col md="4">
-                                                                                <div class="grid-demo">
-                                                                                    <b>Plate number: </b>
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            <bs-col md="8">
-                                                                                <div class="grid-demo">
-                                                                                    {{plate_number.value}}
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            {{/ifCond}}
-        
-                                                                            <semantic-query query='
-                                                                            SELECT DISTINCT ?pageNumber WHERE {
-                                                                                <[[this]]> crm:P129i_is_subject_of ?edition.
-                                                                                ?edition a crm:E73_Information_Object.
-                                                                                ?edition crm:P148_is_component_of ?page.
-                                                                                ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
-                                                                                ?page rdfs:label ?pageNumber
-                                                                                FILTER(regex(str(?edition),"/1961"))   
-                                                                              }
-                                                                        ' 
-                                                                        template="{{> pageNumberTemplate1961}}"
-                                                                        > 
-                                                                        <template id="pageNumberTemplate1961">
-                                                                               {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
-                                                                            <bs-col md="4">
-                                                                                <div class="grid-demo">
-                                                                                    <b>Page number:</b>
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            <bs-col md="8">
-                                                                                <div class="grid-demo">
-                                                                                    {{#each bindings}}
-                                                                                        {{pageNumber.value}}  
-                                                                                    {{/each}}
-                                                                                </div>
-                                                                                </bs-col>
-                                                                            {{/ifCond}}
-                                                                        </template>
-                                                                            </semantic-query>
-                     
+                             
                                                                             <semantic-query query='
                                                                             SELECT DISTINCT ?catalogueNumber WHERE {
                                                                                 <[[this]]> crm:P1_is_identified_by ?cat_no.
@@ -938,7 +910,37 @@
                                                                                     {{/ifCond}}
                                                                                 </template>
                                                                             </semantic-query>
-        
+                                                                            
+                                                                            <semantic-query query='
+                                                                            SELECT DISTINCT (GROUP_CONCAT(?page_num;SEPARATOR=",") AS ?pageNumber) WHERE {
+                                                                                <[[this]]> crm:P129i_is_subject_of ?edition.
+                                                                                ?edition a crm:E73_Information_Object.
+                                                                                ?edition crm:P148_is_component_of ?page.
+                                                                                ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
+                                                                                ?page rdfs:label ?page_num
+                                                                                FILTER(regex(str(?edition),"/1961"))   
+                                                                              }
+                                                                        ' 
+                                                                        template="{{> pageNumberTemplate1961}}"
+                                                                        > 
+                                                                        <template id="pageNumberTemplate1961">
+                                                                               {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Page number:</b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{#each bindings}}
+                                                                                        {{pageNumber.value}}  
+                                                                                    {{/each}}
+                                                                                </div>
+                                                                                </bs-col>
+                                                                            {{/ifCond}}
+                                                                        </template>
+                                                                            </semantic-query>
+       
                                                                             <semantic-query query='
                                                                                 SELECT DISTINCT ?artist_1961 ?label WHERE {
                                                                                     <[[this]]> crm:P108i_was_produced_by ?production.
@@ -1014,8 +1016,9 @@
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
-                                                                    <semantic-if query='ASK { <[[this]]> <https://florentinedrawings.itatti.harvard.edu/resource/field/Has_Edition> ?edition
-                                                                        FILTER(regex(str(?edition),"/1938"))      
+                                                                    <semantic-if query='ASK {  <[[this]]> crm:P129i_is_subject_of ?edition.
+                                                                        ?edition a crm:E73_Information_Object.
+                                                                        FILTER(regex(str(?edition),"/1938"))     
                                                                      }'
                                                                         then='{{> then}}' else='{{> else}}'>
                                                                         <!-- Show recto or verso as main image if exists -->
@@ -1046,18 +1049,6 @@
                                                                             </bs-col>
                                                                             {{/ifCond}}
         
-                                                                            {{#ifCond plate_number.value "!==" undefined}}
-                                                                            <bs-col md="4">
-                                                                                <div class="grid-demo">
-                                                                                    <b>Plate number: </b>
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            <bs-col md="8">
-                                                                                <div class="grid-demo">
-                                                                                    {{plate_number.value}}
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            {{/ifCond}}
                                                                             
                                                                             <semantic-query query='
                                                                             SELECT DISTINCT ?catalogueNumber WHERE {
@@ -1089,12 +1080,12 @@
                                                                             </semantic-query>
         
                                                                             <semantic-query query='
-                                                                            SELECT DISTINCT ?pageNumber WHERE {
+                                                                            SELECT DISTINCT (GROUP_CONCAT(?page_num;SEPARATOR=",") AS ?pageNumber) WHERE {
                                                                                 <[[this]]> crm:P129i_is_subject_of ?edition.
                                                                                 ?edition a crm:E73_Information_Object.
                                                                                 ?edition crm:P148_is_component_of ?page.
                                                                                 ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
-                                                                                ?page rdfs:label ?pageNumber
+                                                                                ?page rdfs:label ?page_num
                                                                                 FILTER(regex(str(?edition),"/1938"))   
                                                                               }
                                                                             ' 
@@ -1207,7 +1198,8 @@
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
-                                                                    <semantic-if query='ASK { <[[this]]> <https://florentinedrawings.itatti.harvard.edu/resource/field/Has_Edition> ?edition
+                                                                    <semantic-if query='ASK {  <[[this]]> crm:P129i_is_subject_of ?edition.
+                                                                        ?edition a crm:E73_Information_Object.
                                                                         FILTER(regex(str(?edition),"/1903"))      
                                                                      }'
                                                                         then='{{> then}}' else='{{> else}}'>
@@ -1284,12 +1276,12 @@
                                                                         </template>
                                                                     </semantic-query>
                                                                     <semantic-query query='
-                                                                    SELECT DISTINCT ?pageNumber WHERE {
+                                                                    SELECT DISTINCT (GROUP_CONCAT(?page_num;SEPARATOR=",") AS ?pageNumber) WHERE {
                                                                         <[[this]]> crm:P129i_is_subject_of ?edition.
                                                                         ?edition a crm:E73_Information_Object.
                                                                         ?edition crm:P148_is_component_of ?page.
                                                                         ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
-                                                                        ?page rdfs:label ?pageNumber
+                                                                        ?page rdfs:label ?page_num
                                                                         FILTER(regex(str(?edition),"/1903"))   
                                                                       }
                                                                     ' 
@@ -1305,13 +1297,43 @@
                                                                             <bs-col md="8">
                                                                                 <div class="grid-demo">
                                                                             {{#each bindings}}
-                                                                                    {{pageNumber.value}}                                                             
+                                                                                    {{pageNumber.value}}                                                            
                                                                                     {{/each}}
                                                                                 </div>
                                                                                 </bs-col>
                                                                             {{/ifCond}}
                                                                         </template>
                                                                     </semantic-query>
+
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT (GROUP_CONCAT(?plate_num;SEPARATOR=",") AS ?plateNumber) WHERE {
+                                                                            <[[this]]> crm:P56_bears_feature ?plate_feat.             
+                                                                            ?plate_feat crm:P129i_is_subject_of ?plate.
+                                                                            ?plate crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Plate>.
+                                                                            ?plate rdfs:label ?plate_num
+                                                                      }
+                                                                    ' 
+                                                                    template="{{> plateNumberTemplate1903}}"
+                                                                    > 
+                                                                        <template id="plateNumberTemplate1903">
+                                                                            {{#ifCond bindings.0.plateNumber.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Plate number:</b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                            {{#each bindings}}
+                                                                                    {{plateNumber.value}}                                                           
+                                                                                    {{/each}}
+                                                                                </div>
+                                                                                </bs-col>
+                                                                            {{/ifCond}}
+                                                                        </template>
+                                                                    </semantic-query>
+
+                                                                    
 
                                                                     <semantic-query query='
                                                                     SELECT DISTINCT ?artist_1903 ?label WHERE {
@@ -1759,19 +1781,19 @@ WHERE {
 }' options='{"showFilter":false}' tuple-template='{{>headerDefaultData}}'>
 
     <template id="headerDefaultData">
-        <div>
+        <div style="margin-top:8px">
             <bs-col>
                 <div data-flex-layout="row md-column center-stretch">
                   <bs-row>
                     <div>
                                     
                         {{#ifCond id_number.value "!==" undefined}}
-                        <bs-col lg="5" md="12"> 
+                        <bs-col lg="5" md="4" sm="12"> 
                             <div class="grid-demo"> 
                                 <b>Inventory Number: </b>
                             </div> 
                         </bs-col>
-                        <bs-col md="7">
+                        <bs-col lg="7" md="8" sm="12">
                             <div class="grid-demo">
                                 {{id_number.value}}
                             </div>
@@ -1779,12 +1801,12 @@ WHERE {
                         {{/ifCond}}
 
                         {{#ifCond recto_title_1961.value "!==" undefined}}
-                        <bs-col lg="5" md="12"> 
+                        <bs-col lg="5" md="4" sm="12"> 
                             <div class="grid-demo"> 
                                 <b>Recto Title (1961): </b>
                             </div> 
                         </bs-col>
-                        <bs-col md="7">
+                        <bs-col lg="7" md="8" sm="12">
                             <div class="grid-demo">
                                 {{recto_title_1961.value}}
                             </div>
@@ -1792,12 +1814,12 @@ WHERE {
                         {{/ifCond}}
 
                         {{#ifCond verso_title_1961.value "!==" undefined}}
-                        <bs-col lg="5" md="12"> 
+                        <bs-col lg="5" md="4" sm="12"> 
                             <div class="grid-demo"> 
                                 <b>Verso Title (1961): </b>
                             </div> 
                         </bs-col>
-                        <bs-col md="7">
+                        <bs-col lg="7" md="8" sm="12">
                             <div class="grid-demo">
                                 {{verso_title_1961.value}}
                             </div>
@@ -1805,12 +1827,12 @@ WHERE {
                         {{/ifCond}}
 
                         {{#ifCond recto_title_1938.value "!==" undefined}}
-                        <bs-col lg="5" md="12"> 
+                        <bs-col lg="5" md="4" sm="12"> 
                             <div class="grid-demo"> 
                                 <b>Recto Title (1938): </b>
                             </div> 
                         </bs-col>
-                        <bs-col md="7">
+                        <bs-col lg="7" md="8" sm="12">
                             <div class="grid-demo">
                                 {{recto_title_1938.value}}
                             </div>
@@ -1818,12 +1840,12 @@ WHERE {
                         {{/ifCond}}
 
                         {{#ifCond verso_title_1938.value "!==" undefined}}
-                        <bs-col lg="5" md="12"> 
+                        <bs-col lg="5" md="4" sm="12"> 
                             <div class="grid-demo"> 
                                 <b>Verso Title (1938): </b>
                             </div> 
                         </bs-col>
-                        <bs-col md="7">
+                        <bs-col lg="7" md="8" sm="12">
                             <div class="grid-demo">
                                 {{verso_title_1938.value}}
                             </div>
@@ -1853,12 +1875,12 @@ WHERE {
                         <template id="artistTemplate">
                             {{#each bindings}}
                             {{#ifCond artist.value "!==" undefined}}
-                            <bs-col lg="5" md="12"> 
+                            <bs-col lg="5" md="4" sm="12"> 
                                 <div class="grid-demo"> 
                                     <b>Artist Attribution (1961): </b>
                                 </div> 
                             </bs-col>
-                            <bs-col md="7">
+                            <bs-col lg="7" md="8" sm="12">
                                 <div class="grid-demo">
                                     <semantic-link iri={{artist.value}}>{{label.value}}</semantic-link>
                                 </div>
@@ -1870,12 +1892,12 @@ WHERE {
 
 
                         {{#ifCond recto_title_1961.value "!==" undefined}}
-                        <bs-col lg="5" md="12"> 
+                        <bs-col lg="5" md="4" sm="12"> 
                             <div class="grid-demo"> 
                                 <b>Recto Technique: </b>
                             </div> 
                         </bs-col>
-                        <bs-col md="7">
+                        <bs-col lg="7" md="8" sm="12">
                             <div class="grid-demo">
                                 <semantic-query query='  
                                 SELECT ?technique  WHERE{
@@ -1891,12 +1913,12 @@ WHERE {
                         {{/ifCond}}
 
                         {{#ifCond verso_title_1961.value "!==" undefined}}
-                        <bs-col lg="5" md="12"> 
+                        <bs-col lg="5" md="4" sm="12"> 
                             <div class="grid-demo"> 
                                 <b>Verso Technique: </b>
                             </div> 
                         </bs-col>
-                        <bs-col md="7">
+                        <bs-col lg="7" md="8" sm="12">
                             <div class="grid-demo">
                                 <semantic-query query='  
                                 SELECT ?technique  WHERE{
@@ -1912,7 +1934,7 @@ WHERE {
                         {{/ifCond}}
 
                         {{#ifCond location.value "!==" undefined}}
-                        <bs-col lg="5" md="12"> 
+                        <bs-col lg="5" md="4" sm="12"> 
                             <div class="grid-demo"> 
                                 <b>Location: </b>
                             </div> 
@@ -1939,14 +1961,15 @@ WHERE {
                                 </a>
                               </div>
                             {{/ifCond}}
-                            <div style="margin-right:1vw">
+                           
                                 {{#ifCond artist.value "!==" undefined}}
+                                <div style="margin-right:1vw">
                                 <a target="_null" title={{artistLabel.value}} href={{artist.value}}>
                                     <img class="dataSourceIcon" alt="ULAN" src="../../assets/images/ulan_source.png">
                                 </a>
-                                {{/ifCond}}
                             </div>
-                            <div style="margin-right:1vw">
+                                {{/ifCond}}
+                            <div>
                                 {{#ifCond recto_title_1961.value "!==" undefined}}
                                 <div style="display: flex;">
                                   <semantic-query query='  
