@@ -404,6 +404,7 @@
 
 
                                             {{#ifCond bindings.0.count.value ">" "1"}}
+                                            <div style="margin-left: 5vw;">
                                               <!-- THUMBNAILS FOR RECTO & VERSO -->
                                                 <div>
                                                     <semantic-query query='SELECT DISTINCT ?imgUrl ?imageLabel WHERE{
@@ -445,27 +446,28 @@
                                                 </div>
                                                 <!-- THUMBNAILS FOR PLATES -->
                                                 <div>
-                                                    <semantic-query query='SELECT DISTINCT ?plateImage ?plateLabel
-                                                    WHERE {
-                                                            <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?feature.
-                                                            ?feature <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?plate.
-                                                            ?plate crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Plate>.
-                                                            ?plate rdfs:label ?plate_number.
-                                                            ?plate crm:P129i_is_subject_of ?plateImage.  
-                                                            ?plateImage crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Thumbnail/200>
-                                                            BIND(CONCAT("Plate ",?plate_number," from 1903 edition") as ?plateLabel).    
-                                                            FILTER (regex(str(?plateImage),".jpg"))   
-                                                    }' template='{{> imagesThumbnail}}'>
-                                                    <template id="imagesThumbnail">
-                                                        {{#each bindings}}
-                                                            <mp-event-trigger id='event-trigger' type='Component.TemplateUpdate' data='{"imgURL": "{{plateImage.value}}","label":"{{plateLabel.value}}","imageType":"plate","iiifServer":"https://iiif.itatti.harvard.edu/iiif/2"}' targets='["event-target"]'>
-                                                                <img class="object-representations__image--rep" src="{{plateImage.value}}"/>
-                                                            </mp-event-trigger>
-                                                        {{/each}}
-                                                    </template>
-                                                    </semantic-query>
+                                                <semantic-query query='SELECT DISTINCT ?plateImage ?plateLabel
+                                                WHERE {
+                                                        <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?feature.
+                                                        ?feature <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?plate.
+                                                        ?plate crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Plate>.
+                                                        ?plate rdfs:label ?plate_number.
+                                                        ?plate crm:P129i_is_subject_of ?plateImage.  
+                                                        ?plateImage crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Thumbnail/200>
+                                                        BIND(CONCAT("Plate ",?plate_number," from 1903 edition") as ?plateLabel).    
+                                                        FILTER (regex(str(?plateImage),".jpg"))   
+                                                }' template='{{> imagesThumbnail}}'>
+                                                <template id="imagesThumbnail">
+                                                    {{#each bindings}}
+                                                        <mp-event-trigger id='event-trigger' type='Component.TemplateUpdate' data='{"imgURL": "{{plateImage.value}}","label":"{{plateLabel.value}}","imageType":"plate","iiifServer":"https://iiif.itatti.harvard.edu/iiif/2"}' targets='["event-target"]'>
+                                                            <img class="object-representations__image--rep" src="{{plateImage.value}}"/>
+                                                        </mp-event-trigger>
+                                                    {{/each}}
+                                                </template>
+                                                </semantic-query>
                                                 </div>
                                               {{/ifCond}}
+                                            </div>
                                             [[/block]]
                                             </div>
                                             <div class="col-md-12 col-lg-6" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
