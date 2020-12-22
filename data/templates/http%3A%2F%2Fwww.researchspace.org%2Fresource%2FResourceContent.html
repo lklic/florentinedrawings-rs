@@ -205,11 +205,9 @@
                                                             <mp-event-target-template-render id='event-target' template='{{> mainImageTemplate}}'>
                                                                 <template id='mainImageTemplate'>
                                                                     <semantic-query query='SELECT DISTINCT ?imageUrl WHERE{
-                                                                        
-                                                                        BIND(REPLACE(STR("{{imgURL}}"),"text200","text500") AS ?pageImg).
+                                                                        BIND(REPLACE(STR("{{imgURL}}"),"full/200","full/500") AS ?rectoversoImg).
+                                                                        BIND(REPLACE(STR(?rectoversoImg),"text200","text500") AS ?pageImg).
                                                                         BIND(REPLACE(STR(?pageImg),"plates200","plates500") AS ?imageUrl).
-
-
                                                                      }' template='{{> mediumImageSize}}'>
                                                                      <template id="mediumImageSize">                                                                    
                                                             <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
@@ -412,12 +410,12 @@
                                                         ?transfer crm:P29_custody_recieved_by ?location.
                                                         ?location rdfs:label ?locationLabel.
                                                         BIND(CONCAT("Image from ",?locationLabel) as ?imageLabel).    
-                                                        BIND(CONCAT("https://s3-eu-west-1.amazonaws.com/florentinedrawings/thumbs/",REPLACE(STR(REPLACE(STR(<[[this]]>),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2"),".jpg") AS ?imgUrl)
+                                                        BIND(CONCAT("https://iiif.itatti.harvard.edu/iiif/2/florentinedrawings!works!",REPLACE(STR(REPLACE(STR(<[[this]]>),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2"),".jpg/full/200,/0/default.jpg") AS ?imgUrl)
                                                         }' template='{{> imagesThumbnail}}'>
                                                     <template id="imagesThumbnail">
                                                         {{#each bindings}}
                                                         <mp-event-trigger id='event-trigger' type='Component.TemplateUpdate' data='{"imgURL":"{{imgUrl.value}}","label":"{{imageLabel.value}}","imageType":"rectoverso","iiifServer":"https://iiif.itatti.harvard.edu/iiif/2","iiifPattern":"?? crm:P56_bears_feature ?feat. ?feat crm:P138_has_representation ?img_visual. ?img_visual crm:P129i_is_subject_of ?image."}' targets='["event-target"]'>
-                                                        <img class="object-representations__image--rep" src="{{imgUrl.value}}"/>
+                                                            <img class="object-representations__image--rep" src="{{imgUrl.value}}"/>
                                                         </mp-event-trigger>
                                                         {{/each}}
                                                     </template>
