@@ -55,10 +55,16 @@
     "kind": "resource",
     "queryPattern": "
       {
-        $subject crm:P108i_was_produced_by ?production.
+       { $subject crm:P108i_was_produced_by ?production.
         ?production crm:P01i_is_domain_of ?domain.
         ?domain a crm:PC15_was_influenced_by .
         ?domain crm:P15.1_in_the_role_of ?__value__.
+      }UNION{
+         $subject crm:P108i_was_produced_by ?production.
+         ?production crm:P01i_is_domain_of ?domain.
+         ?domain <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?__value__.
+         ?domain a <http://www.cidoc-crm.org/cidoc-crm/PC14_carried_out_by>
+        }
       }"
   }
 ],
