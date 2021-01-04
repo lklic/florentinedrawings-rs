@@ -1878,7 +1878,15 @@ WHERE {
                         </bs-col>
                         {{/ifCond}}
 
-                        <semantic-query query='  
+                        {{#ifCond verso_title_1961.value "!==" undefined}}
+                        <bs-col lg="5" md="4" sm="12"> 
+                            <div class="grid-demo"> 
+                                <b>Verso Technique: </b>
+                            </div> 
+                        </bs-col>
+                        <bs-col lg="7" md="8" sm="12">
+                            <div class="grid-demo">
+                                <semantic-query query='  
                                 SELECT ?technique  WHERE{
                                 <[[this]]> crm:P56_bears_feature ?feature.
                                 ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
@@ -1886,24 +1894,10 @@ WHERE {
                                 ?feature crm:P81_was_modified_by ?modification.
                                 ?modification a crm:E11_Modification.
                                 ?modification crm:P32_used_general_technique ?technique.
-                                }'> 
-                                <template id="versoTechniqueTemplate">
-                                    {{#ifCond bidnings.0.technique.value "!==" undefined}}
-                                        <bs-col lg="5" md="4" sm="12"> 
-                                            <div class="grid-demo"> 
-                                                <b>Verso Technique: </b>
-                                            </div> 
-                                        </bs-col>
-                                        <bs-col lg="7" md="8" sm="12">
-                                            {{#each bindings}}
-                                            <div class="grid-demo">
-                                                {{technique}} 
-                                            </div>
-                                            {{/each}}
-                                        </bs-col>
-                                    {{/ifCond}}
-                                </template>
-                        </semantic-query>
+                                }'> {{technique}} </semantic-query>
+                            </div>
+                        </bs-col>
+                        {{/ifCond}}
                 
                         {{#ifCond location.value "!==" undefined}}
                         <bs-col lg="5" md="4" sm="12"> 
