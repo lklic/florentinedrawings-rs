@@ -145,15 +145,10 @@
                                     <semantic-query template='{{> imageViewer}}' query='
                                     SELECT (count(?anyImage) as ?count) 
                                     WHERE { 
-                                        <[[this]]> ?bears ?feat.             
-                                        ?feat ?has ?img_visual.
-                                        ?img_visual crm:P129i_is_subject_of ?anyImage.     
-                                        ?anyImage crm:P2_has_type <http://iiif.io/api/image>.                                  
-                                        FILTER (regex(str(?anyImage),".jpg"))                               
+                                        <[[this]]> <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?anyImage.                           
                                     }
                                     '>
                                     <template id='imageViewer'>
-
                                         {{#ifCond bindings.0.count.value "!==" "0"}}
                                             <div class="col-md-12 col-lg-6 rs-image-container" style="height: 45vh;">
 
@@ -193,215 +188,211 @@
                                             [[#block "imageContent"]]
   
                                             <!-- MAIN REPRESENTATION (bigger image) -->
-                                  
-                                         
-                                                    <semantic-if query='ASK { <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?main_feat.             
-                                                        ?main_feat <http://www.cidoc-crm.org/cidoc-crm/P138_has_representation> ?main_visual.
-                                                        ?main_visual crm:P129i_is_subject_of ?imgURL.   
-                                                    }'
-                                                        then='{{> then}}' else='{{> else}}'>
-                                                        <!-- Show recto or verso as main image if exists -->
-                                                        <template id="then">
-                                                            <mp-event-target-template-render id='event-target' template='{{> mainImageTemplate}}'>
-                                                                <template id='mainImageTemplate'>
-                                                                    <semantic-query query='SELECT DISTINCT ?imageUrl WHERE{
-                                                                        BIND(REPLACE(STR("{{imgURL}}"),"full/200","full/500") AS ?rectoversoImg).
-                                                                        BIND(REPLACE(STR(?rectoversoImg),"text200","text500") AS ?pageImg).
-                                                                        BIND(REPLACE(STR(?pageImg),"plates200","plates500") AS ?imageUrl).
-                                                                     }' template='{{> mediumImageSize}}'>
-                                                                     <template id="mediumImageSize">                                                                    
-                                                            <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
-                                                                <mp-overlay-dialog-trigger>
-                                                                    {{#ifCond imgURL "!==" undefined}}
+                                            <semantic-if query='ASK { <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?main_feat.             
+                                                ?main_feat <http://www.cidoc-crm.org/cidoc-crm/P138_has_representation> ?main_visual.
+                                                ?main_visual crm:P129i_is_subject_of ?imgURL.   
+                                            }'
+                                                then='{{> then}}' else='{{> else}}'>
+                                                <!-- Show recto or verso as main image if exists -->
+                                                <template id="then">
+                                                    <mp-event-target-template-render id='event-target' template='{{> mainImageTemplate}}'>
+                                                        <template id='mainImageTemplate'>
+                                                            <semantic-query query='SELECT DISTINCT ?imageUrl WHERE{
+                                                                BIND(REPLACE(STR("{{imgURL}}"),"full/200","full/500") AS ?rectoversoImg).
+                                                                BIND(REPLACE(STR(?rectoversoImg),"text200","text500") AS ?pageImg).
+                                                                BIND(REPLACE(STR(?pageImg),"plates200","plates500") AS ?imageUrl).
+                                                                }' template='{{> mediumImageSize}}'>
+                                                                <template id="mediumImageSize">                                                                    
+                                                    <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
+                                                        <mp-overlay-dialog-trigger>
+                                                            {{#ifCond imgURL "!==" undefined}}
 
-                                                                        <div class="rs-page__summary-image">
-                                                                            <img style="height:20vh" src="{{bindings.0.imageUrl.value}}"/>
-                                                                            <div class="subtitle"><i>{{label}}</i></div>
-                                                                        </div>
-                                                                    
-                                                                    {{/ifCond}}
-                                                                    {{#ifCond imgURL "===" undefined}}
-                                                                    <div class="rs-page__summary-image">
-                                                                        <semantic-query query='SELECT distinct ?imgURL ?label
-                                                                        WHERE {
-                                                                            <[[this]]>  crm:P30_custody_transferred_through ?transfer.
-                                                                            ?transfer crm:P29_custody_recieved_by ?location.
-                                                                            ?location rdfs:label ?locationLabel.
-                                                                            BIND(CONCAT("Image from ",?locationLabel) as ?label).             
+                                                                <div class="rs-page__summary-image">
+                                                                    <img style="height:20vh" src="{{bindings.0.imageUrl.value}}"/>
+                                                                    <div class="subtitle"><i>{{label}}</i></div>
+                                                                </div>
+                                                            
+                                                            {{/ifCond}}
+                                                            {{#ifCond imgURL "===" undefined}}
+                                                            <div class="rs-page__summary-image">
+                                                                <semantic-query query='SELECT distinct ?imgURL ?label
+                                                                WHERE {
+                                                                    <[[this]]>  crm:P30_custody_transferred_through ?transfer.
+                                                                    ?transfer crm:P29_custody_recieved_by ?location.
+                                                                    ?location rdfs:label ?locationLabel.
+                                                                    BIND(CONCAT("Image from ",?locationLabel) as ?label).             
 
-                                                                            <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?main_feat.             
-                                                                            ?main_feat <http://www.cidoc-crm.org/cidoc-crm/P138_has_representation> ?main_visual.
-                                                                            ?main_visual crm:P129i_is_subject_of ?imgURL.   
-                                                                            ?imgURL crm:P2_has_type <http://iiif.io/api/image>.
-                                                                        }' template='{{> imageThumbnail}}'>
-                                                                    <template id="imageThumbnail">
-                                                                        <img style="height:20vh" src="{{bindings.0.imgURL.value}}"/>
-                                                                        <div class="subtitle"><i>{{bindings.0.label.value}}</i></div>
-                                                                    </template>
-                                                                    </semantic-query>
-                                                                    </div>
-                                                                    {{/ifCond}}
-                                                                </mp-overlay-dialog-trigger>
-                                                                <mp-overlay-dialog-content>
-                                                                <div style='height: 80vh; width: 100%;'>
-                                                                 {{#ifCond iiifServer "===" undefined}}
-                                                                        <rs-iiif-mirador
-                                                                        image-or-region="[[this]]" 
-                            
-                                                                        image-id-pattern='
-                                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                                        <[[this]]> crm:P56_bears_feature ?feat.             
-                                                                        ?feat crm:P138_has_representation ?img_visual.
-                                                                        ?img_visual crm:P129i_is_subject_of ?image . 
-                                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                                        '
-                                                                        iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
-                                                                        >
-                                                                        </rs-iiif-mirador>
-                                                                 {{/ifCond}}
-                                                                 {{#ifCond iiifServer "!==" undefined}}
-                                                                    {{#ifCond imageType "===" "plate"}}
-                                                                        <rs-iiif-mirador
-                                                                        id="plate_mirador"
-                                                                        image-or-region="[[this]]" 
-                                                                        image-id-pattern='BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                                        ?? crm:P56_bears_feature ?feat.
-                                                                        ?feat crm:P129i_is_subject_of ?plate.
-                                                                        ?plate crm:P129i_is_subject_of ?image. 
-                                                                        ?image crm:P2_has_type <http://iiif.io/api/image>.
-                                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imagio).
-                                                                        BIND(REPLACE(STR(REPLACE(STR(?imagio),"florentinedrawings!","florentinedrawings!plates!")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                                        '                                                                       
-                                                                        iiif-server-url={{iiifServer}} 
-                                                                        >
-                                                                        </rs-iiif-mirador>
-                                                                    {{/ifCond}}
-                                                                    {{#ifCond imageType "!==" "plate"}}
-                                                                        <rs-iiif-mirador
-                                                                        id="rectoversopage_mirador"
-                                                                        image-or-region="[[this]]" 
-                                                                        image-id-pattern='
-                                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                                        {{iiifPattern}}
-                                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                                        '                                                                       
-                                                                        iiif-server-url={{iiifServer}} 
-                                                                        >
-                                                                        </rs-iiif-mirador>
-                                                                    {{/ifCond}}
+                                                                    <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?main_feat.             
+                                                                    ?main_feat <http://www.cidoc-crm.org/cidoc-crm/P138_has_representation> ?main_visual.
+                                                                    ?main_visual crm:P129i_is_subject_of ?imgURL.   
+                                                                    ?imgURL crm:P2_has_type <http://iiif.io/api/image>.
+                                                                }' template='{{> imageThumbnail}}'>
+                                                            <template id="imageThumbnail">
+                                                                <img style="height:20vh" src="{{bindings.0.imgURL.value}}"/>
+                                                                <div class="subtitle"><i>{{bindings.0.label.value}}</i></div>
+                                                            </template>
+                                                            </semantic-query>
+                                                            </div>
+                                                            {{/ifCond}}
+                                                        </mp-overlay-dialog-trigger>
+                                                        <mp-overlay-dialog-content>
+                                                        <div style='height: 80vh; width: 100%;'>
+                                                            {{#ifCond iiifServer "===" undefined}}
+                                                                <rs-iiif-mirador
+                                                                image-or-region="[[this]]" 
+                    
+                                                                image-id-pattern='
+                                                                BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                <[[this]]> crm:P56_bears_feature ?feat.             
+                                                                ?feat crm:P138_has_representation ?img_visual.
+                                                                ?img_visual crm:P129i_is_subject_of ?image . 
+                                                                BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                '
+                                                                iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
+                                                                >
+                                                                </rs-iiif-mirador>
+                                                            {{/ifCond}}
+                                                            {{#ifCond iiifServer "!==" undefined}}
+                                                            {{#ifCond imageType "===" "plate"}}
+                                                                <rs-iiif-mirador
+                                                                id="plate_mirador"
+                                                                image-or-region="[[this]]" 
+                                                                image-id-pattern='BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                ?? crm:P56_bears_feature ?feat.
+                                                                ?feat crm:P129i_is_subject_of ?plate.
+                                                                ?plate crm:P129i_is_subject_of ?image. 
+                                                                ?image crm:P2_has_type <http://iiif.io/api/image>.
+                                                                BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imagio).
+                                                                BIND(REPLACE(STR(REPLACE(STR(?imagio),"florentinedrawings!","florentinedrawings!plates!")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                '                                                                       
+                                                                iiif-server-url={{iiifServer}} 
+                                                                >
+                                                                </rs-iiif-mirador>
+                                                            {{/ifCond}}
+                                                            {{#ifCond imageType "!==" "plate"}}
+                                                                <rs-iiif-mirador
+                                                                id="rectoversopage_mirador"
+                                                                image-or-region="[[this]]" 
+                                                                image-id-pattern='
+                                                                BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                {{iiifPattern}}
+                                                                BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                '                                                                       
+                                                                iiif-server-url={{iiifServer}} 
+                                                                >
+                                                                </rs-iiif-mirador>
+                                                            {{/ifCond}}
+                                                        {{/ifCond}}
+
+                                                            </div>
+                                                        </mp-overlay-dialog-content>
+                                                    </mp-overlay-dialog>
+                                                </template>
+                                            </semantic-query>
+                                                    </template>
+                                                    </mp-event-target-template-render>
+                                                </template>
+                                                <!-- Else show the page or plate image as main image-->
+                                                <template id="else">
+                                                    <mp-event-target-template-render id='event-target' template='{{> mainImageTemplate}}'>
+                                                        <template id='mainImageTemplate'>
+                                                            <semantic-query query='SELECT DISTINCT ?imageUrl WHERE{
+                                                                
+                                                                BIND(REPLACE(STR("{{imgURL}}"),"text200","text500") AS ?pageImg).
+                                                                BIND(REPLACE(STR(?pageImg),"plates200","plates500") AS ?imageUrl).
+
+
+                                                                }' template='{{> mediumImageSize}}'>
+                                                                <template id="mediumImageSize">
+                                                    <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
+                                                        <mp-overlay-dialog-trigger>
+                                                            {{#ifCond imgURL "!==" undefined}}
+                                                            
+                                                                <div class="rs-page__summary-image">
+                                                                    <img style="height:20vh" src="{{bindings.0.imageUrl.value}}"/>
+                                                                    <div class="subtitle"><i>{{label}}</i></div>
+                                                                </div>
+                                                            
+                                                            {{/ifCond}}
+                                                            {{#ifCond imgURL "===" undefined}}
+                                                                <div class="rs-page__summary-image">
+                                                                <semantic-query query='SELECT distinct ?pageplateImage
+                                                                WHERE {
+                                                                    <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?feat.             
+                                                                    ?feat <http://www.cidoc-crm.org/cidoc-crm/P148_is_component_of> ?img_visual.
+                                                                    ?img_visual crm:P129i_is_subject_of ?pageplateImage.  
+                                                                    ?pageplateImage crm:P2_has_type <http://iiif.io/api/image>
+                                                                    FILTER (regex(str(?pageplateImage),".jpg"))   
+                                                                }' template='{{> imageThumbnail}}'>
+                                                            <template id="imageThumbnail">
+                                                                <img style="height:20vh" src="{{bindings.0.pageplateImage.value}}"/>
+                                                                <div class="subtitle"><i>Page from 1903 edition</i></div>
+                                                            </template>
+                                                            </semantic-query>
+                                                            </div>
+                                                            {{/ifCond}}
+                                                        </mp-overlay-dialog-trigger>
+                                                        <mp-overlay-dialog-content>
+                                                        <div style='height: 80vh; width: 100%;'>
+                                                                {{#ifCond iiifServer "===" undefined}}
+                                                                <rs-iiif-mirador
+                                                                image-or-region="[[this]]" 
+                    
+                                                                image-id-pattern='
+                                                                BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                <[[this]]> crm:P129i_is_subject_of ?feat.             
+                                                                ?feat crm:P148_is_component_of ?img_visual.
+                                                                ?img_visual crm:P129i_is_subject_of ?image . 
+                                                                ?image crm:P2_has_type <http://iiif.io/api/image>.
+                                                                BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                '
+                                                                iiif-server-url="https://ids.lib.harvard.edu/ids/iiif" 
+                                                                >
+                                                                </rs-iiif-mirador>
                                                                 {{/ifCond}}
 
-                                                                    </div>
-                                                                </mp-overlay-dialog-content>
-                                                            </mp-overlay-dialog>
-                                                        </template>
-                                                    </semantic-query>
-                                                            </template>
-                                                            </mp-event-target-template-render>
-                                                        </template>
-                                                        <!-- Else show the page or plate image as main image-->
-                                                        <template id="else">
-                                                            <mp-event-target-template-render id='event-target' template='{{> mainImageTemplate}}'>
-                                                                <template id='mainImageTemplate'>
-                                                                    <semantic-query query='SELECT DISTINCT ?imageUrl WHERE{
-                                                                        
-                                                                        BIND(REPLACE(STR("{{imgURL}}"),"text200","text500") AS ?pageImg).
-                                                                        BIND(REPLACE(STR(?pageImg),"plates200","plates500") AS ?imageUrl).
-
-
-                                                                     }' template='{{> mediumImageSize}}'>
-                                                                     <template id="mediumImageSize">
-                                                            <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
-                                                                <mp-overlay-dialog-trigger>
-                                                                    {{#ifCond imgURL "!==" undefined}}
-                                                                   
-                                                                        <div class="rs-page__summary-image">
-                                                                            <img style="height:20vh" src="{{bindings.0.imageUrl.value}}"/>
-                                                                            <div class="subtitle"><i>{{label}}</i></div>
-                                                                        </div>
+                                                                {{#ifCond iiifServer "!==" undefined}}
+                                                                    {{#ifCond imageType "===" "plate"}}
+                                                                    <rs-iiif-mirador
+                                                                    image-or-region="[[this]]" 
+                                                                    image-id-pattern='BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                    ?? crm:P56_bears_feature ?feat.
+                                                                    ?feat crm:P129i_is_subject_of ?plate.
+                                                                    ?plate crm:P129i_is_subject_of ?image. 
+                                                                    ?image crm:P2_has_type <http://iiif.io/api/image>.
+                                                                    BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imagio).
+                                                                    BIND(REPLACE(STR(REPLACE(STR(?imagio),"florentinedrawings!","florentinedrawings!plates!")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                    '                                                                       
+                                                                    iiif-server-url={{iiifServer}} 
+                                                                    >
+                                                                    </rs-iiif-mirador>
+                                                                {{/ifCond}}
+                                                                {{#ifCond imageType "!==" "plate"}}
+                                                                <rs-iiif-mirador
+                                                                image-or-region="[[this]]" 
+                                                                image-id-pattern='
+                                                                BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                {{iiifPattern}}
+                                                                BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                '                                                                       
+                                                                iiif-server-url={{iiifServer}} 
+                                                                >
+                                                                </rs-iiif-mirador>
+                                                                    {{/ifCond}}
+                                                                    
                                                                     
                                                                     {{/ifCond}}
-                                                                    {{#ifCond imgURL "===" undefined}}
-                                                                     <div class="rs-page__summary-image">
-                                                                        <semantic-query query='SELECT distinct ?pageplateImage
-                                                                        WHERE {
-                                                                            <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P129i_is_subject_of> ?feat.             
-                                                                            ?feat <http://www.cidoc-crm.org/cidoc-crm/P148_is_component_of> ?img_visual.
-                                                                            ?img_visual crm:P129i_is_subject_of ?pageplateImage.  
-                                                                            ?pageplateImage crm:P2_has_type <http://iiif.io/api/image>
-                                                                            FILTER (regex(str(?pageplateImage),".jpg"))   
-                                                                        }' template='{{> imageThumbnail}}'>
-                                                                    <template id="imageThumbnail">
-                                                                        <img style="height:20vh" src="{{bindings.0.pageplateImage.value}}"/>
-                                                                        <div class="subtitle"><i>Page from 1903 edition</i></div>
-                                                                    </template>
-                                                                    </semantic-query>
-                                                                    </div>
-                                                                    {{/ifCond}}
-                                                                </mp-overlay-dialog-trigger>
-                                                                <mp-overlay-dialog-content>
-                                                                <div style='height: 80vh; width: 100%;'>
-                                                                       {{#ifCond iiifServer "===" undefined}}
-                                                                        <rs-iiif-mirador
-                                                                        image-or-region="[[this]]" 
-                            
-                                                                        image-id-pattern='
-                                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                                        <[[this]]> crm:P129i_is_subject_of ?feat.             
-                                                                        ?feat crm:P148_is_component_of ?img_visual.
-                                                                        ?img_visual crm:P129i_is_subject_of ?image . 
-                                                                        ?image crm:P2_has_type <http://iiif.io/api/image>.
-                                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                                        '
-                                                                        iiif-server-url="https://ids.lib.harvard.edu/ids/iiif" 
-                                                                        >
-                                                                        </rs-iiif-mirador>
-                                                                        {{/ifCond}}
-
-                                                                        {{#ifCond iiifServer "!==" undefined}}
-                                                                          {{#ifCond imageType "===" "plate"}}
-                                                                          <rs-iiif-mirador
-                                                                          image-or-region="[[this]]" 
-                                                                          image-id-pattern='BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                                          ?? crm:P56_bears_feature ?feat.
-                                                                          ?feat crm:P129i_is_subject_of ?plate.
-                                                                          ?plate crm:P129i_is_subject_of ?image. 
-                                                                          ?image crm:P2_has_type <http://iiif.io/api/image>.
-                                                                          BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imagio).
-                                                                          BIND(REPLACE(STR(REPLACE(STR(?imagio),"florentinedrawings!","florentinedrawings!plates!")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                                          '                                                                       
-                                                                          iiif-server-url={{iiifServer}} 
-                                                                          >
-                                                                          </rs-iiif-mirador>
-                                                                        {{/ifCond}}
-                                                                        {{#ifCond imageType "!==" "plate"}}
-                                                                        <rs-iiif-mirador
-                                                                        image-or-region="[[this]]" 
-                                                                        image-id-pattern='
-                                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                                        {{iiifPattern}}
-                                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                                        '                                                                       
-                                                                        iiif-server-url={{iiifServer}} 
-                                                                        >
-                                                                        </rs-iiif-mirador>
-                                                                         {{/ifCond}}
-                                                                          
-                                                                            
-                                                                         {{/ifCond}}
-                                                                    </div>
-                                                                </mp-overlay-dialog-content>
-                                                            </mp-overlay-dialog>
-                                                        </template>
-                                                    </semantic-query>
-                                                            </template>
-                                                            </mp-event-target-template-render>
-                                                        </template>
-                                                    </semantic-if>
+                                                            </div>
+                                                        </mp-overlay-dialog-content>
+                                                    </mp-overlay-dialog>
+                                                </template>
+                                            </semantic-query>
+                                                    </template>
+                                                    </mp-event-target-template-render>
+                                                </template>
+                                            </semantic-if>
                                    
-
-
-                                            {{#ifCond bindings.0.count.value ">" "1"}}
+                                            {{#ifCond bindings.0.count.value ">=" "1"}}
                                             <div style="margin-left: 5vw;">
                                                 <!-- THUMBNAILS FOR RECTO & VERSO -->
                                                 <div>
@@ -409,8 +400,8 @@
                                                         <[[this]]>  crm:P30_custody_transferred_through ?transfer.
                                                         ?transfer crm:P29_custody_recieved_by ?location.
                                                         ?location rdfs:label ?locationLabel.
+                                                        <[[this]]> <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?imgUrl.    
                                                         BIND(CONCAT("Image from ",?locationLabel) as ?imageLabel).    
-                                                        BIND(CONCAT("https://iiif.itatti.harvard.edu/iiif/2/florentinedrawings!works!",REPLACE(STR(REPLACE(STR(<[[this]]>),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2"),".jpg/full/200,/0/default.jpg") AS ?imgUrl)
                                                         }' template='{{> imagesThumbnail}}'>
                                                     <template id="imagesThumbnail">
                                                         {{#each bindings}}
@@ -464,12 +455,6 @@
                                                 </template>
                                                 </semantic-query>
                                                 </div>
-                                              {{/ifCond}}
-                                            </div>
-                                            [[/block]]
-                                            </div>
-                                            <div class="col-md-12 col-lg-6" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
-                                                [[> resourceHeaderData image=true]]
                                             </div>
                                             {{/ifCond}}
 
@@ -477,14 +462,16 @@
                                             <div class="col-md-12 col-lg-6 rs-image-container" style="width:30vw; height: 45vh;">
                                                 <img src='/assets/images/image_placeholder_large.png' style="width:100%"/>
                                             </div>
-                                             <div class="col-md-6 col-lg-6" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
-                                                [[> resourceHeaderData image=true]]
+                                        {{/ifCond}}
+                                        [[/block]]
                                             </div>
-                                            {{/ifCond}}
-
+                                        {{/ifCond}}
                                     </template>
                           </semantic-query>
-                                   
+                          <!-- Load side data -->
+                                    <div class="col-md-12 col-lg-6" style="padding: 1.8% 1.5% 1.5% 5%; height: fit-content;">
+                                        [[> resourceHeaderData image=true]]
+                                    </div>
                                 </div> <!--  close row -->
                             </bs-col>
                         </bs-row> <!--  close row -->
@@ -849,156 +836,143 @@
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
-                                                                    <semantic-if query='ASK {  <[[this]]> crm:P129i_is_subject_of ?edition.
-                                                                        ?edition a crm:E73_Information_Object.
-                                                                        FILTER(regex(str(?edition),"/1961"))      
-                                                                     }'
-                                                                        then='{{> then}}' else='{{> else}}'>
-                                                                        <!-- Show recto or verso as main image if exists -->
-                                                                        <template id="then">
-                                                                            {{#ifCond recto_title_1961.value "!==" undefined}}
+                                                                    {{#ifCond recto_title_1961.value "!==" undefined}}
+                                                                    <bs-col md="4">
+                                                                        <div class="grid-demo">
+                                                                            <b>Recto Title (1961): </b>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    <bs-col md="8">
+                                                                        <div class="grid-demo">
+                                                                            {{recto_title_1961.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+
+                                                                    {{#ifCond verso_title_1961.value "!==" undefined}}
+                                                                    <bs-col md="4">
+                                                                        <div class="grid-demo">
+                                                                            <b>Verso Title (1961): </b>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    <bs-col md="8">
+                                                                        <div class="grid-demo">
+                                                                            {{verso_title_1961.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+                        
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?catalogueNumber WHERE {
+                                                                        <[[this]]> crm:P1_is_identified_by ?cat_no.
+                                                                        ?cat_no a crm:E42_Identifier.
+                                                                        ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
+                                                                        ?cat_no rdfs:label ?catalogueNumber.
+                                                                        FILTER(regex(str(?cat_no),"/1961"))   
+                                                                        }
+                                                                    ' 
+                                                                    template="{{> catalogueNumberTemplate1961}}"
+                                                                    > 
+                                                                        <template id="catalogueNumberTemplate1961">
+                                                                            {{#ifCond bindings.0.catalogueNumber.value "!==" undefined}}
                                                                             <bs-col md="4">
                                                                                 <div class="grid-demo">
-                                                                                    <b>Recto Title (1961): </b>
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            <bs-col md="8">
-                                                                                <div class="grid-demo">
-                                                                                    {{recto_title_1961.value}}
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            {{/ifCond}}
-        
-                                                                            {{#ifCond verso_title_1961.value "!==" undefined}}
-                                                                            <bs-col md="4">
-                                                                                <div class="grid-demo">
-                                                                                    <b>Verso Title (1961): </b>
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            <bs-col md="8">
-                                                                                <div class="grid-demo">
-                                                                                    {{verso_title_1961.value}}
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            {{/ifCond}}
-                             
-                                                                            <semantic-query query='
-                                                                            SELECT DISTINCT ?catalogueNumber WHERE {
-                                                                                <[[this]]> crm:P1_is_identified_by ?cat_no.
-                                                                                ?cat_no a crm:E42_Identifier.
-                                                                                ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
-                                                                                ?cat_no rdfs:label ?catalogueNumber.
-                                                                                FILTER(regex(str(?cat_no),"/1961"))   
-                                                                              }
-                                                                            ' 
-                                                                            template="{{> catalogueNumberTemplate1961}}"
-                                                                            > 
-                                                                                <template id="catalogueNumberTemplate1961">
-                                                                                    {{#ifCond bindings.0.catalogueNumber.value "!==" undefined}}
-                                                                                    <bs-col md="4">
-                                                                                        <div class="grid-demo">
-                                                                                            <b>Berenson Cat. No.:</b>
-                                                                                        </div>
-                                                                                    </bs-col>
-                                                                                    <bs-col md="8">
-                                                                                        <div class="grid-demo">
-                                                                                            {{#each bindings}}
-                                                                                                {{catalogueNumber.value}}                                                             
-                                                                                            {{/each}}
-                                                                                        </div>
-                                                                                        </bs-col>
-                                                                                    {{/ifCond}}
-                                                                                </template>
-                                                                            </semantic-query>
-                                                                            
-                                                                            <semantic-query query='
-                                                                            SELECT DISTINCT (GROUP_CONCAT(?page_num;SEPARATOR=",") AS ?pageNumber) WHERE {
-                                                                                <[[this]]> crm:P129i_is_subject_of ?edition.
-                                                                                ?edition a crm:E73_Information_Object.
-                                                                                ?edition crm:P148_is_component_of ?page.
-                                                                                ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
-                                                                                ?page rdfs:label ?page_num
-                                                                                FILTER(regex(str(?edition),"/1961"))   
-                                                                            }
-                                                                        ' 
-                                                                        template="{{> pageNumberTemplate1961}}"
-                                                                        > 
-                                                                        <template id="pageNumberTemplate1961">
-                                                                               {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
-                                                                            <bs-col md="4">
-                                                                                <div class="grid-demo">
-                                                                                    <b>Page number:</b>
+                                                                                    <b>Berenson Cat. No.:</b>
                                                                                 </div>
                                                                             </bs-col>
                                                                             <bs-col md="8">
                                                                                 <div class="grid-demo">
                                                                                     {{#each bindings}}
-                                                                                        {{pageNumber.value}}  
+                                                                                        {{catalogueNumber.value}}                                                             
                                                                                     {{/each}}
                                                                                 </div>
                                                                                 </bs-col>
                                                                             {{/ifCond}}
                                                                         </template>
-                                                                            </semantic-query>
-       
-                                                                            <semantic-query query='
-                                                                                SELECT DISTINCT ?artist_1961 ?label WHERE {
-                                                                                    <[[this]]> crm:P108i_was_produced_by ?production.
-                                                                                    ?production crm:P01i_is_domain_of ?domain.
-                                                                                    ?domain crm:P02_has_range ?artist_1961.
-                                                                                    ?artist_1961 rdfs:label ?artistLabel.
-                                                                                     {
-                                                                                        ?domain a crm:PC15_was_influenced_by.
-                                                                                        ?domain crm:P15.1_in_the_role_of ?qualifier.
-                                                                                        ?qualifier rdfs:label ?qualifierLabel.
-                                                                                     } union {
-                                                                                        FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
-                                                                                        BIND("by" as ?qualifierLabel)
-                                                                                      } 
-                                                                                    BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
-                                                                                     FILTER(regex(str(?domain),"/1961"))   
-                                                                                  }
-                                                                            ' 
-                                                                            template="{{> qualifierTemplate1961}}"
-                                                                            > 
-                                                                            <template id="qualifierTemplate1961">
-                                                                                {{#each bindings}}
-                                                                                   {{#ifCond artist_1961.value "!==" undefined}}
-                                                                                <bs-col md="4">
-                                                                                    <div class="grid-demo">
-                                                                                        <b>Artist Attribution: </b>
-                                                                                    </div>
-                                                                                </bs-col>
-                                                                                <bs-col md="8">
-                                                                                    <div class="grid-demo">
-                                                                                        <semantic-link iri={{artist_1961.value}}>{{label.value}}</semantic-link>                                                                     
-                                                                                    </div>
-                                                                                    </bs-col>
-                                                                                {{/ifCond}}
-                                                                                {{/each}}
-                                                                            </template>
-                                                                            </semantic-query>
-        
-                                                                            {{#ifCond recto_notes_1961.value "!==" undefined}}
-                                                                            <bs-col md="4">
-                                                                                <div class="grid-demo">
-                                                                                    <b>Recto Notes (1961): </b>
-                                                                                </div>
+                                                                    </semantic-query>
+                                                                    
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT (GROUP_CONCAT(?page_num;SEPARATOR=",") AS ?pageNumber) WHERE {
+                                                                        <[[this]]> crm:P129i_is_subject_of ?edition.
+                                                                        ?edition a crm:E73_Information_Object.
+                                                                        ?edition crm:P148_is_component_of ?page.
+                                                                        ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
+                                                                        ?page rdfs:label ?page_num
+                                                                        FILTER(regex(str(?edition),"/1961"))   
+                                                                    }
+                                                                ' 
+                                                                template="{{> pageNumberTemplate1961}}"
+                                                                > 
+                                                                <template id="pageNumberTemplate1961">
+                                                                        {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
+                                                                        {{#ifCond bindings.0.pageNumber.value "!==" ""}}
+                                                                    <bs-col md="4">
+                                                                        <div class="grid-demo">
+                                                                            <b>Page number:</b>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    <bs-col md="8">
+                                                                        <div class="grid-demo">
+                                                                            {{#each bindings}}
+                                                                                {{pageNumber.value}}  
+                                                                            {{/each}}
+                                                                        </div>
+                                                                        </bs-col>
+                                                                        {{/ifCond}}
+                                                                    {{/ifCond}}
+                                                                </template>
+                                                                    </semantic-query>
+
+                                                                    <semantic-query query='
+                                                                        SELECT DISTINCT ?artist_1961 ?label WHERE {
+                                                                            <[[this]]> crm:P108i_was_produced_by ?production.
+                                                                            ?production crm:P01i_is_domain_of ?domain.
+                                                                            ?domain crm:P02_has_range ?artist_1961.
+                                                                            ?artist_1961 rdfs:label ?artistLabel.
+                                                                                {
+                                                                                ?domain a crm:PC15_was_influenced_by.
+                                                                                ?domain crm:P15.1_in_the_role_of ?qualifier.
+                                                                                ?qualifier rdfs:label ?qualifierLabel.
+                                                                                } union {
+                                                                                FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
+                                                                                BIND("by" as ?qualifierLabel)
+                                                                                } 
+                                                                            BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
+                                                                                FILTER(regex(str(?domain),"/1961"))   
+                                                                            }
+                                                                    ' 
+                                                                    template="{{> qualifierTemplate1961}}"
+                                                                    > 
+                                                                    <template id="qualifierTemplate1961">
+                                                                        {{#each bindings}}
+                                                                            {{#ifCond artist_1961.value "!==" undefined}}
+                                                                        <bs-col md="4">
+                                                                            <div class="grid-demo">
+                                                                                <b>Artist Attribution: </b>
+                                                                            </div>
+                                                                        </bs-col>
+                                                                        <bs-col md="8">
+                                                                            <div class="grid-demo">
+                                                                                <semantic-link iri={{artist_1961.value}}>{{label.value}}</semantic-link>                                                                     
+                                                                            </div>
                                                                             </bs-col>
-                                                                            <bs-col md="8">
-                                                                                <div class="grid-demo">
-                                                                                    {{recto_notes_1961.value}}
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            {{/ifCond}} 
-                                                                        </template>
-                                                                        <!-- Else show the page or plate image as main image-->
-                                                                        <template id="else">
-                                                                            <bs-col style="font-size: 16px; text-align: center;" md="12">
-                                                                                <i>Was not cataloged in the 1961 edition</i>
-                                                                            </bs-col>
-                                                                        </template>
-                                                                    </semantic-if>      
+                                                                        {{/ifCond}}
+                                                                        {{/each}}
+                                                                    </template>
+                                                                    </semantic-query>
+
+                                                                    {{#ifCond recto_notes_1961.value "!==" undefined}}
+                                                                    <bs-col md="4">
+                                                                        <div class="grid-demo">
+                                                                            <b>Recto Notes (1961): </b>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    <bs-col md="8">
+                                                                        <div class="grid-demo">
+                                                                            {{recto_notes_1961.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}} 
                                                                 </div>
                                                               </bs-row>
                                                             </div>
@@ -1016,170 +990,157 @@
                                                             <div data-flex-layout="row md-column center-stretch">
                                                               <bs-row>
                                                                 <div>
-                                                                    <semantic-if query='ASK {  <[[this]]> crm:P129i_is_subject_of ?edition.
+                                                                    {{#ifCond recto_title_1938.value "!==" undefined}}
+                                                                    <bs-col md="4">
+                                                                        <div class="grid-demo">
+                                                                            <b>Recto Title (1938): </b>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    <bs-col md="8">
+                                                                        <div class="grid-demo">
+                                                                            {{recto_title_1938.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+
+                                                                    {{#ifCond verso_title_1938.value "!==" undefined}}
+                                                                    <bs-col md="4">
+                                                                        <div class="grid-demo">
+                                                                            <b>Verso Title (1938): </b>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    <bs-col md="8">
+                                                                        <div class="grid-demo">
+                                                                            {{verso_title_1938.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+
+                                                                    
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?catalogueNumber WHERE {
+                                                                        <[[this]]> crm:P1_is_identified_by ?cat_no.
+                                                                        ?cat_no a crm:E42_Identifier.
+                                                                        ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
+                                                                        ?cat_no rdfs:label ?catalogueNumber.
+                                                                        FILTER(regex(str(?cat_no),"/1938"))   
+                                                                        }
+                                                                    ' 
+                                                                    template="{{> catalogueNumberTemplate1938}}"
+                                                                    > 
+                                                                        <template id="catalogueNumberTemplate1938">
+                                                                            {{#ifCond bindings.0.catalogueNumber.value "!==" undefined}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Berenson Cat. No.:</b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{#each bindings}}
+                                                                                        {{catalogueNumber.value}}                                                             
+                                                                                    {{/each}}
+                                                                                </div>
+                                                                                </bs-col>
+                                                                            {{/ifCond}}
+                                                                        </template>
+                                                                    </semantic-query>
+
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT (GROUP_CONCAT(?page_num;SEPARATOR=",") AS ?pageNumber) WHERE {
+                                                                        <[[this]]> crm:P129i_is_subject_of ?edition.
                                                                         ?edition a crm:E73_Information_Object.
-                                                                        FILTER(regex(str(?edition),"/1938"))     
-                                                                     }'
-                                                                        then='{{> then}}' else='{{> else}}'>
-                                                                        <!-- Show recto or verso as main image if exists -->
-                                                                        <template id="then">
-                                                                            {{#ifCond recto_title_1938.value "!==" undefined}}
-                                                                            <bs-col md="4">
-                                                                                <div class="grid-demo">
-                                                                                    <b>Recto Title (1938): </b>
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            <bs-col md="8">
-                                                                                <div class="grid-demo">
-                                                                                    {{recto_title_1938.value}}
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            {{/ifCond}}
-        
-                                                                            {{#ifCond verso_title_1938.value "!==" undefined}}
-                                                                            <bs-col md="4">
-                                                                                <div class="grid-demo">
-                                                                                    <b>Verso Title (1938): </b>
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            <bs-col md="8">
-                                                                                <div class="grid-demo">
-                                                                                    {{verso_title_1938.value}}
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            {{/ifCond}}
-        
-                                                                            
-                                                                            <semantic-query query='
-                                                                            SELECT DISTINCT ?catalogueNumber WHERE {
-                                                                                <[[this]]> crm:P1_is_identified_by ?cat_no.
-                                                                                ?cat_no a crm:E42_Identifier.
-                                                                                ?cat_no crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/Berenson%20Catalogue%20Number>.
-                                                                                ?cat_no rdfs:label ?catalogueNumber.
-                                                                                FILTER(regex(str(?cat_no),"/1938"))   
-                                                                              }
-                                                                            ' 
-                                                                            template="{{> catalogueNumberTemplate1938}}"
-                                                                            > 
-                                                                                <template id="catalogueNumberTemplate1938">
-                                                                                    {{#ifCond bindings.0.catalogueNumber.value "!==" undefined}}
-                                                                                    <bs-col md="4">
-                                                                                        <div class="grid-demo">
-                                                                                            <b>Berenson Cat. No.:</b>
-                                                                                        </div>
-                                                                                    </bs-col>
-                                                                                    <bs-col md="8">
-                                                                                        <div class="grid-demo">
-                                                                                            {{#each bindings}}
-                                                                                                {{catalogueNumber.value}}                                                             
-                                                                                            {{/each}}
-                                                                                        </div>
-                                                                                        </bs-col>
-                                                                                    {{/ifCond}}
-                                                                                </template>
-                                                                            </semantic-query>
-        
-                                                                            <semantic-query query='
-                                                                            SELECT DISTINCT (GROUP_CONCAT(?page_num;SEPARATOR=",") AS ?pageNumber) WHERE {
-                                                                                <[[this]]> crm:P129i_is_subject_of ?edition.
-                                                                                ?edition a crm:E73_Information_Object.
-                                                                                ?edition crm:P148_is_component_of ?page.
-                                                                                ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
-                                                                                ?page rdfs:label ?page_num
-                                                                                FILTER(regex(str(?edition),"/1938"))   
-                                                                              }
-                                                                            ' 
-                                                                            template="{{> pageNumberTemplate1938}}"
-                                                                            > 
-                                                                                <template id="pageNumberTemplate1938">
-                                                                                    {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
-                                                                                    <bs-col md="4">
-                                                                                        <div class="grid-demo">
-                                                                                            <b>Page number:</b>
-                                                                                        </div>
-                                                                                    </bs-col>
-                                                                                    <bs-col md="8">
-                                                                                        <div class="grid-demo">
-                                                                                            {{#each bindings}}
-                                                                                                {{pageNumber.value}}                                                             
-                                                                                            {{/each}}
-                                                                                        </div>
-                                                                                        </bs-col>
-                                                                                    {{/ifCond}}
-                                                                                </template>
-                                                                            </semantic-query>
-        
-                                                                            <semantic-query query='
-                                                                            SELECT DISTINCT ?artist_1938 ?label WHERE {
-                                                                                <[[this]]> crm:P108i_was_produced_by ?production.
-                                                                                ?production crm:P01i_is_domain_of ?domain.
-                                                                                ?domain crm:P02_has_range ?artist_1938.
-                                                                                ?artist_1938 rdfs:label ?artistLabel.
-                                                                                 {
-                                                                                    ?domain a crm:PC15_was_influenced_by.
-                                                                                    ?domain crm:P15.1_in_the_role_of ?qualifier.
-                                                                                    ?qualifier rdfs:label ?qualifierLabel.
-                                                                                 } union {
-                                                                                    FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
-                                                                                    BIND("by" as ?qualifierLabel)
-                                                                                  } 
-                                                                                BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
-                                                                                 FILTER(regex(str(?domain),"/1938"))   
-                                                                              }
-                                                                            ' 
-                                                                            template="{{> qualifierTemplate1938}}"
-                                                                            > 
-                                                                            <template id="qualifierTemplate1938">
-                                                                                {{#each bindings}}
-                                                                                   {{#ifCond artist_1938.value "!==" undefined}}
+                                                                        ?edition crm:P148_is_component_of ?page.
+                                                                        ?page crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/work/type/Page> .
+                                                                        ?page rdfs:label ?page_num
+                                                                        FILTER(regex(str(?edition),"/1938"))   
+                                                                        }
+                                                                    ' 
+                                                                    template="{{> pageNumberTemplate1938}}"
+                                                                    > 
+                                                                        <template id="pageNumberTemplate1938">
+                                                                            {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
+                                                                                {{#ifCond bindings.0.pageNumber.value "!==" ""}}
                                                                                 <bs-col md="4">
                                                                                     <div class="grid-demo">
-                                                                                        <b>Artist Attribution: </b>
+                                                                                        <b>Page number:</b>
                                                                                     </div>
                                                                                 </bs-col>
                                                                                 <bs-col md="8">
                                                                                     <div class="grid-demo">
-                                                                                        <semantic-link iri={{artist_1938.value}}>{{label.value}}</semantic-link>
+                                                                                        {{#each bindings}}
+                                                                                            {{pageNumber.value}}                                                             
+                                                                                        {{/each}}
                                                                                     </div>
                                                                                     </bs-col>
                                                                                 {{/ifCond}}
-                                                                                {{/each}}
-                                                                            </template>
-                                                                            </semantic-query>
-        
-                                                                            {{#ifCond recto_notes_1938.value "!==" undefined}}
-                                                                            <bs-col md="4">
-                                                                                <div class="grid-demo">
-                                                                                    <b>Recto Notes (1938): </b>
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            <bs-col md="8">
-                                                                                <div class="grid-demo">
-                                                                                    {{recto_notes_1938.value}}
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            {{/ifCond}}
-        
-                                                                            {{#ifCond verso_notes_1938.value "!==" undefined}}
-                                                                            <bs-col md="4">
-                                                                                <div class="grid-demo">
-                                                                                    <b>Verso Notes (1938): </b>
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            <bs-col md="8">
-                                                                                <div class="grid-demo">
-                                                                                    {{verso_notes_1938.value}}
-                                                                                </div>
-                                                                            </bs-col>
                                                                             {{/ifCond}}
                                                                         </template>
-                                                                        <!-- Else show the page or plate image as main image-->
-                                                                        <template id="else">
-                                                                            <bs-col style="font-size: 16px; text-align: center;" md="12">
-                                                                                <i>Was not cataloged in the 1938 edition</i>
+                                                                    </semantic-query>
+
+                                                                    <semantic-query query='
+                                                                    SELECT DISTINCT ?artist_1938 ?label WHERE {
+                                                                        <[[this]]> crm:P108i_was_produced_by ?production.
+                                                                        ?production crm:P01i_is_domain_of ?domain.
+                                                                        ?domain crm:P02_has_range ?artist_1938.
+                                                                        ?artist_1938 rdfs:label ?artistLabel.
+                                                                            {
+                                                                            ?domain a crm:PC15_was_influenced_by.
+                                                                            ?domain crm:P15.1_in_the_role_of ?qualifier.
+                                                                            ?qualifier rdfs:label ?qualifierLabel.
+                                                                            } union {
+                                                                            FILTER NOT EXISTS{ ?domain a crm:PC15_was_influenced_by.}
+                                                                            BIND("by" as ?qualifierLabel)
+                                                                            } 
+                                                                        BIND(CONCAT(?artistLabel," (",?qualifierLabel,")") as ?label)
+                                                                            FILTER(regex(str(?domain),"/1938"))   
+                                                                        }
+                                                                    ' 
+                                                                    template="{{> qualifierTemplate1938}}"
+                                                                    > 
+                                                                    <template id="qualifierTemplate1938">
+                                                                        {{#each bindings}}
+                                                                            {{#ifCond artist_1938.value "!==" undefined}}
+                                                                        <bs-col md="4">
+                                                                            <div class="grid-demo">
+                                                                                <b>Artist Attribution: </b>
+                                                                            </div>
+                                                                        </bs-col>
+                                                                        <bs-col md="8">
+                                                                            <div class="grid-demo">
+                                                                                <semantic-link iri={{artist_1938.value}}>{{label.value}}</semantic-link>
+                                                                            </div>
                                                                             </bs-col>
-                                                                        </template>
-                                                                    </semantic-if>              
+                                                                        {{/ifCond}}
+                                                                        {{/each}}
+                                                                    </template>
+                                                                    </semantic-query>
+
+                                                                    {{#ifCond recto_notes_1938.value "!==" undefined}}
+                                                                    <bs-col md="4">
+                                                                        <div class="grid-demo">
+                                                                            <b>Recto Notes (1938): </b>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    <bs-col md="8">
+                                                                        <div class="grid-demo">
+                                                                            {{recto_notes_1938.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}
+
+                                                                    {{#ifCond verso_notes_1938.value "!==" undefined}}
+                                                                    <bs-col md="4">
+                                                                        <div class="grid-demo">
+                                                                            <b>Verso Notes (1938): </b>
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    <bs-col md="8">
+                                                                        <div class="grid-demo">
+                                                                            {{verso_notes_1938.value}}
+                                                                        </div>
+                                                                    </bs-col>
+                                                                    {{/ifCond}}           
                                                                 </div>
                                                               </bs-row>
                                                             </div>
@@ -1233,16 +1194,18 @@
                                                                     {{/ifCond}}
 
                                                                     {{#ifCond plate_number.value "!==" undefined}}
-                                                                    <bs-col md="4">
-                                                                        <div class="grid-demo">
-                                                                            <b>Plate number: </b>
-                                                                        </div>
-                                                                    </bs-col>
-                                                                    <bs-col md="8">
-                                                                        <div class="grid-demo">
-                                                                            {{plate_number.value}}
-                                                                        </div>
-                                                                    </bs-col>
+                                                                        {{#ifCond plate_number.value "!==" ""}}
+                                                                            <bs-col md="4">
+                                                                                <div class="grid-demo">
+                                                                                    <b>Plate number: </b>
+                                                                                </div>
+                                                                            </bs-col>
+                                                                            <bs-col md="8">
+                                                                                <div class="grid-demo">
+                                                                                    {{plate_number.value}}
+                                                                                </div>
+                                                                            </bs-col>
+                                                                        {{/ifCond}}
                                                                     {{/ifCond}}
 
                                                                     <semantic-query query='
@@ -1289,6 +1252,7 @@
                                                                     > 
                                                                         <template id="pageNumberTemplate1903">
                                                                             {{#ifCond bindings.0.pageNumber.value "!==" undefined}}
+                                                                            {{#ifCond bindings.0.pageNumber.value "!==" ""}}
                                                                             <bs-col md="4">
                                                                                 <div class="grid-demo">
                                                                                     <b>Page number:</b>
@@ -1301,6 +1265,7 @@
                                                                                     {{/each}}
                                                                                 </div>
                                                                                 </bs-col>
+                                                                                {{/ifCond}}
                                                                             {{/ifCond}}
                                                                         </template>
                                                                     </semantic-query>
@@ -1317,18 +1282,20 @@
                                                                     > 
                                                                         <template id="plateNumberTemplate1903">
                                                                             {{#ifCond bindings.0.plateNumber.value "!==" undefined}}
-                                                                            <bs-col md="4">
-                                                                                <div class="grid-demo">
-                                                                                    <b>Plate number:</b>
-                                                                                </div>
-                                                                            </bs-col>
-                                                                            <bs-col md="8">
-                                                                                <div class="grid-demo">
-                                                                            {{#each bindings}}
-                                                                                    {{plateNumber.value}}                                                           
-                                                                                    {{/each}}
-                                                                                </div>
-                                                                                </bs-col>
+                                                                                {{#ifCond bindings.0.plateNumber.value "!==" ""}}
+                                                                                    <bs-col md="4">
+                                                                                        <div class="grid-demo">
+                                                                                            <b>Plate number:</b>
+                                                                                        </div>
+                                                                                    </bs-col>
+                                                                                    <bs-col md="8">
+                                                                                        <div class="grid-demo">
+                                                                                            {{#each bindings}}
+                                                                                                {{plateNumber.value}}                                                           
+                                                                                            {{/each}}
+                                                                                        </div>
+                                                                                    </bs-col>
+                                                                                {{/ifCond}}
                                                                             {{/ifCond}}
                                                                         </template>
                                                                     </semantic-query>
@@ -1403,9 +1370,8 @@
                                                                         <!-- Else show the page or plate image as main image-->
                                                                         <template id="else">
                                                                             <bs-col style="font-size: 16px; text-align: center;" md="12">
-                                                                            <i>Was not cataloged in the 1903 edition</i>
-                                                                                </bs-col>
-                                                                                
+                                                                                <i>Was not cataloged in the 1903 edition</i>
+                                                                            </bs-col>
                                                                         </template>
                                                                     </semantic-if>
                                                                 </div>
@@ -1790,7 +1756,7 @@ WHERE {
                         {{#ifCond id_number.value "!==" undefined}}
                         <bs-col lg="5" md="4" sm="12"> 
                             <div class="grid-demo"> 
-                                <b>Inventory Number: </b>
+                                <b>Museum Inv. Number: </b>
                             </div> 
                         </bs-col>
                         <bs-col lg="7" md="8" sm="12">
@@ -1912,15 +1878,7 @@ WHERE {
                         </bs-col>
                         {{/ifCond}}
 
-                        {{#ifCond verso_title_1961.value "!==" undefined}}
-                        <bs-col lg="5" md="4" sm="12"> 
-                            <div class="grid-demo"> 
-                                <b>Verso Technique: </b>
-                            </div> 
-                        </bs-col>
-                        <bs-col lg="7" md="8" sm="12">
-                            <div class="grid-demo">
-                                <semantic-query query='  
+                        <semantic-query query='  
                                 SELECT ?technique  WHERE{
                                 <[[this]]> crm:P56_bears_feature ?feature.
                                 ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
@@ -1928,11 +1886,25 @@ WHERE {
                                 ?feature crm:P81_was_modified_by ?modification.
                                 ?modification a crm:E11_Modification.
                                 ?modification crm:P32_used_general_technique ?technique.
-                                }'> {{technique}} </semantic-query>
-                            </div>
-                        </bs-col>
-                        {{/ifCond}}
-
+                                }'> 
+                                <template id="versoTechniqueTemplate">
+                                    {{#ifCond bidnings.0.technique.value "!==" undefined}}
+                                        <bs-col lg="5" md="4" sm="12"> 
+                                            <div class="grid-demo"> 
+                                                <b>Verso Technique: </b>
+                                            </div> 
+                                        </bs-col>
+                                        <bs-col lg="7" md="8" sm="12">
+                                            {{#each bindings}}
+                                            <div class="grid-demo">
+                                                {{technique}} 
+                                            </div>
+                                            {{/each}}
+                                        </bs-col>
+                                    {{/ifCond}}
+                                </template>
+                        </semantic-query>
+                
                         {{#ifCond location.value "!==" undefined}}
                         <bs-col lg="5" md="4" sm="12"> 
                             <div class="grid-demo"> 

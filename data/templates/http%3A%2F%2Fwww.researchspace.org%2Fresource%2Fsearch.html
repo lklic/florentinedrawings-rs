@@ -361,11 +361,7 @@
                   SELECT DISTINCT ?subject (COUNT(?anyImage) as ?imageCount) 
                    WHERE {
                     ?subject a crm:E22_Man-Made_Object.
-                    ?subject  ?bears ?feat.             
-                    ?feat ?has ?img_visual.
-                    ?img_visual crm:P129i_is_subject_of ?anyImage.     
-                    ?anyImage crm:P2_has_type <http://iiif.io/api/image>.                                  
-                    FILTER (regex(str(?anyImage),".jpg"))                               
+                    ?subject <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?anyImage                               
                    }GROUP BY ?subject ORDER BY DESC(?imageCount) 
                 '
                     tuple-template="{{>tupleTemplate}}"
@@ -380,8 +376,8 @@
                               <div class="row-center">
                                 <semantic-query
                                   query='SELECT DISTINCT ?imgUrl WHERE{
-                              BIND(CONCAT("https://s3-eu-west-1.amazonaws.com/florentinedrawings/thumbs/",REPLACE(STR(REPLACE(STR({{subject}}),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2"),".jpg") AS ?imgUrl)
-                            }'
+                                   <{{subject.value}}> <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?imgUrl  
+                                  }'
                                   template="{{> imageThumbnail}}"
                                 >
                                   <template id="imageThumbnail">
