@@ -357,6 +357,7 @@
                       "showFilter":false
                     }'
                     number-of-displayed-rows="10"
+                    no-result-template='<div style="text-align: center;">No results. Please refine your search.</div>'
                     query='
                   SELECT DISTINCT ?subject (COUNT(?anyImage) as ?imageCount) 
                    WHERE {
