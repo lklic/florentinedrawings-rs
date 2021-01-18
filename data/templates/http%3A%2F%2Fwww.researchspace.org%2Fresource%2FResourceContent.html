@@ -246,6 +246,7 @@
                                                                 <[[this]]> crm:P56_bears_feature ?feat.             
                                                                 ?feat crm:P138_has_representation ?img_visual.
                                                                 ?img_visual crm:P129i_is_subject_of ?image . 
+                                                                ?image <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> <http://iiif.io/api/image>.
                                                                 BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
                                                                 '
                                                                 iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
@@ -253,36 +254,37 @@
                                                                 </rs-iiif-mirador>
                                                             {{/ifCond}}
                                                             {{#ifCond iiifServer "!==" undefined}}
-                                                            {{#ifCond imageType "===" "plate"}}
-                                                                <rs-iiif-mirador
-                                                                id="plate_mirador"
-                                                                image-or-region="[[this]]" 
-                                                                image-id-pattern='BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                                ?? crm:P56_bears_feature ?feat.
-                                                                ?feat crm:P129i_is_subject_of ?plate.
-                                                                ?plate crm:P129i_is_subject_of ?image. 
-                                                                ?image crm:P2_has_type <http://iiif.io/api/image>.
-                                                                BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imagio).
-                                                                BIND(REPLACE(STR(REPLACE(STR(?imagio),"florentinedrawings!","florentinedrawings!plates!")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                                '                                                                       
-                                                                iiif-server-url={{iiifServer}} 
-                                                                >
-                                                                </rs-iiif-mirador>
+                                                                {{#ifCond imageType "===" "plate"}}
+                                                                    <rs-iiif-mirador
+                                                                    id="plate_mirador"
+                                                                    image-or-region="[[this]]" 
+                                                                    image-id-pattern='BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                    ?? crm:P56_bears_feature ?feat.
+                                                                    ?feat crm:P129i_is_subject_of ?plate.
+                                                                    ?plate crm:P129i_is_subject_of ?image. 
+                                                                    ?image crm:P2_has_type <http://iiif.io/api/image>.
+                                                                    BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imagio).
+                                                                    BIND(REPLACE(STR(REPLACE(STR(?imagio),"florentinedrawings!","florentinedrawings!plates!")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                    '                                                                       
+                                                                    iiif-server-url={{iiifServer}} 
+                                                                    >
+                                                                    </rs-iiif-mirador>
+                                                                {{/ifCond}}
+                                                                {{#ifCond imageType "!==" "plate"}}
+                                                                    <rs-iiif-mirador
+                                                                    id="rectoversopage_mirador"
+                                                                    image-or-region="[[this]]" 
+                                                                    image-id-pattern='
+                                                                    BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                    {{iiifPattern}}
+                                                                    ?image <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> <http://iiif.io/api/image>
+                                                                    BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                    '                                                                       
+                                                                    iiif-server-url={{iiifServer}} 
+                                                                    >
+                                                                    </rs-iiif-mirador>
+                                                                {{/ifCond}}
                                                             {{/ifCond}}
-                                                            {{#ifCond imageType "!==" "plate"}}
-                                                                <rs-iiif-mirador
-                                                                id="rectoversopage_mirador"
-                                                                image-or-region="[[this]]" 
-                                                                image-id-pattern='
-                                                                BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
-                                                                {{iiifPattern}}
-                                                                BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
-                                                                '                                                                       
-                                                                iiif-server-url={{iiifServer}} 
-                                                                >
-                                                                </rs-iiif-mirador>
-                                                            {{/ifCond}}
-                                                        {{/ifCond}}
 
                                                             </div>
                                                         </mp-overlay-dialog-content>
@@ -1886,24 +1888,34 @@ WHERE {
                         {{/ifCond}}
 
                         {{#ifCond verso_title_1961.value "!==" undefined}}
-                        <bs-col lg="5" md="4" sm="12"> 
-                            <div class="grid-demo"> 
-                                <b>Verso Technique: </b>
-                            </div> 
-                        </bs-col>
-                        <bs-col lg="7" md="8" sm="12">
-                            <div class="grid-demo">
-                                <semantic-query query='  
-                                SELECT ?technique  WHERE{
-                                <[[this]]> crm:P56_bears_feature ?feature.
-                                ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
-                                ?feature a crm:E25_Man-Made_Feature.
-                                ?feature crm:P81_was_modified_by ?modification.
-                                ?modification a crm:E11_Modification.
-                                ?modification crm:P32_used_general_technique ?technique.
-                                }'> {{technique}} </semantic-query>
-                            </div>
-                        </bs-col>
+                        <semantic-if query='ASK{ <[[this]]> crm:P56_bears_feature ?feature.
+                            ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+                            ?feature a crm:E25_Man-Made_Feature.
+                            ?feature crm:P81_was_modified_by ?modification.
+                            ?modification a crm:E11_Modification.
+                            ?modification crm:P32_used_general_technique ?technique.}'
+                            then='{{> thenVersoTechnique}}'>
+                            <template id="thenVersoTechnique">
+                                <bs-col lg="5" md="4" sm="12"> 
+                                    <div class="grid-demo"> 
+                                        <b>Verso Technique: </b>
+                                    </div> 
+                                </bs-col>
+                                <bs-col lg="7" md="8" sm="12">
+                                    <div class="grid-demo">
+                                        <semantic-query query='  
+                                        SELECT ?technique  WHERE{
+                                        <[[this]]> crm:P56_bears_feature ?feature.
+                                        ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300010292>.
+                                        ?feature a crm:E25_Man-Made_Feature.
+                                        ?feature crm:P81_was_modified_by ?modification.
+                                        ?modification a crm:E11_Modification.
+                                        ?modification crm:P32_used_general_technique ?technique.
+                                        }'> {{technique}} </semantic-query>
+                                    </div>
+                                </bs-col>
+                            </template>
+                        </semantic-if>            
                         {{/ifCond}}
                 
                         {{#ifCond location.value "!==" undefined}}
