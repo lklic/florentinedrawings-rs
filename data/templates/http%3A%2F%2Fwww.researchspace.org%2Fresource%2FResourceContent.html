@@ -203,7 +203,7 @@
                                                                 BIND(REPLACE(STR(?pageImg),"plates200","plates500") AS ?imageUrl).
                                                                 }' template='{{> mediumImageSize}}'>
                                                                 <template id="mediumImageSize">                                                                    
-                                                    <mp-overlay-dialog title="‎‎"   class="miradorViewerPopup">
+                                                    <mp-overlay-dialog title="{{label}}‎‎"   class="miradorViewerPopup">
                                                         <mp-overlay-dialog-trigger>
                                                             {{#ifCond imgURL "!==" undefined}}
 
@@ -1677,7 +1677,7 @@
     </div>
 </div> -->
 <!-- DATA ON PAGE HEADER (right by the image) -->
-<semantic-table query=' SELECT DISTINCT ?artist ?artistLabel ?id_number ?geonames ?recto_title_1938 ?verso_title_1938 ?recto_title_1961 ?verso_title_1961 ?location ?locationLabel
+<semantic-table query=' SELECT DISTINCT ?artist ?artistLabel ?id_number ?museumLink ?geonames ?geonamesLabel ?recto_title_1938 ?verso_title_1938 ?recto_title_1961 ?verso_title_1961 ?location ?locationLabel
 WHERE {
     
     ## LOCATION ##
@@ -1686,8 +1686,15 @@ WHERE {
         ?transfer crm:P29_custody_recieved_by ?location.
         ?location rdfs:label ?locationLabel.
         ?location crm:P74_has_current_or_former_resindence ?geonames.
+        ?geonames rdfs:label ?geonamesLabel
     }
     
+    ## MUSEUM LINK ##
+    OPTIONAL{
+        <[[this]]> crm:P1_is_identified_by ?museumLink.
+        ?museumLink crm:P2_has_type <https://florentinedrawings.itatti.harvard.edu/resource/type/museum_link>.
+    }
+
     ## PREFERRED IDENTIFIER (Inventory Number) ##
     OPTIONAL {
         <[[this]]> crm:P48_has_preferred_identifier ?id .
@@ -1907,7 +1914,27 @@ WHERE {
                         </bs-col>
                         <bs-col md="7">
                             <div class="grid-demo">
-                                <semantic-link iri={{location.value}}></semantic-link>
+                                <semantic-link iri={{location.value}}></semantic-link>({{geonamesLabel.value}})
+                            </div>
+                        </bs-col>
+                        {{/ifCond}}
+                        {{#ifCond museumLink.value "!==" undefined}}
+                        <bs-col lg="5" md="4" sm="12"> 
+                            <div class="grid-demo"> 
+                                <b>Museum Link: </b>
+                            </div> 
+                        </bs-col>
+                        <bs-col md="7">
+                            <div class="grid-demo">
+                                <mp-popover title="Note">
+                                    <mp-popover-trigger placement="top"  trigger='["hover","focus"]'> 
+                                        <a href="{{museumLink.value}}" target="_null">Museum site </a>
+                                    </mp-popover-trigger>
+                                    <mp-popover-content style="background:white;">
+                                      <div>Please note that museum record links will change over time and may no longer funtion</div>
+                                    </mp-popover-content>
+                                  </mp-popover>
+                                
                             </div>
                         </bs-col>
                         {{/ifCond}}
@@ -1977,8 +2004,20 @@ WHERE {
 [[/inline]]
 
 <style>
+
+    #mp-popover{
+        background: white !important;
+    }
+    #mp-popover .arrow::after {
+        border-right-color: transparent !important;
+    }
+    .popover.top>.arrow, .popover.top>.arrow:after
+    {
+        border-top-color: black !important;
+    }
+
     .mirador-main-menu-bar{
-    display: none !important;
+        display: none !important;
     }
 
     .mirador-viewer{
