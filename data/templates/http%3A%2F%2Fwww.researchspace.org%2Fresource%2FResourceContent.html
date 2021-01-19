@@ -1889,24 +1889,34 @@ WHERE {
 
 
                         {{#ifCond recto_title_1961.value "!==" undefined}}
-                        <bs-col lg="5" md="4" sm="12"> 
-                            <div class="grid-demo"> 
-                                <b>Recto Technique: </b>
-                            </div> 
-                        </bs-col>
-                        <bs-col lg="7" md="8" sm="12">
-                            <div class="grid-demo">
-                                <semantic-query query='  
-                                SELECT ?technique  WHERE{
-                                <[[this]]> crm:P56_bears_feature ?feature.
-                                ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
-                                ?feature a crm:E25_Man-Made_Feature.
-                                ?feature crm:P81_was_modified_by ?modification.
-                                ?modification a crm:E11_Modification.
-                                ?modification crm:P32_used_general_technique ?technique.
-                                }'> {{technique}} </semantic-query>
-                            </div>
-                        </bs-col>
+                        <semantic-if query='ASK{  <[[this]]> crm:P56_bears_feature ?feature.
+                            ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                            ?feature a crm:E25_Man-Made_Feature.
+                            ?feature crm:P81_was_modified_by ?modification.
+                            ?modification a crm:E11_Modification.
+                            ?modification crm:P32_used_general_technique ?technique.}'
+                            then='{{> thenRectoTechnique}}'>
+                            <template id="thenRectoTechnique">
+                                <bs-col lg="5" md="4" sm="12"> 
+                                    <div class="grid-demo"> 
+                                        <b>Recto Technique: </b>
+                                    </div> 
+                                </bs-col>
+                                <bs-col lg="7" md="8" sm="12">
+                                    <div class="grid-demo">
+                                        <semantic-query query='  
+                                        SELECT ?technique  WHERE{
+                                        <[[this]]> crm:P56_bears_feature ?feature.
+                                        ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+                                        ?feature a crm:E25_Man-Made_Feature.
+                                        ?feature crm:P81_was_modified_by ?modification.
+                                        ?modification a crm:E11_Modification.
+                                        ?modification crm:P32_used_general_technique ?technique.
+                                        }'> {{technique}} </semantic-query>
+                                    </div>
+                                </bs-col>
+                            </template>
+                        </semantic-if>
                         {{/ifCond}}
 
                         {{#ifCond verso_title_1961.value "!==" undefined}}
