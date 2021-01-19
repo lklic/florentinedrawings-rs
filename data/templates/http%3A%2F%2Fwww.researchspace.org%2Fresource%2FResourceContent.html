@@ -145,10 +145,19 @@
                                     <semantic-query template='{{> imageViewer}}' query='
                                     SELECT (count(?anyImage) as ?count) 
                                     WHERE { 
-                                        <[[this]]> <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?anyImage.                           
+                                        OPTIONAL{
+                                            <[[this]]> <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?anyImage.                           
+                                        }
                                     }
                                     '>
                                     <template id='imageViewer'>
+                                        {{#ifCond bindings.0.count.value "===" "0"}}
+                                        <div class="col-md-12 col-lg-6 rs-image-container" style="height: 45vh;">
+                                            <div class="rs-page__summary-image">
+                                                <img src="/assets/images/image_placeholder_large.png"/>
+                                            </div>
+                                        </div>
+                                        {{/ifCond}}
                                         {{#ifCond bindings.0.count.value "!==" "0"}}
                                             <div class="col-md-12 col-lg-6 rs-image-container" style="height: 45vh;">
 

@@ -378,19 +378,19 @@
                             <bs-col lg="4" md="12" xs="12">
                               <div class="row-center">
                                 <semantic-query
-                                  query='SELECT DISTINCT ?imgUrl WHERE{
-                                   <{{subject.value}}> <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?imgUrl  
-                                  }'
-                                  template="{{> imageThumbnail}}"
-                                >
-                                  <template id="imageThumbnail">
-                                    <object
-                                      data="{{bindings.0.imgUrl.value}}"
-                                      type="image/jpeg"
-                                      class="thumbnailImage"
-                                    ></object>
-                                  </template>
-                                </semantic-query>
+                                query='SELECT DISTINCT ?imgUrl WHERE{
+                                  bind("_" as ?default_imageUrl)
+                                  OPTIONAL{
+                                    <{{subject.value}}> <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?thumbnailImage.
+                                  }
+                                  BIND(coalesce(?thumbnailImage, ?default_imageUrl) as ?imgUrl)    
+                              }'
+                                template="{{> imageThumbnail}}"
+                              >
+                                <template id="imageThumbnail">
+                                  <img alt='   ' src="{{bindings.0.imgUrl.value}}" class="thumbnailImage"/>
+                                </template>
+                              </semantic-query>
                               </div>
                             </bs-col>
                             <bs-col lg="7" md="10" xs="10">
