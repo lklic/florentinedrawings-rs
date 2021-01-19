@@ -191,6 +191,7 @@
                                             <semantic-if query='ASK { <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?main_feat.             
                                                 ?main_feat <http://www.cidoc-crm.org/cidoc-crm/P138_has_representation> ?main_visual.
                                                 ?main_visual crm:P129i_is_subject_of ?imgURL.   
+                                                ?imgURL <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> <http://iiif.io/api/image>.
                                             }'
                                                 then='{{> then}}' else='{{> else}}'>
                                                 <!-- Show recto or verso as main image if exists -->
@@ -198,7 +199,7 @@
                                                     <mp-event-target-template-render id='event-target' template='{{> mainImageTemplate}}'>
                                                         <template id='mainImageTemplate'>
                                                             <semantic-query query='SELECT DISTINCT ?imageUrl WHERE{
-                                                                BIND(REPLACE(STR("{{imgURL}}"),"full/200","full/500") AS ?rectoversoImg).
+                                                                BIND(REPLACE(STR("{{imgURL}}"),"full/100","full/500") AS ?rectoversoImg).
                                                                 BIND(REPLACE(STR(?rectoversoImg),"text200","text500") AS ?pageImg).
                                                                 BIND(REPLACE(STR(?pageImg),"plates200","plates500") AS ?imageUrl).
                                                                 }' template='{{> mediumImageSize}}'>
@@ -388,7 +389,7 @@
                                                         </mp-overlay-dialog-content>
                                                     </mp-overlay-dialog>
                                                 </template>
-                                            </semantic-query>
+                                                            </semantic-query>
                                                     </template>
                                                     </mp-event-target-template-render>
                                                 </template>
@@ -402,7 +403,11 @@
                                                         <[[this]]>  crm:P30_custody_transferred_through ?transfer.
                                                         ?transfer crm:P29_custody_recieved_by ?location.
                                                         ?location rdfs:label ?locationLabel.
-                                                        <[[this]]> <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?imgUrl.    
+                                                        <[[this]]> crm:P56_bears_feature ?feat.             
+                                                        ?feat crm:P138_has_representation ?img_visual.
+                                                        ?img_visual crm:P129i_is_subject_of ?image . 
+                                                        ?image <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> <http://iiif.io/api/image>.
+                                                        BIND(REPLACE(str(?image),"full/full","full/100,") as ?imgUrl).
                                                         BIND(CONCAT("Image from ",?locationLabel) as ?imageLabel).    
                                                         }' template='{{> imagesThumbnail}}'>
                                                     <template id="imagesThumbnail">
@@ -929,8 +934,10 @@
                                                                         SELECT DISTINCT ?artist_1961 ?label WHERE {
                                                                             <[[this]]> crm:P108i_was_produced_by ?production.
                                                                             ?production crm:P01i_is_domain_of ?domain.
-                                                                            ?domain crm:P02_has_range ?artist_1961.
-                                                                            ?artist_1961 rdfs:label ?artistLabel.
+                                                                            graph <https://florentine-drawings-Attribution1961-data>{
+                                                                                ?domain crm:P02_has_range ?artist_1961.
+                                                                                ?artist_1961 rdfs:label ?artistLabel.
+                                                                            }
                                                                                 {
                                                                                 ?domain a crm:PC15_was_influenced_by.
                                                                                 ?domain crm:P15.1_in_the_role_of ?qualifier.
@@ -1084,8 +1091,10 @@
                                                                     SELECT DISTINCT ?artist_1938 ?label WHERE {
                                                                         <[[this]]> crm:P108i_was_produced_by ?production.
                                                                         ?production crm:P01i_is_domain_of ?domain.
-                                                                        ?domain crm:P02_has_range ?artist_1938.
-                                                                        ?artist_1938 rdfs:label ?artistLabel.
+                                                                        graph <https://florentine-drawings-Attribution1938-data>{
+                                                                            ?domain crm:P02_has_range ?artist_1938.
+                                                                            ?artist_1938 rdfs:label ?artistLabel.
+                                                                        }
                                                                             {
                                                                             ?domain a crm:PC15_was_influenced_by.
                                                                             ?domain crm:P15.1_in_the_role_of ?qualifier.
@@ -1308,8 +1317,10 @@
                                                                     SELECT DISTINCT ?artist_1903 ?label WHERE {
                                                                         <[[this]]> crm:P108i_was_produced_by ?production.
                                                                         ?production crm:P01i_is_domain_of ?domain.
-                                                                        ?domain crm:P02_has_range ?artist_1903.
-                                                                        ?artist_1903 rdfs:label ?artistLabel.
+                                                                        graph <https://florentine-drawings-Attribution1903-data>{
+                                                                            ?domain crm:P02_has_range ?artist_1903.
+                                                                            ?artist_1903 rdfs:label ?artistLabel.
+                                                                        }
                                                                          {
                                                                             ?domain a crm:PC15_was_influenced_by.
                                                                             ?domain crm:P15.1_in_the_role_of ?qualifier.
@@ -1765,7 +1776,7 @@ WHERE {
                         {{#ifCond id_number.value "!==" undefined}}
                         <bs-col lg="5" md="4" sm="12"> 
                             <div class="grid-demo"> 
-                                <b>Museum Inv. Number: </b>
+                                <b>Museum Inventory No.: </b>
                             </div> 
                         </bs-col>
                         <bs-col lg="7" md="8" sm="12">
@@ -1831,8 +1842,10 @@ WHERE {
                         SELECT DISTINCT ?artist ?label WHERE {
                             <[[this]]> crm:P108i_was_produced_by ?production.
                             ?production crm:P01i_is_domain_of ?domain.
-                            ?domain crm:P02_has_range ?artist.
-                            ?artist rdfs:label ?artistLabel.
+                            graph <https://florentine-drawings-Attribution1961-data>{
+                                ?domain crm:P02_has_range ?artist.
+                                ?artist rdfs:label ?artistLabel.
+                            }
                              {
                                 ?domain a crm:PC15_was_influenced_by.
                                 ?domain crm:P15.1_in_the_role_of ?qualifier.

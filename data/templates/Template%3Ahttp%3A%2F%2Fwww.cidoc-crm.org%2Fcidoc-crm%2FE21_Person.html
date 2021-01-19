@@ -34,8 +34,11 @@
           ?production crm:P01i_is_domain_of ?domain.
           ?domain crm:P02_has_range <[[this]]>.     
 
-          ?subject <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?anyImage.                                
-    
+          OPTIONAL{
+           ?subject <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?anyImage.         
+           FILTER (regex(str(?anyImage),".jpg")).      
+           }
+
           OPTIONAL{
             ?subject crm:P56_bears_feature ?feature_a.
             ?feature_a crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
@@ -55,7 +58,6 @@
               ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
             }
           }
-          FILTER (regex(str(?anyImage),".jpg")).      
           
         }GROUP BY ?subject ?recto_title_1961 ?recto_title_1938  ORDER BY DESC(?imageCount) 
       '
@@ -91,7 +93,7 @@
                     Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1961"
                     English_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1938"  
                     Inv.Number="https://florentinedrawings.itatti.harvard.edu/resource/field/Inventory_Number"
-                    Artist ="https://florentinedrawings.itatti.harvard.edu/resource/field/Artist_Attribution"
+                    Artist ="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Artist_Attribution"
                     Technique="https://florentinedrawings.itatti.harvard.edu/resource/field/Technique"
                     Location="https://florentinedrawings.itatti.harvard.edu/resource/field/Location"
                     ]]'

@@ -35,7 +35,9 @@
         ?modification a crm:E11_Modification.
         ?modification crm:P32_used_general_technique <[[this]]>.
 
-        ?subject <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?anyImage.       
+        OPTIONAL{
+          ?subject <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?anyImage.     
+        }
 
         OPTIONAL{
           ?subject crm:P108i_was_produced_by ?production.

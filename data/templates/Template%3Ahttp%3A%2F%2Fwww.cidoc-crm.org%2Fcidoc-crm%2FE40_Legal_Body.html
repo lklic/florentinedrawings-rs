@@ -32,8 +32,9 @@
         ?subject crm:P30_custody_transferred_through ?transfer.
         ?transfer crm:P29_custody_recieved_by <[[this]]>.
 
-        ?subject <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?anyImage.     
-
+        OPTIONAL{
+          ?subject <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?anyImage.     
+        }
         OPTIONAL{
           ?subject crm:P108i_was_produced_by ?production.
           ?production crm:P01i_is_domain_of ?domain.
