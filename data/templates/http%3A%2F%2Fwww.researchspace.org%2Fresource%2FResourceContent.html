@@ -207,8 +207,12 @@
                                                 <template id="then">
                                                     <mp-event-target-template-render id='event-target' template='{{> mainImageTemplate}}'>
                                                         <template id='mainImageTemplate'>
-                                                            <semantic-query query='SELECT DISTINCT ?imageUrl WHERE{
-                                                                BIND(REPLACE(STR("{{imgURL}}"),"full/100","full/500") AS ?rectoversoImg).
+                                                            <semantic-query query='SELECT DISTINCT ?imageUrl ?iiifImage WHERE{
+                                                                BIND(REPLACE(STR("{{imgURL}}"),"full/100,","full/full") AS ?rectoversoiiifImage).
+                                                                BIND(REPLACE(STR("{{imgURL}}"),"text200,","full/full") AS ?pageImage).
+                                                                BIND(REPLACE(STR("{{imgURL}}"),"full/100,","full/full") AS ?iiifImage).
+
+                                                                BIND(REPLACE(STR("{{imgURL}}"),"full/100","full/350") AS ?rectoversoImg).
                                                                 BIND(REPLACE(STR(?rectoversoImg),"text200","text500") AS ?pageImg).
                                                                 BIND(REPLACE(STR(?pageImg),"plates200","plates500") AS ?imageUrl).
                                                                 }' template='{{> mediumImageSize}}'>
@@ -234,8 +238,11 @@
 
                                                                     <[[this]]> <http://www.cidoc-crm.org/cidoc-crm/P56_bears_feature> ?main_feat.             
                                                                     ?main_feat <http://www.cidoc-crm.org/cidoc-crm/P138_has_representation> ?main_visual.
-                                                                    ?main_visual crm:P129i_is_subject_of ?imgURL.   
-                                                                    ?imgURL crm:P2_has_type <http://iiif.io/api/image>.
+                                                                    ?main_visual crm:P129i_is_subject_of ?image.   
+                                                                    ?image crm:P2_has_type <http://iiif.io/api/image>.
+                                                                    BIND(REPLACE(STR(?image),"full/full","full/350,") AS ?rectoversoImg).
+                                                                    BIND(REPLACE(STR(?rectoversoImg),"text200","text500") AS ?pageImg).
+                                                                    BIND(REPLACE(STR(?pageImg),"plates200","plates500") AS ?imgURL).
                                                                 }' template='{{> imageThumbnail}}'>
                                                             <template id="imageThumbnail">
                                                                 <img style="height:20vh" src="{{bindings.0.imgURL.value}}"/>
@@ -264,6 +271,7 @@
                                                                 </rs-iiif-mirador>
                                                             {{/ifCond}}
                                                             {{#ifCond iiifServer "!==" undefined}}
+                                                                <!-- Show plate -->
                                                                 {{#ifCond imageType "===" "plate"}}
                                                                     <rs-iiif-mirador
                                                                     id="plate_mirador"
@@ -280,8 +288,9 @@
                                                                     >
                                                                     </rs-iiif-mirador>
                                                                 {{/ifCond}}
-                                                                {{#ifCond imageType "!==" "plate"}}
-                                                                    <rs-iiif-mirador
+                                                                <!-- Show page -->
+                                                                {{#ifCond imageType "===" "page"}}
+                                                                <rs-iiif-mirador
                                                                     id="rectoversopage_mirador"
                                                                     image-or-region="[[this]]" 
                                                                     image-id-pattern='
@@ -293,6 +302,22 @@
                                                                     iiif-server-url={{iiifServer}} 
                                                                     >
                                                                     </rs-iiif-mirador>
+                                                                {{/ifCond}}
+                                                                <!-- Show recto/verso -->
+                                                                {{#ifCond imageType "===" "rectoverso"}}
+                                                                        <rs-iiif-mirador
+                                                                        id="rectoversopage_mirador"
+                                                                        image-or-region="[[this]]" 
+                                                                        image-id-pattern='
+                                                                        BIND("image" AS ?type). BIND(?? AS ?imageIRI). 
+                                                                        {{iiifPattern}}
+                                                                        ?image <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> <http://iiif.io/api/image>
+                                                                        FILTER(str(?image)="{{bindings.0.iiifImage.value}}")
+                                                                        BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+                                                                        '                                                                       
+                                                                        iiif-server-url={{iiifServer}} 
+                                                                        >
+                                                                        </rs-iiif-mirador>
                                                                 {{/ifCond}}
                                                             {{/ifCond}}
 
