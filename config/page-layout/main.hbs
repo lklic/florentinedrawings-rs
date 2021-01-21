@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <script type="text/javascript" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
     <meta name="version" content="{{version}}" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -9,8 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
 
     <link rel="icon" href="/assets/no_auth/favicon.ico" type="image/x-icon">
-
-    {{#each assetsMap.app.css}}
+   {{#each assetsMap.app.css}}
     <link href="{{this}}" rel="stylesheet" type="text/css">
     {{/each}}
 

@@ -1,0 +1,20 @@
+.sidenav .filters {
+  display: flex;
+  flex-direction: column;
+  height: 22vh;
+  justify-content: space-evenly;
+}
+.sidenav .filters .filter {
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 0.4vh;
+  border: 1px solid #ddd;
+}
+.sidenav .filters .title {
+  font-size: large;
+}
+
+.sidenav .filters .title:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -1,2 +1,10 @@
-      image-id-pattern='OPTIONAL { ?imageIRI crm:P1_is_identified_by/rso:PX_has_file_name ?carrierImageID. } BIND(COALESCE(?carrierImageID, REPLACE(STR(?imageIRI), "^.*/(.*)$", "$1")) AS ?imageID) .'
-      iiif-server-url='/proxy/IIIF'
+
+image-or-region="[[#if record]][[record]][[else]]{{record}}[[/if]]" 
+
+image-id-pattern='BIND("image" AS ?type). BIND( ?? AS ?imageIRI). ?? crm:P56_bears_feature ?feat.             
+  ?feat crm:P136_has_representation ?img_visual.
+  ?img_visual crm:P129i_is_subject_of ?image . 
+  
+BIND(REPLACE(STR(REPLACE(STR(?image),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)'
+  
+iiif-server-url=" https://iiif.itatti.harvard.edu/iiif/2"

@@ -1,0 +1,37 @@
+
+.semantic-carousel{
+    margin-top: 3vh;
+}
+.slick-slider{
+    margin-left: 2% !important;
+    margin-right: 2% !important;
+}
+.table > tr > td{
+    border-bottom-color: black !important;
+}
+.rs-application .page {
+    padding-top: 34px;
+}
+.page{
+    padding-top: 0 !important;
+}
+
+.rs-entity-bg-thing{
+    background-color: #816e4206;
+}
+
+.rs-resource-header-content-underline {
+    border-bottom: 1px solid #761f0e !important;
+}
+
+#mp-popover, #sparql-editor-popover{
+    background:	none !important;
+}
+
+#mp-popover .arrow::after{
+    border-right-color: #761f0e !important;
+}
+
+.popover.bottom>.arrow, .popover.bottom>.arrow:after {
+    border-bottom-color: #761f0e !important;
+}

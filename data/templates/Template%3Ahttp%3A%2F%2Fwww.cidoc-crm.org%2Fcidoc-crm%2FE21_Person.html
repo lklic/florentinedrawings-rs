@@ -1,0 +1,232 @@
+
+    <div class="artwork_list_head">
+      <h1>Artworks by</h1>
+        <semantic-query
+          query=" 
+          PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          
+            SELECT ?artist_name WHERE {                    
+                  <[[this]]> rdfs:label ?artist_name
+            }"
+          template="{{>artistTemplate}}"
+        >
+          <template id="artistTemplate">
+            {{#each bindings}}
+            <object data="../../images/{{artist_name.value}}.png" type="image/png" class="img-circle headImageObject"></object>
+            <h2>{{artist_name.value}}</h2>
+            {{/each}}
+          </template>
+        </semantic-query>
+      </h2>
+    </div>
+
+    <div class="artwork_list_body">
+        <semantic-table
+        id="grid-result"
+        number-of-displayed-rows="10"
+        query='
+        SELECT DISTINCT ?subject ?recto_title_1961 ?recto_title_1938 (COUNT(?anyImage) as ?imageCount) 
+        WHERE {
+          ?subject a crm:E22_Man-Made_Object.
+          ?subject crm:P108i_was_produced_by ?production.
+          ?production crm:P01i_is_domain_of ?domain.
+          ?domain crm:P02_has_range <[[this]]>.     
+
+          OPTIONAL{
+           ?subject <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?anyImage.         
+           FILTER (regex(str(?anyImage),".jpg")).      
+           }
+
+          OPTIONAL{
+            ?subject crm:P56_bears_feature ?feature_a.
+            ?feature_a crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
+            ?feature_a a crm:E25_Man-Made_Feature.
+            ?feature_a crm:P138_has_representation ?visual_item_a.
+            ?visual_item_a a crm:E36_Visual_Item.
+            OPTIONAL{
+              ?visual_item_a crm:P102_has_title ?value_uri_a.
+              ?value_uri_a a crm:E35_Title.
+              ?value_uri_a rdfs:label ?recto_title_1961.
+              ?value_uri_a crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1961/attribute_assignment>.
+            }
+            OPTIONAL{
+              ?visual_item_a crm:P102_has_title ?value_uri.
+              ?value_uri a crm:E35_Title.
+              ?value_uri rdfs:label ?recto_title_1938.
+              ?value_uri crm:P141i_was_assigned_by <https://florentinedrawings.itatti.harvard.edu/resource/work/1938/attribute_assignment>.
+            }
+          }
+          
+        }GROUP BY ?subject ?recto_title_1961 ?recto_title_1938  ORDER BY DESC(?imageCount) 
+      '
+        tuple-template="{{>tupleTemplate}}"
+      >
+        <template id="tupleTemplate">
+          <div
+            class="rs-grid-element panel panel-default artwork-card fade-in"
+          >
+          <semantic-link-container uri="{{subject.value}}">
+            <div class="panel-body">
+              <bs-col md="5" xs="12">
+                <div class="row-center">
+                  <semantic-query
+                    query='SELECT DISTINCT ?imgUrl WHERE{
+                      bind("_" as ?default_imageUrl)
+                      OPTIONAL{
+                        <{{subject.value}}> <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?thumbnailImage.
+                      }
+                      BIND(coalesce(?thumbnailImage, ?default_imageUrl) as ?imgUrl)    
+                  }'
+                    template="{{> imageThumbnail}}"
+                  >
+                    <template id="imageThumbnail">
+                      <img alt='   ' src="{{bindings.0.imgUrl.value}}" class="thumbnailImage"/>
+                    </template>
+                  </semantic-query>
+                </div>
+              </bs-col>
+              <bs-col md="7" xs="12">
+                <div data-flex-layout="row md-column center-stretch">
+                  <bs-row>
+                  
+                    <mp-field-visualization
+                    subject="{{subject.value}}"
+                    fields='[[fieldDefinitions  
+                    Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1961"
+                    English_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1938"  
+                    Inv.Number="https://florentinedrawings.itatti.harvard.edu/resource/field/Inventory_Number"
+                    Artist ="https://florentinedrawings.itatti.harvard.edu/resource/field/1961_Edition_Artist_Attribution"
+                    Technique="https://florentinedrawings.itatti.harvard.edu/resource/field/Technique"
+                    Location="https://florentinedrawings.itatti.harvard.edu/resource/field/Location"
+                    ]]'
+                  
+                    template='{{>generalInfo}}'
+                    >
+                    <template id="generalInfo">
+                        [[> rsp:ResourceFieldBasedVisualization subject=[[this]]  ]]
+                    </template>
+                  </mp-field-visualization>
+
+                    <!-- {{#ifCond recto_title_1961.value "!==" undefined}}
+                    <bs-col md="12">
+                      <h4>{{recto_title_1961.value}}</h4>
+                    </bs-col>
+                    {{/ifCond}} -->
+
+                      <!-- {{#ifCond recto_title_1938.value "!==" undefined}}
+                      <bs-col md="4">
+                        <div class="grid-demo">
+                          <b>English title: </b>
+                        </div>
+                      </bs-col>
+                      <bs-col md="8">
+                        <div class="grid-demo">
+                          {{recto_title_1938.value}}
+                        </div>
+                      </bs-col>
+                      {{/ifCond}} -->
+
+                      <!-- {{#ifCond id_number.value "!==" undefined}}
+                      <bs-col md="4">
+                        <div class="grid-demo">
+                          <b>Inventory Number: </b>
+                        </div>
+                      </bs-col>
+                      <bs-col md="8">
+                        <div class="grid-demo">
+                          {{id_number.value}}
+                        </div>
+                      </bs-col>
+                      {{/ifCond}} -->
+                      
+                      <!-- {{#ifCond artist_name.value "!==" undefined}}
+                      <bs-col md="4">
+                        <div class="grid-demo">
+                          <b>Artist Attribution: </b>
+                        </div>
+                      </bs-col>
+                      <bs-col md="8">
+                        <div class="grid-demo">
+                          {{artist_name.value}}
+                        </div>
+                      </bs-col>
+                      {{/ifCond}}
+
+                      {{#ifCond techniqueList.value "!==" ""}}
+                      <bs-col md="4">
+                        <div class="grid-demo">
+                          <b>Technique: </b>
+                        </div>
+                      </bs-col>
+                      <bs-col md="8">
+                        <div class="grid-demo">
+                          {{techniqueList.value}} 
+                        </div>
+                      </bs-col>
+                      {{/ifCond}} -->
+
+                  </bs-row>
+                </div>
+              </bs-col>
+            </div>
+          </semantic-link-container>
+          </div>
+        </template>
+      </semantic-table>
+    </div>
+
+
+
+<style>
+
+  .filter-container {
+   justify-content:center !important;
+  }
+
+  .fade-in {
+    -webkit-animation: fade-in-fwd 0.7s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+    animation: fade-in-fwd 0.7s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  }
+
+  .grid-demo b{
+      font-weight: normal;
+    color: #777777;
+    }
+
+  .panel-body{
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    flex-wrap: wrap;
+  }
+  .panel-body:hover{
+    box-shadow: 1px 2px 8px 0 #761f0e35, 1px 3px 12px 2px rgba(0, 0, 0, 0.07);
+  }
+  .rs-application .table > tbody > tr > td{
+    border-color: white !important;
+    padding: 4px 8px;
+  }
+  .rs-page__field{
+    display: flex;
+    justify-content: flex-start;
+  }
+  .rs-page__field-label{
+    font-weight: normal;
+    color: #777777;
+  }
+  .rs-page__field-label-holder{
+    min-width: 10vw;
+}
+
+@media (max-width:800px){
+  .rs-page__field{
+    flex-direction:column;
+  }
+  .table-responsive>.table{
+    overflow: hidden;
+  }
+}
+</style>
+  

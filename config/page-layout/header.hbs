@@ -1,90 +1,84 @@
-<nav class="navbar navbar-default" role="navigation">
+<nav id="fd-navigation" class="navbar navbar-default" role="navigation">
   <div class="rs-header">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-
-      <a class="rs-header-logo" href="/"><img src="../../images/logo.png" alt="{{deploymentTitle}}" /></a>
+      <a class="rs-header-logo" href="/"><img src="../../images/logo.svg" alt="{{deploymentTitle}}" />
+        {{!-- <div class="subtitle">
+          by Bernard Berenson
+        </div> --}}
+      </a>
+      
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="rs-navbar">
+    <div style="height: 100%;">
+      <ul style="height: 100%; display: flex; align-items:center;
+    justify-content: flex-end;">
+      <a  style="min-width: 7vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;" href="/resource/search">
+       Search
+      <img
+        style="filter: hue-rotate(80deg); margin-left: 0.5vw"
+        src="/assets/images/icons/search.svg"
+      />
+       </a>
+     
+          <bs-nav-dropdown style="min-width: 7vw;
+          min-height:10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;"  title="About" id="rs-about-dropdown" class="rs-dropdown about">
 
-      <ul class="nav navbar-nav">
-      </ul>
-
-      <ul class="nav navbar-nav">
-
-        <li class="rs-only-xs">
-          <semantic-link iri="http://www.researchspace.org/resource/ThinkingFrames" urlqueryparam-view='simple-search'
-            title="Advanced seach" style="display: inline-block;">
-            Search
-          </semantic-link>
-        </li>
-
-        <li class="rs-xs-none {{!-- rs-navigate-input --}}">
-          {{!-- <input type="text" placeholder="Navigate To .." disabled class="rs-textInput--white rs-body-m-M" style="height: 27px;"> --}}
-          <semantic-link iri="http://www.researchspace.org/resource/ThinkingFrames" urlqueryparam-view='simple-search'
-            title="Advanced seach" style="padding-top:3px; padding-right: 5px;">
-            <img src="/assets/images/icons/Actions/Search_white.svg" class="rs-search-icon">
-          </semantic-link>
-        </li>
-
-        <mp-anonymous-hidden>
-          <li>
-            <mp-link url="/sparql" class="rs-body-m-M">Sparql</mp-link>
-          </li>
-        </mp-anonymous-hidden>
-
-
-        <mp-anonymous-hidden>
-          <li class="rs-only-xs">
-            <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings">
-              Setting
-            </semantic-link>
-          </li>
-        </mp-anonymous-hidden>
-
-        <mp-anonymous-hidden>
-          <li class="rs-xs-none">
-            <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings"
-              class="rs-setting-icon">
-              <i class="fa fa-cog"></i>
-            </semantic-link>
-          </li>
-        </mp-anonymous-hidden>
-
-        <mp-anonymous-hidden alt='<li><a href="/login" title="login" class="rs-body-m-M">Logout</a></li>'>
-          <bs-nav-dropdown title="Account" id="rs-account-dropdown" class="rs-account-dropdown">
-
-            <bs-menu-item title='userPrincipal'>
-              <semantic-query
-                query='SELECT ?__useruri__ ?userName { BIND(REPLACE(REPLACE(STR(?__useruri__), STR(User:), ""), "%40", "@") as ?userName) }'
-                template='\{{> template}}'>
-                <template id='template'>
-                  <semantic-link-container uri='\{{bindings.0.__useruri__.value}}'>
-                    <div class="user-dropdown_item">
-                      <img src="/assets/images/icons/user_dark.svg" class="rs-xs-none user-dropdown_img">
-                      <span>\{{bindings.0.userName.value}}</span>
-                    </div>
-                  </semantic-link-container>
-                </template>
-              </semantic-query>
+            <bs-menu-item href="background" title='Background'>
+              <div class="dropdownTitle"> Background</div>
+            </bs-menu-item>
+            <bs-menu-item href="credits" title='Credits'>
+              <div class="dropdownTitle">Credits</div>
+            </bs-menu-item>
+            <bs-menu-item href="http://itatti.harvard.edu/website-feedback" title='Contact'>
+              <div class="dropdownTitle">Contact</div>
             </bs-menu-item>
 
-            {{!--       <semantic-link-container uri="http://www.researchspace.org/resource/MyImages">
-                  <bs-menu-item title='my images'>My Images</bs-menu-item>
-                </semantic-link-container>
+            <hr />
 
-                <semantic-link-container uri="http://www.researchspace.org/resource/MyPages">
-                  <bs-menu-item title='my pages'>My Narratives</bs-menu-item>
-                </semantic-link-container>
+            <bs-menu-item href="http://data.itatti.harvard.edu/" title='Data'>
+              <div class="dropdownTitle">Data</div>
+            </bs-menu-item>
 
-                <semantic-link-container uri="http://www.researchspace.org/resource/MyKnowledgeMaps">
-                  <bs-menu-item title='my maps'>My Knowledge Maps</bs-menu-item>
-                </semantic-link-container>
-                
-                <bs-menu-item divider="true"></bs-menu-item> --}}
-            <bs-menu-item href="/login" title='logout'>
+          </bs-nav-dropdown>
+
+      </ul>
+
+    </div><!-- /.navbar-collapse -->
+  
+  
+  
+  
+  </div><!-- /.container-fluid -->
+
+  <div style="position: fixed; bottom:0; right:0; z-index:100">
+            <mp-anonymous-hidden>
+          <bs-nav-dropdown  title="Admin" id="rs-about-dropdown" class="dropup admin">
+
+            <bs-menu-item href="background" title='Background'>
+              <div class="dropdownTitle">
+                <mp-link url="/sparql" class="rs-body-m-M">Sparql</mp-link>
+              </div>
+            </bs-menu-item>
+            <bs-menu-item >
+              <div class="dropdownTitle">
+                <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings"
+                  class="rs-setting-icon">
+                  <i class="fa fa-cog"></i>
+                </semantic-link>
+            </bs-menu-item>
+       
+
+            <hr />
+
+             <bs-menu-item href="/login" title='logout'>
               <div class="user-dropdown_item">
                 <img src="/assets/images/icons/Actions/logout_dark.svg" class="rs-xs-none user-dropdown_img">
                 <span>Logout</span>
@@ -93,21 +87,6 @@
 
           </bs-nav-dropdown>
         </mp-anonymous-hidden>
-
-
-      </ul>
-
-
-
-
-
-    </div><!-- /.navbar-collapse -->
-
-
-  </div><!-- /.container-fluid -->
-
-
-
-
+  </div>
 
 </nav>

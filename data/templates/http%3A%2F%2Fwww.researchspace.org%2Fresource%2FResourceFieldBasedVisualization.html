@@ -1,12 +1,14 @@
 {{#if noData}}
 <div class="table-responsive rs-table">
   <table class="table table-hover">
+    {{#ifCond noHead "!==" "true"}}
     <thead>
       <tr>
         <th scope="col" style="width: 30%">Field</th>
         <th scope="col">Value</th>
       </tr>
     </thead>
+    {{/ifCond}}
     <tbody>
       <tr>
         <td>No data available</td>
@@ -18,40 +20,38 @@
 {{else}}
 <div class="table-responsive rs-table">
   <table class="table table-hover">
+    <!-- TODO: pass conditional noHead (display/hide table-head) -->
+    <!-- {{#ifCond noHead "!==" "true"}}
     <thead>
       <tr>
         <th scope="col" style="width: 30%">Field</th>
         <th scope="col">Value</th>
       </tr>
     </thead>
+    {{/ifCond}} -->
     <tbody>
-      {{#each fields as |field|}}
-      {{#if field.values}}
+      {{#each fields as |field|}} {{#if field.values}}
       <tr class="rs-page__field">
         <td class="rs-page__field-label-holder">
-          <span class="rs-page__field-label">
-            {{field.label.0.value}}
-          </span>
+          <span class="rs-page__field-label"> {{field.label.0.value}} </span>
         </td>
         <td>
           {{#ifCond (objectLength field.values) '>' 1}}
-          <ol class="rs-page__field-values">
-            {{#each field.values as |value|}}
-            <li class="rs-page__field-value">
-              {{> rsp:ResourceFieldValueVisualization field=field value=value }}
-            </li>
+          <div style="display: flex; white-space: pre; ">
+            {{#each field.values as |value|}} {{>
+            rsp:ResourceFieldValueVisualization field=field value=value }}  <span>, </span>
             {{/each}}
-          </ol>
-          {{/ifCond}}
-          {{#ifCond (objectLength field.values) '===' 1}}
-          {{#each field.values as |value|}}
-          <span class="rs-page__field-value">{{> rsp:ResourceFieldValueVisualization field=field value=value }}</span>
-          {{/each}}
-          {{/ifCond}}
+          </div>
+          {{/ifCond}} {{#ifCond (objectLength field.values) '===' 1}} {{#each
+          field.values as |value|}}
+          <span class="rs-page__field-value"
+            >{{> rsp:ResourceFieldValueVisualization field=field value=value
+            }}</span
+          >
+          {{/each}} {{/ifCond}}
         </td>
       </tr>
-      {{/if}}
-      {{/each}}
+      {{/if}} {{/each}}
     </tbody>
   </table>
 </div>

@@ -1,0 +1,109 @@
+<div class="fd-footer">
+    <div class="actions">
+        <div class="action">
+            <semantic-link class="btn btn-default" iri="http://www.researchspace.org/resource/background">Background
+            </semantic-link>
+        </div>
+        <div class="action">
+            <semantic-link class="btn btn-default" iri="http://www.researchspace.org/resource/credits">Credits
+            </semantic-link>
+        </div>
+        <div class="action">
+            <a class="btn btn-default" href="http://itatti.harvard.edu/website-feedback">
+                Contact</a>
+        </div>
+        <div class="action">
+            <a class="btn btn-default" href="http://data.itatti.harvard.edu/">
+                Data</a>
+        </div>
+    </div>
+    <div class="footer-attribution">
+        <div class="logo">
+            <a href="https://www.kressfoundation.org/" title="Go to kressfoundation.org">
+                <img src="../../assets/images/kress_logo.png" /></a>
+            <div class="label">Supported by</div>
+        </div>
+        <div class="logo">
+            <a href="https://www.itatti.harvard.edu/" title="Go to itatti.harvard.edu">
+                <img src="../../assets/images/logoitatti.png" /></a>
+            <div class="label">© 2020 The President and Fellows of Harvard College</div>
+        </div>
+    </div>
+    <div class="actions end">
+        <div class="action">
+            <a class="btn btn-default" href="/login">
+                Login</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fd-footer {
+        background: #e6e6e3;
+        display: flex;
+        align-items: center;
+    }
+
+    .actions {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        z-index: 1;
+    }
+
+    .end {
+        width: 100%;
+        align-items: flex-end;
+        z-index: 0;
+    }
+
+    .action {
+        cursor: pointer;
+        margin-right: 2vw;
+        margin-left: 2vw;
+        height: 3vh;
+        box-shadow: none !important;
+    }
+
+    .action a {
+
+        box-shadow: none !important;
+    }
+
+    .action:hover {
+        text-decoration: underline;
+    }
+
+    .footer-attribution {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        align-items: center;
+        height: 14vh;
+        margin-top: 16px;
+        justify-content: center;
+    }
+
+    .footer-attribution .logo {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-self: center;
+        margin-left: 8.5vw;
+        z-index: 1;
+    }
+
+    .footer-attribution .logo .label {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-self: center;
+        margin-top: 8px;
+    }
+
+    .footer-attribution .logo img {
+        height: 7.4vh;
+    }
+</style>
