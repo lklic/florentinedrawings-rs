@@ -21,10 +21,14 @@
             >
             </rs-iiif-mirador>
              </div>
-
+<p> The data model was developed using the CIDOC-CRM ontology, which can be seen through the graphical representation above </p>
+			
   		<p class="default-paragraph">The data in the database consists of drawing records created by Berenson. This data was transcribed in summer 2015 in two phases. In phase one, an Excel spreadsheet was created for each artist (about 61% of total records were transcribed in this phase). In phase two, each transcriber was given one Google sheet to work in, and new columns were added in order to ensure multiple data points were not entered in the same field.
             <br><br>Because the data was transcribed according to different guidelines in the two phases of transcription, separate data cleanup efforts were conducted. The individual artist spreadsheets from phase one were combined into one. The two spreadsheets created in phase two were combined into one.
             <br><br>Once each phase’s data was cleaned, the phase one master spreadsheet and the phase two master spreadsheet were combined. Individual drawing identifiers were assigned to each row, using a Python script to add padding zeros.</p>
+			
+			<p> Below you can download the slides that were presented at the ARLIS conference in 2018, where we described much of the technical work of the data transformation and publishing process </p>
+			
             <a href="https://s3-eu-west-1.amazonaws.com/florentinedrawings/platform-images/FlorentineDrawings_Slides_ARLIS2017.pdf">
             <button class="btn" style="margin: 20px;">
                 Download the PDF
@@ -149,7 +153,7 @@ limit 100
                                         <bs-tab-pane event-key="sixth"><bs-col > 
 		<bs-panel header="URI Patterns" collapsible="true">            
                
-             <p><span style="font-weight: 400;">The base URI for the Drawings of the Florentine Painters project is http://data.itatti.harvard.edu/resource/florentinedrawings</span></p>
+             <p><span style="font-weight: 400;">The base URI for the Drawings of the Florentine Painters project is https://florentinedrawings.itatti.harvard.edu/resource/work/</span></p>
 <p>&nbsp;</p>
 <table>
 <tbody>
@@ -296,7 +300,35 @@ limit 100
 </table>
           </bs-panel>
 	</bs-col></bs-tab-pane>   
-             
+                                       <bs-tab-pane event-key="seventh"><bs-col > 
+		<bs-panel header="Legacy project data" collapsible="true">
+
+          <!-- content -->   
+
+    <p> The project was updated in January 2021 with a new data model and user interface, using the ResearchSpace platform. The legacy datasets can be downloaded here:<br />
+	 <a href="https://florentinedrawings.itatti.harvard.edu/assets/no_auth/berenson1903.nt">
+            <button class="btn" style="margin: 20px;">
+                1903 Data
+            </button><br />
+		 	 <a href="https://florentinedrawings.itatti.harvard.edu/assets/no_auth/berenson1938.nt">
+            <button class="btn" style="margin: 20px;">
+                1938 Data
+            </button>
+				 <br />
+		 	 <a href="https://florentinedrawings.itatti.harvard.edu/assets/no_auth/berenson1968.nt">
+            <button class="btn" style="margin: 20px;">
+                1961 Data
+            </button>
+				 <br />
+		 	 <a href="https://florentinedrawings.itatti.harvard.edu/assets/no_auth/project2016.nt">
+            <button class="btn" style="margin: 20px;">
+                Project Data
+            </button>
+      
+      project2016.nt
+      
+    </bs-panel>
+	</bs-col></bs-tab-pane>
              
       <!-- end of tabs -->       
              
