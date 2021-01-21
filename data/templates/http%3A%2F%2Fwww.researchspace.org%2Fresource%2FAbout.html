@@ -1,0 +1,355 @@
+<div class="row-center row">
+    <div class="background-page col-md-8 col-sm-10">
+   
+            <bs-col> 
+		<bs-panel header="Project description" mountOnEnter="true" expanded='true' collapsible="true" >
+  		<p class="default-paragraph">The Florentine Drawings database is derived from the three editions (1903, 1938, and 1961) of Bernard Berenson’s book, Drawings of the Florentine Painters. The 1903 and 1938 editions are in English, and the 1961 edition is in Italian. The data has been selectively transcribed; not all information printed in the books is included.
+          <br><br>The definition of what constitutes a drawing is, as it was in Berenson’s book, not always clear-cut. Though often a single sheet, which might have marks on the recto and the verso, a recto and a verso might be cataloged by Berenson or the drawing’s owner as separate works. Additionally, drawings might be part of a complex object such as a sketchbook. Multiple drawings may have been mounted together.</p>
+    </bs-panel>
+	</bs-col>
+             <bs-tab-pane event-key="second">
+                 <bs-col> 
+		<bs-panel header="Data transformation" collapsible="true">
+         <div style="height: 50vh; width: 64vw;">
+            <rs-iiif-mirador
+            image-or-region="https://iiif.itatti.harvard.edu/iiif/2/florentinedrawings!florentine_drawings_model.jpg/full/full/0/default.jpg"
+            image-id-pattern='
+            BIND("image" AS ?type). 
+            BIND(IRI("https://iiif.itatti.harvard.edu/iiif/2/florentinedrawings!florentine_drawings_model.jpg/full/full/0/default.jpg") AS ?imageIRI). 
+            BIND(REPLACE(STR(REPLACE(STR("https://iiif.itatti.harvard.edu/iiif/2/florentinedrawings!florentine_drawings_model.jpg/full/full/0/default.jpg"),"/full/full/0/default.jpg","")), "(^.*)\\/(.*)$", "$2") AS ?imageID)
+            '                                         
+            iiif-server-url="https://iiif.itatti.harvard.edu/iiif/2" 
+            >
+            </rs-iiif-mirador>
+             </div>
+
+  		<p class="default-paragraph">The data in the database consists of drawing records created by Berenson. This data was transcribed in summer 2015 in two phases. In phase one, an Excel spreadsheet was created for each artist (about 61% of total records were transcribed in this phase). In phase two, each transcriber was given one Google sheet to work in, and new columns were added in order to ensure multiple data points were not entered in the same field.
+            <br><br>Because the data was transcribed according to different guidelines in the two phases of transcription, separate data cleanup efforts were conducted. The individual artist spreadsheets from phase one were combined into one. The two spreadsheets created in phase two were combined into one.
+            <br><br>Once each phase’s data was cleaned, the phase one master spreadsheet and the phase two master spreadsheet were combined. Individual drawing identifiers were assigned to each row, using a Python script to add padding zeros.</p>
+            <a href="https://s3-eu-west-1.amazonaws.com/florentinedrawings/platform-images/FlorentineDrawings_Slides_ARLIS2017.pdf">
+            <button class="btn" style="margin: 20px;">
+                Download the PDF
+            </button>
+         </a>
+      
+      
+    </bs-panel>
+	</bs-col>
+   
+             
+             
+                          <bs-tab-pane event-key="fourth"><bs-col > 
+		<bs-panel header="Sample SPARQL queries" collapsible="true">
+
+          <!-- content -->   
+
+      <pre class="code-example__code">
+      <code class="cm-s-default">
+SELECT 
+(COUNT(*) as ?count) 
+WHERE { 
+GRAPH &lt;http://data.itatti.harvard.edu/resource/florentinedrawings/berenson1938&gt; { ?sub ?pred ?obj } }
+
+      </code>
+      </pre>
+        <pre class="code-example__code">
+      <code class="cm-s-default">
+Select * 
+WHERE { 
+GRAPH &lt;http://data.itatti.harvard.edu/florentinedrawings/berenson1938&gt;{ ?s ?p ?o } }
+limit 100
+
+      </code>
+      </pre>
+
+      
+      
+      
+    </bs-panel>
+	</bs-col></bs-tab-pane>
+             
+                           <bs-tab-pane event-key="fifth"><bs-col > 
+		<bs-panel header="Namespaces" collapsible="true">            
+             
+             
+             <p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td>
+<p><strong>Namespace</strong></p>
+</td>
+<td>
+<p><strong>Explanation</strong></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">http://cidoc-crm.org/cidoc-crm/</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">The CIDOC-CRM ontology is used to define properties (relationships) between entities (things).</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">http://schema.org/</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">schema:url &nbsp;was used to make statements about the museum links in the Botticelli and Filippino Lippi case study.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">http://www.w3.org/2002/07/owl#</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">owl:sameAs was used to link British Museum URIs with Florentine Drawings drawing URIs, and to link two ULAN URIs.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">http://www.w3.org/2000/01/rdf-schema#</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">Rdfs:label was used to create labels for Florentine Drawings URIs and some externally-hosted URIs.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">http://vocab.getty.edu/ulan/</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">The Getty&rsquo;s Union List of Artist Names (ULAN) is used for artist URIs.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">http://vocab.getty.edu/aat/</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">The Getty&rsquo;s Art &amp; Architecture Thesaurus (AAT) is used for material and technique URIs.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">http://viaf.org/viaf/</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">The Virtual International Authority File (VIAF) is used for location (collection name) URIs.</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+             
+          </bs-panel>
+	</bs-col></bs-tab-pane>       
+       
+             
+             
+                                        <bs-tab-pane event-key="sixth"><bs-col > 
+		<bs-panel header="URI Patterns" collapsible="true">            
+               
+             <p><span style="font-weight: 400;">The base URI for the Drawings of the Florentine Painters project is http://data.itatti.harvard.edu/resource/florentinedrawings</span></p>
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr>
+<td>
+<p><strong>URI</strong></p>
+</td>
+<td>
+<p><strong>Pattern</strong></p>
+</td>
+<td>
+<p><strong>Explanation</strong></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Florentine Drawings properties</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/ontologies/[property]</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">The Florentine Drawings project created several properties to describe four of Berenson&rsquo;s more granular attributions.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Entities</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/entity/[entity name]</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">If a collection or artist name was not found in other vocabularies, a local URI was created.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Drawing</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/[drawing number]-Berenson</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">The drawing number is a unique identifier created from the 1961 edition catalogue number. Most (but not all) are 7 characters, with padding zeros at the front.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Drawing (side)</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/[drawing number]-Berenson/[side]</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">Drawing sides (rectos and, if they exist, versos) have URIs.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Modification</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/[drawing number]-Berenson/[side]/modification</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">This node indicates that a drawing side underwent a modification event (a material was applied to the page)</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Production</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/[drawing number]-Berenson/production</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">This node indicates that a drawing underwent a production event (its creation)</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Identifier assignment</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/[drawing number]-Berenson/identifier_assignment</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">This node indicates that an entity (a collection) assigned an identifier (an inventory number) to a drawing.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Image</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/[drawing number]-Berenson/[side]</span></p>
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Figure or plate number</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/[drawing number]-Berenson/[side]/image/[edition year]_[plate or figure]</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">Figure and plate URIs include the edition year.</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Berenson comment</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/[drawing number]-Berenson/[side]</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">Berenson comment URIs are numbered 1 (for 1903 edition), 2 (for 1938 edition), or 3 (for 1961 edition)</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Title</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/[drawing number]-Berenson/[side]/title/[number]</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">Title URIs are numbered 1 (for 1903 edition), 2 (for 1938 edition), or 3 (for 1961 edition)</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span style="font-weight: 400;">Page number</span></p>
+</td>
+<td>
+<p><span style="font-weight: 400;">/[drawing number]-Berenson/[edition year]_page/[page number]</span></p>
+</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+          </bs-panel>
+	</bs-col></bs-tab-pane>   
+             
+             
+      <!-- end of tabs -->       
+             
+           </bs-tab-content>
+
+       </bs-row>
+       </div>
+       </div>
+<style>
+    .window-manifest-title{
+        display: none !important;
+    }
+      .background-page {
+    margin: 2vw;
+  }
+    .panel-default>.panel-heading {
+    color: #fff;
+    background-color: #ffffff !important;
+    border-color: #cccccc !important;
+}
+.panel-default>.panel-heading a {
+    color: #fff;
+    color: #7b2817 !important;
+    font-weight: 600;
+}
+    p.default-paragraph {
+    margin-top: 2vh;
+    background: #ffffff;
+    padding: 2vh;
+    font-size: 12pt;
+    line-height: 4vh;
+  }
+  h1 {
+    font-size: 22pt;
+    text-align: center;
+  }
+
+  a {
+    color: #761f0e !important;
+    text-decoration-color: #761f0e;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  .mirador-viewer{
+        top: 0px !important;
+    }
+    .mirador-osd-annotation-controls{
+        display: none !important;
+    }
+    a.mirador-icon-window-menu{
+        display: none !important;
+    }
+
+</style>
