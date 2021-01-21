@@ -54,9 +54,35 @@
             <div class="dropdownTitle">SPARQL</div>
           </bs-menu-item>
         </bs-nav-dropdown>
+        <mp-anonymous-hidden>
+          <bs-nav-dropdown title="Admin" id="rs-about-dropdown" class="dropdown admin">
 
+            <bs-menu-item href="background" title='Background'>
+              <div class="dropdownTitle">
+                <mp-link url="/sparql" class="rs-body-m-M">SPARQL</mp-link>
+              </div>
+            </bs-menu-item>
+            <bs-menu-item>
+              <div class="dropdownTitle">
+                <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings"
+                  class="rs-setting-icon">
+                  <i class="fa fa-cog"></i>
+                </semantic-link>
+            </bs-menu-item>
+
+
+            <hr />
+
+            <bs-menu-item href="/login" title='logout'>
+              <div class="user-dropdown_item">
+                <img src="/assets/images/icons/Actions/logout_dark.svg" class="rs-xs-none user-dropdown_img">
+                <span>Logout</span>
+              </div>
+            </bs-menu-item>
+
+          </bs-nav-dropdown>
+        </mp-anonymous-hidden>
       </ul>
-
     </div><!-- /.navbar-collapse -->
 
 
@@ -64,35 +90,5 @@
 
   </div><!-- /.container-fluid -->
 
-  <div style="position: fixed; bottom:0; right:0; z-index:100">
-    <mp-anonymous-hidden>
-      <bs-nav-dropdown title="Admin" id="rs-about-dropdown" class="dropup admin">
-
-        <bs-menu-item href="background" title='Background'>
-          <div class="dropdownTitle">
-            <mp-link url="/sparql" class="rs-body-m-M">Sparql</mp-link>
-          </div>
-        </bs-menu-item>
-        <bs-menu-item>
-          <div class="dropdownTitle">
-            <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings"
-              class="rs-setting-icon">
-              <i class="fa fa-cog"></i>
-            </semantic-link>
-        </bs-menu-item>
-
-
-        <hr />
-
-        <bs-menu-item href="/login" title='logout'>
-          <div class="user-dropdown_item">
-            <img src="/assets/images/icons/Actions/logout_dark.svg" class="rs-xs-none user-dropdown_img">
-            <span>Logout</span>
-          </div>
-        </bs-menu-item>
-
-      </bs-nav-dropdown>
-    </mp-anonymous-hidden>
-  </div>
 
 </nav>
