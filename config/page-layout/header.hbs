@@ -7,88 +7,92 @@
           by Bernard Berenson
         </div> --}}
       </a>
-      
+
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div style="height: 100%;">
       <ul style="height: 100%; display: flex; align-items:center;
     justify-content: flex-end;">
-      <a  style="min-width: 7vw;
+        <semantic-link-container uri="Default:search">
+          <a style="min-width: 7vw;
     display: flex;
     justify-content: center;
-    align-items: center;" href="/resource/search">
-       Search
-      <img
-        style="filter: hue-rotate(80deg); margin-left: 0.5vw"
-        src="/assets/images/icons/search.svg"
-      />
-       </a>
-     
-          <bs-nav-dropdown style="min-width: 7vw;
+    align-items: center;">
+            Search
+            <img style="filter: hue-rotate(80deg); margin-left: 0.5vw" src="/assets/images/icons/search.svg" />
+          </a>
+        </semantic-link-container>
+
+        <bs-nav-dropdown style="min-width: 7vw;
           min-height:10vh;
     display: flex;
     justify-content: center;
-    align-items: center;"  title="About" id="rs-about-dropdown" class="rs-dropdown about">
+    align-items: center;" title="About" id="rs-about-dropdown" class="rs-dropdown about">
 
-            <bs-menu-item href="background" title='Background'>
+          <semantic-link-container uri="Default:background">
+            <bs-menu-item title='Background'>
               <div class="dropdownTitle"> Background</div>
             </bs-menu-item>
-            <bs-menu-item href="credits" title='Credits'>
+          </semantic-link-container>
+          <semantic-link-container uri="Default:credits">
+            <bs-menu-item title='Credits'>
               <div class="dropdownTitle">Credits</div>
             </bs-menu-item>
-            <bs-menu-item href="http://itatti.harvard.edu/website-feedback" title='Contact'>
-              <div class="dropdownTitle">Contact</div>
-            </bs-menu-item>
+          </semantic-link-container>
+          <bs-menu-item href="http://itatti.harvard.edu/website-feedback" title='Contact'>
+            <div class="dropdownTitle">Contact</div>
+          </bs-menu-item>
 
-            <hr />
-
-            <bs-menu-item href="about" title='Data'>
+          <hr />
+          <semantic-link-container uri="Default:about">
+            <bs-menu-item title='Data'>
               <div class="dropdownTitle">About</div>
             </bs-menu-item>
+          </semantic-link-container>
           <bs-menu-item href="sparql" title='SPARQL'>
-              <div class="dropdownTitle">SPARQL</div>
-            </bs-menu-item>
-          </bs-nav-dropdown>
+            <div class="dropdownTitle">SPARQL</div>
+          </bs-menu-item>
+        </bs-nav-dropdown>
 
       </ul>
 
     </div><!-- /.navbar-collapse -->
-  
-  
-  
-  
+
+
+
+
   </div><!-- /.container-fluid -->
 
   <div style="position: fixed; bottom:0; right:0; z-index:100">
-            <mp-anonymous-hidden>
-          <bs-nav-dropdown  title="Admin" id="rs-about-dropdown" class="dropup admin">
+    <mp-anonymous-hidden>
+      <bs-nav-dropdown title="Admin" id="rs-about-dropdown" class="dropup admin">
 
-            <bs-menu-item href="background" title='Background'>
-              <div class="dropdownTitle">
-                <mp-link url="/sparql" class="rs-body-m-M">Sparql</mp-link>
-              </div>
-            </bs-menu-item>
-            <bs-menu-item >
-              <div class="dropdownTitle">
-                <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings"
-                  class="rs-setting-icon">
-                  <i class="fa fa-cog"></i>
-                </semantic-link>
-            </bs-menu-item>
-       
+        <bs-menu-item href="background" title='Background'>
+          <div class="dropdownTitle">
+            <mp-link url="/sparql" class="rs-body-m-M">Sparql</mp-link>
+          </div>
+        </bs-menu-item>
+        <bs-menu-item>
+          <div class="dropdownTitle">
+            <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings"
+              class="rs-setting-icon">
+              <i class="fa fa-cog"></i>
+            </semantic-link>
+        </bs-menu-item>
 
-            <hr />
 
-             <bs-menu-item href="/login" title='logout'>
-              <div class="user-dropdown_item">
-                <img src="/assets/images/icons/Actions/logout_dark.svg" class="rs-xs-none user-dropdown_img">
-                <span>Logout</span>
-              </div>
-            </bs-menu-item>
+        <hr />
 
-          </bs-nav-dropdown>
-        </mp-anonymous-hidden>
+        <bs-menu-item href="/login" title='logout'>
+          <div class="user-dropdown_item">
+            <img src="/assets/images/icons/Actions/logout_dark.svg" class="rs-xs-none user-dropdown_img">
+            <span>Logout</span>
+          </div>
+        </bs-menu-item>
+
+      </bs-nav-dropdown>
+    </mp-anonymous-hidden>
   </div>
 
 </nav>
