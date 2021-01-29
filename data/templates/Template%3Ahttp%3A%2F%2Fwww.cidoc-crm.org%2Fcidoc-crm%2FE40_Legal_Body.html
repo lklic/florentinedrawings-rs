@@ -9,11 +9,51 @@
           SELECT ?institute_name WHERE {                   
                 <[[this]]> rdfs:label ?institute_name
           }"
-        template="{{>artistTemplate}}"
+        template="{{>instituteTemplate}}"
       >
-        <template id="artistTemplate">
+
+        <template id="instituteTemplate">
           {{#each bindings}}
-          <object data="../../images/{{institute_name.value}}.png" type="image/png" class="img-circle headImageObject"></object>
+          <semantic-query
+          query='
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX wd: <http://www.wikidata.org/entity/>
+        PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+        PREFIX wdtn: <http://www.wikidata.org/prop/direct-normalized/>
+    
+        SELECT DISTINCT ?imgUrl WHERE{
+          bind("_" as ?default_imageUrl)
+          OPTIONAL{
+            SERVICE <https://query.wikidata.org/sparql> 
+              {
+                {
+                  ?institution wdt:P31 wd:Q33506 . 
+                  ?institution rdfs:label "{{institute_name.value}}"@en .
+                  ?institution wdt:P18 ?institutionImage
+                }UNION{
+                  ?institution wdt:P31 wd:Q207694.
+                  ?institution rdfs:label "{{institute_name.value}}"@en .
+                  ?institution wdt:P18 ?institutionImage.
+                } UNION {
+                    ?person wdtn:P245 <[[this]]>.
+                    ?person wdt:P18 ?personImage.
+                  }
+              }
+          }
+          BIND(coalesce(?institutionImage, ?default_imageUrl) as ?imgUrl)    
+              }LIMIT 1'
+          template="{{> imageThumbnail}}"
+        >
+          <template id="imageThumbnail">
+            <object data="../../images/{{institute_name.value}}.png" type="image/png" class="img-circle headImageObjectParent">
+            <object
+              alt="   "
+              class="img-circle headImageObject"
+              data="{{bindings.0.imgUrl.value}}"
+            />
+          </object>
+          </template>
+      </semantic-query>
           <h2>{{institute_name.value}}</h2>
           {{/each}}
         </template>
@@ -67,7 +107,7 @@
         <div
           class="rs-grid-element panel panel-default artwork-card fade-in"
         >
-        <semantic-link-container uri="{{subject.value}}">
+        <semantic-link uri="{{subject.value}}">
           <div class="panel-body">
             <bs-col md="5" xs="12">
               <div class="row-center">
@@ -111,7 +151,7 @@
               </div>
             </bs-col>
           </div>
-        </semantic-link-container>
+        </semantic-link>
         </div>
       </template>
     </semantic-table>
