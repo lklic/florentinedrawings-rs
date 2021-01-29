@@ -22,7 +22,7 @@
         PREFIX wdtn: <http://www.wikidata.org/prop/direct-normalized/>
     
         SELECT DISTINCT ?imgUrl WHERE{
-          bind("_" as ?default_imageUrl)
+          bind("/assets/images/image_placeholder_repo.png" as ?default_imageUrl)
           OPTIONAL{
             SERVICE <https://query.wikidata.org/sparql> 
               {
