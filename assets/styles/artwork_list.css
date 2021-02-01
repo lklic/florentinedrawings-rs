@@ -58,6 +58,10 @@
   width: 50vw;
 }
 
+.artwork_list_body .filter-container input{
+  width: 100% !important;
+}
+
 .carousel {
   width: 16vw;
   height: 20vh;
