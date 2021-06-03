@@ -1,0 +1,24 @@
+
+{{#each fields as |field|}} {{#if field.values}}
+<tr class="rs-page__field">
+  <td class="rs-page__field-label-holder">
+    <span class="rs-page__field-label"> {{field.label.0.value}} </span>
+  </td>
+  <td>
+    {{#ifCond (objectLength field.values) '>' 1}}
+    <div style="display: flex; white-space: pre; ">
+      {{#each field.values as |value|}} {{>
+      rsp:ResourceFieldValueVisualizationCard 
+        field=field value=value artworkIri=../../subject }} <span>, </span>
+      {{/each}}
+    </div>
+    {{/ifCond}} {{#ifCond (objectLength field.values) '===' 1}} {{#each
+    field.values as |value|}}
+    <span class="rs-page__field-value">{{> rsp:ResourceFieldValueVisualizationCard 
+      field=field value=value artworkIri=../../subject
+      }}</span>
+    {{/each}} {{/ifCond}}
+  </td>
+</tr>
+
+{{/if}} {{/each}}

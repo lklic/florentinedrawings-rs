@@ -5,55 +5,50 @@
   {
     "kind": "resource",
     "queryPattern": "
-      {
         $subject crm:P108i_was_produced_by ?production.
         ?production crm:P01i_is_domain_of ?domain.
         ?domain a crm:PC14_carried_out_by.
         ?domain crm:P02_has_range ?__value__.
-      }"
+      "
   }
 ],
 "<https://florentinedrawings.itatti.harvard.edu/resource/field/Attribution_Qualifier>":[
 {
 "kind": "resource",
 "queryPattern": "
-  {
     $subject crm:P108i_was_produced_by ?production.
     ?production crm:P01i_is_domain_of ?domain.
     ?domain a crm:PC15_was_influenced_by .
     ?domain crm:P15.1_in_the_role_of ?__value__.
-  }"
+  "
 }
 ],
 "<https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Technique>": [
 {
 "kind": "resource",
 "queryPattern": "
-  {
     $subject crm:P56_bears_feature ?feature.
     ?feature crm:P2_has_type <http://vocab.getty.edu/aat/300078817>.
     ?feature a crm:E25_Man-Made_Feature.
     ?feature crm:P81_was_modified_by ?modification.
     ?modification a crm:E11_Modification.
     ?modification crm:P32_used_general_technique ?__value__.
-  }"
+  "
 }],
 "<https://florentinedrawings.itatti.harvard.edu/resource/field/Has_Location>": [
 {
 "kind": "resource",
 "queryPattern": "
-  {
     $subject crm:P30_custody_transferred_through ?transfer.
     ?transfer crm:P29_custody_recieved_by ?__value__.
-  }"
+  "
 }],
 "<https://florentinedrawings.itatti.harvard.edu/resource/field/Has_Edition>": [
 {
 "kind": "resource",
 "queryPattern": "
-  {
     $subject <https://florentinedrawings.itatti.harvard.edu/resource/field/Has_Edition> ?__value__.
-  }"
+  "
 }]
 }'
   search-profile='{
@@ -330,7 +325,7 @@ WHERE {
   </semantic-search-query-constant>
  
   <div  id="header-search-results" class="row">
-    <bs-col lg="3" md="4" sm="5" class="fade-in" style="margin-top: 8px">
+    <bs-col id="filters-section" lg="3" md="4" sm="5" class="fade-in" style="margin-top: 8px">
       <semantic-search-facet open-by-default="true"></semantic-search-facet>
     </bs-col>
     <bs-col lg="9" md="8" sm="7" >
@@ -347,7 +342,7 @@ WHERE {
               options='{
                 "showFilter":false
               }'
-              number-of-displayed-rows="10"
+              number-of-displayed-rows="6"
               query="
             SELECT DISTINCT ?subject  ?recto_title_1938 ?recto_title_1961
              WHERE {

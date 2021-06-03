@@ -1,0 +1,55 @@
+<div
+class="rs-grid-element panel panel-default artwork-card fade-in"
+>
+<semantic-link uri="{{subject.value}}">
+  <div class="panel-body">
+    <bs-col lg="4" md="12" xs="12">
+      <div class="row-center">
+        <semantic-query
+          query='SELECT DISTINCT ?imgUrl WHERE{
+          bind("_" as ?default_imageUrl)
+          OPTIONAL{
+            <{{subject.value}}> <https://florentinedrawings.itatti.harvard.edu/customproperty/has_thumbnail> ?thumbnailImage.
+          }
+          BIND(coalesce(?thumbnailImage, ?default_imageUrl) as ?imgUrl)    
+      }'
+          template="{{> imageThumbnail}}"
+        >
+          <template id="imageThumbnail">
+            <img
+              alt="   "
+              src="{{bindings.0.imgUrl.value}}"
+              class="thumbnailImage"
+            />
+          </template>
+        </semantic-query>
+      </div>
+    </bs-col>
+    <bs-col lg="7" md="10" xs="10">
+      <div
+        data-flex-layout="row md-column center-stretch"
+      >
+        <bs-row>
+          <mp-field-visualization
+            subject="{{subject.value}}"
+            fields='[[fieldDefinitions  
+              Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1961"
+              English_Title="https://florentinedrawings.itatti.harvard.edu/resource/field/Recto_Title_1938"  
+              Inv.Number="https://florentinedrawings.itatti.harvard.edu/resource/field/Inventory_Number"
+              Artist ="https://florentinedrawings.itatti.harvard.edu/resource/field/Artist_Attribution"
+              Technique="https://florentinedrawings.itatti.harvard.edu/resource/field/Technique"
+              Location="https://florentinedrawings.itatti.harvard.edu/resource/field/Location"
+              ]]'
+            template="{{>generalInfo}}"
+          >
+            <template id="generalInfo">
+              [[> rsp:ResourceFieldBasedVisualizationCard
+              subject=[[this]] ]]              
+            </template>
+          </mp-field-visualization>
+        </bs-row>
+      </div>
+    </bs-col>
+  </div>
+</semantic-link>
+</div>

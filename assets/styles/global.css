@@ -292,6 +292,9 @@ a:focus {
 {
   white-space: unset !important;
 }
+button.FacetBreadcrumbs--cancelButton.btn.btn-default.btn-xs {
+  padding-left: 10px;
+}
 
 @-webkit-keyframes fade-in-fwd {
   0% {
